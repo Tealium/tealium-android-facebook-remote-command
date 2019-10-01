@@ -20,8 +20,7 @@ class App: Application() {
         val config = Tealium.Config.create(this, "tealiummobile", "facebook", "dev")
         config.forceOverrideLogLevel = "dev"
         tealium = Tealium.createInstance(TealiumHelper.instanceName, config)
-        val facebookRemoteCommand = FacebookRemoteCommand(this
-        )
+        val facebookRemoteCommand = FacebookRemoteCommand(this)
         tealium.addRemoteCommand(facebookRemoteCommand)
     }
 }

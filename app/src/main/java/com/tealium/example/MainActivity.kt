@@ -39,7 +39,6 @@ class MainActivity : AppCompatActivity() {
         achieveLevelButton.setOnClickListener { achieveLevel() }
 
         TealiumHelper.trackView("home_view")
-
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

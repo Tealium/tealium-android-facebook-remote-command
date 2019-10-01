@@ -15,7 +15,6 @@ interface FacebookAppEventsTrackable {
     fun logEvent(eventName: String, parameters: Bundle)
     fun logEvent(eventName: String, valueToSum: Double, parameters: Bundle)
 
-
     fun logPurchase(purchaseAmount: BigDecimal, currency: Currency)
     fun logPurchase(purchaseAmount: BigDecimal, currency: Currency, parameters: Bundle)
 

@@ -112,48 +112,6 @@ open class FacebookRemoteCommand : RemoteCommand {
             }
 
             when (command) {
-//                Commands.INITIALIZE -> {
-//                    application?.let {
-//                        val initializeOptions = payload.optJSONObject(Initialize.INITIALIZE)
-//                        initializeOptions?.let { options ->
-//                            val applicationId =
-//                                if (options.optString(Initialize.APPLICATION_ID).isEmpty()) null else options.optString(
-//                                    Initialize.APPLICATION_ID
-//                                )
-//                            val accessTokenString =
-//                                if (options.optString(Initialize.ACCESS_TOKEN).isEmpty()) null else options.optString(
-//                                    Initialize.ACCESS_TOKEN
-//                                )
-//                            val userIdString =
-//                                if (options.optString(Initialize.USER_ID).isEmpty()) null else options.optString(
-//                                    Initialize.USER_ID
-//                                )
-//                            tracker = FacebookAppEventsTracker(it, applicationId, true)
-//
-//                            accessTokenString?.let { token ->
-//                                applicationId?.let { appId ->
-//                                    userIdString?.let { userId ->
-//                                        tracker?.let {
-//                                            val accessToken = AccessToken(
-//                                                token,
-//                                                appId,
-//                                                userId,
-//                                                null,
-//                                                null,
-//                                                null,
-//                                                null,
-//                                                null,
-//                                                null,
-//                                                null
-//                                            )
-//                                            tracker?.let { it.initialize(appId, accessToken) }
-//                                        }
-//                                    }
-//                                }
-//                            }
-//                        }
-//                    }
-//                }
                 Commands.LOG_PURCHASE -> {
                     val purchase: JSONObject? = payload.optJSONObject(Purchase.PURCHASE)
                     purchase?.let {
