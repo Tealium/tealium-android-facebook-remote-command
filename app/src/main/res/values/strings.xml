@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">TealiumFacebook</string>
+    <string name="facebook_app_id">YOUR_FACEBOOK_APP_ID</string>
+    <string name="fb_login_protocol_scheme">YOUR_FACEBOOK_LOGIN</string>
+    <string name="purchase">Purchase</string>
+    <string name="set_user">Set User</string>
+    <string name="update_user_value">Update User Value</string>
+    <string name="log_product">Log Product</string>
+    <string name="flush">Flush</string>
+    <string name="about_title">Tealium Facebook %1$s</string>
+    <string name="about_message">Tealium Android Library %1$s</string>
+    <string name="achieve_level">Achieve Level</string>
+</resources>
