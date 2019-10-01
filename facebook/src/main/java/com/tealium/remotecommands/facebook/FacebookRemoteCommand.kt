@@ -29,6 +29,9 @@ open class FacebookRemoteCommand : RemoteCommand {
     lateinit var tracker: FacebookAppEventsTrackable
     var application: Application? = null
 
+    /**
+     * Constructs a RemoteCommand that integrates with the Facebook App Events SDK to allow Facebook API calls to be implemented through Tealium.
+     */
     @JvmOverloads
     constructor(
         application: Application? = null,
@@ -50,8 +53,10 @@ open class FacebookRemoteCommand : RemoteCommand {
         val DEFAULT_COMMAND_DESCRIPTION = "Tealium-Facebook Remote Command"
 
         /**
-         * Maps JSON to Bundle. Does not support nested objects.
+         * Maps a JSON object to a Bundle. Does not support nested objects.
          *
+         * @param json - JSON object used to set key/value pairs on the Bundle
+         * @param bundle - bundle to set key/value pairs that is used in tracking events
          */
         fun mapJsonToBundle(json: JSONObject?, bundle: Bundle) {
             json?.let {
@@ -68,6 +73,13 @@ open class FacebookRemoteCommand : RemoteCommand {
             }
         }
 
+        /**
+         * Maps an array onto a Bundle.
+         *
+         * @param key - the key to set on the Bundle
+         * @param value - the value to set on the Bundle
+         * @param bundle - bundle to set key/value pairs that is used in tracking events
+         */
         fun <T> mapArrayToBundle(key: String, value: Array<T>, bundle: Bundle) {
             if (value.count() > 0) {
                 when (value.first()) {
@@ -76,7 +88,8 @@ open class FacebookRemoteCommand : RemoteCommand {
                         bundle.putDoubleArray(key, doubleArray)
                     }
                     is Boolean -> {
-                        val booleanArray = (value.toList() as? ArrayList<Boolean>)?.toTypedArray()?.toBooleanArray()
+                        val booleanArray = (value.toList() as? ArrayList<Boolean>)?.toTypedArray()
+                            ?.toBooleanArray()
                         bundle.putBooleanArray(key, booleanArray)
                     }
                     is Int -> {
@@ -92,16 +105,30 @@ open class FacebookRemoteCommand : RemoteCommand {
         }
     }
 
+    /**
+     * Handles the incoming RemoteCommand response data. Prepares the command and payload for parsing.
+     *
+     * @param response - the response that includes the command and optional command parameters
+     */
     @Throws(Exception::class)
-    override fun onInvoke(response: RemoteCommand.Response) {
+    override fun onInvoke(response: Response) {
         val payload = response.requestPayload
         val commands = splitCommands(payload)
         parseCommands(commands, payload)
     }
 
+    /**
+     * Calls the individual commands consecutively with optional parameters from the payload object.
+     *
+     * @param commands - the list of commands to call
+     * @param payload - optional command parameters to be called with specific commands
+     */
     fun parseCommands(commands: Array<String>, payload: JSONObject) {
         if (tracker == null) {
-            Log.e(TAG, "Tracker is not initialized yet. Please check your remote command initialization.")
+            Log.e(
+                TAG,
+                "Tracker is not initialized yet. Please check your remote command initialization."
+            )
             return
         }
         commands.forEach { command ->
@@ -199,6 +226,11 @@ open class FacebookRemoteCommand : RemoteCommand {
         }
     }
 
+    /**
+     * Checks if the event is a standard Facebook event name.
+     *
+     * @param commandName - name of the command
+     */
     fun isStandardEvent(commandName: String): Boolean {
         return StandardEventNames.values().map { it.value.toLowerCase() }.contains(commandName)
     }
@@ -225,7 +257,7 @@ open class FacebookRemoteCommand : RemoteCommand {
             tracker.logEvent(command)
         }
     }
-
+    
     fun logPurchase(purchase: JSONObject) {
         val amount = purchase.optDouble(Purchase.PURCHASE_AMOUNT) as? Double
         amount?.let {
@@ -291,7 +323,8 @@ open class FacebookRemoteCommand : RemoteCommand {
         val productGtin = productItem.optString(ProductItemParameters.PRODUCT_GTIN)
         val productMpn = productItem.optString(ProductItemParameters.PRODUCT_MPN)
         val productBrand = productItem.optString(ProductItemParameters.PRODUCT_BRAND)
-        val productPriceCurrency = getCurrency(productItem.optString(ProductItemParameters.PRODUCT_PRICE_CURRENCY))
+        val productPriceCurrency =
+            getCurrency(productItem.optString(ProductItemParameters.PRODUCT_PRICE_CURRENCY))
         val productParameters = productItem.optJSONObject(ProductItemParameters.PRODUCT_PARAMETERS)
         val bundle = Bundle()
         mapJsonToBundle(productParameters, bundle)
