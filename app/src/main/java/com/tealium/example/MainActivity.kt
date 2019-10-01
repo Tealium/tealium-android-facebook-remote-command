@@ -56,27 +56,27 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun logPurchase() {
-        TealiumHelper.trackView("logpurchase")
+        TealiumHelper.trackEvent("logpurchase")
     }
 
     private fun setUser() {
-        TealiumHelper.trackView("setuser")
+        TealiumHelper.trackEvent("setuser")
     }
 
     private fun updateUser() {
-        TealiumHelper.trackView("updateuservalue")
+        TealiumHelper.trackEvent("updateuservalue")
     }
 
     private fun logProductItem() {
-        TealiumHelper.trackView("logproductitem")
+        TealiumHelper.trackEvent("logproductitem")
     }
 
     private fun flush() {
-        TealiumHelper.trackView("flush")
+        TealiumHelper.trackEvent("flush")
     }
 
     private fun achieveLevel() {
-        TealiumHelper.trackView("achievelevel")
+        TealiumHelper.trackEvent("achievelevel")
     }
 
     private fun showInfo() {

@@ -6,10 +6,6 @@ object TealiumHelper {
 
     val instanceName = "my_instance"
 
-    init {
-
-    }
-
     fun trackView(viewName: String) {
         Tealium.getInstance(instanceName)?.trackView(viewName, null)
     }
