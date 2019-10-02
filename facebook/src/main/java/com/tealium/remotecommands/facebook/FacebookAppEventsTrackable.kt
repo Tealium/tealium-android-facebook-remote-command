@@ -7,17 +7,19 @@ import java.math.BigDecimal
 import java.util.*
 
 interface FacebookAppEventsTrackable {
-
+    // Initialize
     fun initialize(applicationId: String?, accessToken: AccessToken?)
-
+    fun enableAutoLogAppEvents(enable: Boolean)
+    fun enableAutoInitialize(enable: Boolean)
+    fun enableAdvertiserIDCollection(enable: Boolean)
+    // Facebook Standard Events
     fun logEvent(eventName: String)
     fun logEvent(eventName: String, valueToSum: Double)
     fun logEvent(eventName: String, parameters: Bundle)
     fun logEvent(eventName: String, valueToSum: Double, parameters: Bundle)
-
     fun logPurchase(purchaseAmount: BigDecimal, currency: Currency)
     fun logPurchase(purchaseAmount: BigDecimal, currency: Currency, parameters: Bundle)
-
+    // User
     fun setUserData(
         email: String,
         firstName: String,
@@ -30,15 +32,11 @@ interface FacebookAppEventsTrackable {
         zip: String,
         country: String
     )
-
     fun setUserID(userId: String)
-
     fun clearUserData()
-
     fun clearUserID()
-
     fun updateUserProperties(bundle: Bundle)
-
+    // Product
     fun logProductItem(
         itemID: String,
         availability: AppEventsLogger.ProductAvailability?,
@@ -54,16 +52,9 @@ interface FacebookAppEventsTrackable {
         brand: String,
         parameters: Bundle
     )
-
+    // Flush Events
     fun setFlushBehavior(flushValue: String)
-
     fun flush()
-
+    // Push
     fun setPushNotificationsRegistrationId(registrationId: String)
-
-    fun enableAutoLogAppEvents(enable: Boolean)
-
-    fun enableAutoInitialize(enable: Boolean)
-
-    fun enableAdvertiserIDCollection(enable: Boolean)
 }
