@@ -3,7 +3,6 @@ package com.tealium.remotecommands.facebook
 import Flush
 import android.app.Application
 import android.os.Bundle
-import com.facebook.AccessToken
 import com.facebook.FacebookSdk
 import com.facebook.appevents.AppEventsLogger
 import java.math.BigDecimal
@@ -11,41 +10,22 @@ import java.util.*
 
 class FacebookAppEventsTracker(
     val application: Application,
-    applicationId: String?,
-    accessToken: String?,
-    userId: String?
+    applicationId: String?
 ) : FacebookAppEventsTrackable {
 
     lateinit var logger: AppEventsLogger
 
     init {
-        if (applicationId != null && accessToken != null && userId != null) {
-            val token = AccessToken(
-                accessToken,
-                applicationId,
-                userId,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null
-            )
-            initialize(applicationId, token)
-        } else {
-            initialize(applicationId, null)
-        }
+        initialize(applicationId)
     }
 
-    override fun initialize(applicationId: String?, accessToken: AccessToken?) {
-        if (applicationId != null && accessToken != null) {
-            logger = AppEventsLogger.newLogger(application, applicationId, accessToken)
-        } else if (applicationId != null && accessToken == null) {
+    override fun initialize(applicationId: String?) {
+        applicationId?.let { appId ->
+            FacebookSdk.setApplicationId(applicationId)
+            FacebookSdk.sdkInitialize(application)
+            AppEventsLogger.initializeLib(application, appId)
             logger = AppEventsLogger.newLogger(application, applicationId)
-        } else if (applicationId == null && accessToken != null) {
-            logger = AppEventsLogger.newLogger(application, accessToken)
-        } else {
+        } ?: run {
             logger = AppEventsLogger.newLogger(application)
         }
     }

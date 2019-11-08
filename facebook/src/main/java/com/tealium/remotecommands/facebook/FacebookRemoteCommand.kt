@@ -5,12 +5,12 @@ import AutoInit
 import AutoLog
 import Commands
 import Event
+import Event.VALUE_TO_SUM
 import Flush
 import Product
 import ProductItemParameters
 import Purchase
 import Push
-import StandardEventNames
 import User
 import android.app.Application
 import android.os.Bundle
@@ -37,16 +37,25 @@ open class FacebookRemoteCommand : RemoteCommand {
         application: Application? = null,
         commandId: String = DEFAULT_COMMAND_ID,
         description: String = DEFAULT_COMMAND_DESCRIPTION,
-        facebookApplicationId: String? = null,
-        accessToken: String? = null,
-        userId: String? = null
+        facebookApplicationId: String? = null
     ) : super(commandId, description) {
         application?.let {
-            tracker = FacebookAppEventsTracker(it, facebookApplicationId, accessToken, userId)
+            tracker = FacebookAppEventsTracker(it, facebookApplicationId)
             this.application = it
         }
     }
 
+    @JvmOverloads
+    constructor(
+        autoInit: Boolean,
+        application: Application? = null,
+        commandId: String = DEFAULT_COMMAND_ID,
+        description: String = DEFAULT_COMMAND_DESCRIPTION
+    ) : super(commandId, description) {
+        application?.let {
+            this.application = it
+        }
+    }
 
     companion object {
         val DEFAULT_COMMAND_ID = "facebook"
@@ -63,8 +72,16 @@ open class FacebookRemoteCommand : RemoteCommand {
                 it.keys().forEach { key ->
                     val value = json[key]
                     when (value) {
-                        is Int -> bundle.putInt(key, value)
-                        is Double -> bundle.putDouble(key, value)
+                        is Int -> {
+                            if (key != VALUE_TO_SUM) {
+                                bundle.putInt(key, value)
+                            }
+                        }
+                        is Double -> {
+                            if (key != VALUE_TO_SUM) {
+                                bundle.putDouble(key, value)
+                            }
+                        }
                         is Boolean -> bundle.putBoolean(key, value)
                         is Array<*> -> mapArrayToBundle(key, value, bundle)
                         else -> bundle.putString(key, value.toString())
@@ -124,27 +141,34 @@ open class FacebookRemoteCommand : RemoteCommand {
      * @param payload - optional command parameters to be called with specific commands
      */
     fun parseCommands(commands: Array<String>, payload: JSONObject) {
-        if (tracker == null) {
-            Log.e(
-                TAG,
-                "Tracker is not initialized yet. Please check your remote command initialization."
-            )
-            return
-        }
         commands.forEach { command ->
-            if (isStandardEvent(command)) {
-                val valueToSum = payload.optDouble(Event.VALUE_TO_SUM, 0.0)
-                val eventParameters: JSONObject? = payload.optJSONObject(Event.EVENT)
-                logEvent(command, valueToSum, eventParameters)
-            }
-
             when (command) {
+                Commands.INITIALIZE -> {
+                    val applicationId =
+                        if (payload.optString(Initialize.APPLICATION_ID).isNotBlank()) payload.optString(
+                            Initialize.APPLICATION_ID
+                        ) else null
+                    application?.let { appContext ->
+                        applicationId?.let { appId ->
+                            tracker =
+                                FacebookAppEventsTracker(
+                                    appContext,
+                                    appId
+                                )
+                        } ?: run {
+                            Log.e(
+                                TAG,
+                                "${Initialize.APPLICATION_ID} key does not exist in the payload."
+                            )
+                        }
+                    }
+                }
                 Commands.LOG_PURCHASE -> {
                     val purchase: JSONObject? = payload.optJSONObject(Purchase.PURCHASE)
                     purchase?.let {
                         logPurchase(it)
                     } ?: run {
-                        Log.e(TAG, "${Purchase.PURCHASE} key does not exist in the payload")
+                        Log.e(TAG, "${Purchase.PURCHASE} key does not exist in the payload.")
                     }
                 }
                 Commands.SET_USER -> {
@@ -152,7 +176,7 @@ open class FacebookRemoteCommand : RemoteCommand {
                     userData?.let {
                         setUser(it)
                     } ?: run {
-                        Log.e(TAG, "${User.USER_DATA} key does not exist in the payload")
+                        Log.e(TAG, "${User.USER_DATA} key does not exist in the payload.")
                     }
                 }
                 Commands.SET_USER_ID -> {
@@ -161,7 +185,7 @@ open class FacebookRemoteCommand : RemoteCommand {
                         if (it.isNotEmpty()) {
                             tracker.setUserID(it)
                         } else {
-                            Log.e(TAG, "${User.USER_ID} is empty")
+                            Log.e(TAG, "${User.USER_ID} is empty.")
                         }
                     }
                 }
@@ -180,7 +204,7 @@ open class FacebookRemoteCommand : RemoteCommand {
                         bundle.putString(key, value)
                         tracker.updateUserProperties(bundle)
                     } else {
-                        Log.e(TAG, "${User.USER_KEY} and ${User.USER_VALUE} must be populated")
+                        Log.e(TAG, "${User.USER_KEY} and ${User.USER_VALUE} must be populated.")
                     }
                 }
                 Commands.LOG_PRODUCT_ITEM -> {
@@ -188,7 +212,7 @@ open class FacebookRemoteCommand : RemoteCommand {
                     productItem?.let {
                         logProductItem(it)
                     } ?: run {
-                        Log.e(TAG, "${Product.PRODUCT_ITEM} must be populated")
+                        Log.e(TAG, "${Product.PRODUCT_ITEM} must be populated.")
                     }
                 }
                 Commands.SET_FLUSH_BEHAVIOR -> {
@@ -196,7 +220,7 @@ open class FacebookRemoteCommand : RemoteCommand {
                     if (flushValue.isNotEmpty()) {
                         tracker.setFlushBehavior(flushValue)
                     } else {
-                        Log.e(TAG, "${Flush.FLUSH_BEHAVIOR} must be populated")
+                        Log.e(TAG, "${Flush.FLUSH_BEHAVIOR} must be populated.")
                     }
                 }
                 Commands.FLUSH -> {
@@ -207,7 +231,7 @@ open class FacebookRemoteCommand : RemoteCommand {
                     if (registrationId.isNotEmpty()) {
                         AppEventsLogger.setPushNotificationsRegistrationId(registrationId)
                     } else {
-                        Log.e(TAG, "${Push.REGISTRATION_ID} must be populated")
+                        Log.e(TAG, "${Push.REGISTRATION_ID} must be populated.")
                     }
                 }
                 Commands.SET_AUTO_LOG_APP_EVENTS -> {
@@ -222,6 +246,67 @@ open class FacebookRemoteCommand : RemoteCommand {
                     val advertiserIDEnable = payload.optBoolean(Advertiser.ADVERTISER_COLLECTION)
                     tracker.enableAdvertiserIDCollection(advertiserIDEnable)
                 }
+                Commands.EVENT_NAME_ACHIEVED_LEVEL -> {
+                    val levelAchieved = payload.optString(Event.EVENT_PARAM_LEVEL)
+                    if (levelAchieved.isNotBlank()) {
+                        logEvent(Commands.EVENT_NAME_ACHIEVED_LEVEL, 0.0, payload)
+                    } else {
+                        Log.e(TAG, "${Event.EVENT_PARAM_LEVEL} must be populated.")
+                    }
+                }
+                Commands.EVENT_NAME_UNLOCKED_ACHIEVEMENT -> {
+                    val achievement = payload.optString(Event.EVENT_PARAM_DESCRIPTION)
+                    if (achievement.isNotBlank()) {
+                        logEvent(Commands.EVENT_NAME_UNLOCKED_ACHIEVEMENT, 0.0, payload)
+                    } else {
+                        Log.e(TAG, "${Event.EVENT_PARAM_DESCRIPTION} must be populated.")
+                    }
+                }
+                Commands.EVENT_NAME_COMPLETED_REGISTRATION -> {
+                    val registrationMethod =
+                        payload.optString(Event.EVENT_PARAM_REGISTRATION_METHOD)
+                    if (registrationMethod.isNotBlank()) {
+                        logEvent(Commands.EVENT_NAME_COMPLETED_REGISTRATION, 0.0, payload)
+                    } else {
+                        Log.e(
+                            TAG,
+                            "${Event.EVENT_PARAM_REGISTRATION_METHOD} must be populated."
+                        )
+                    }
+                }
+                Commands.EVENT_NAME_COMPLETED_TUTORIAL -> {
+                    val contentId = payload.optString(Event.EVENT_PARAM_CONTENT_ID)
+                    if (contentId.isNotBlank()) {
+                        logEvent(Commands.EVENT_NAME_COMPLETED_TUTORIAL, 0.0, payload)
+                    } else {
+                        Log.e(
+                            TAG,
+                            "${Event.EVENT_PARAM_CONTENT_ID} must be populated."
+                        )
+                    }
+                }
+                Commands.EVENT_NAME_INITIATED_CHECKOUT -> {
+                    val valueToSum = payload.optDouble(Event.VALUE_TO_SUM, 0.0)
+                    if (valueToSum > 0.0) {
+                        logEvent(Commands.EVENT_NAME_INITIATED_CHECKOUT, valueToSum, payload)
+                    } else {
+                        Log.e(TAG, "${Event.VALUE_TO_SUM} must be populated.")
+                    }
+                }
+                Commands.EVENT_NAME_SEARCHED -> {
+                    val contentType = payload.optString(Event.EVENT_PARAM_SEARCH_STRING)
+                    if (contentType.isNotBlank()) {
+                        logEvent(Commands.EVENT_NAME_SEARCHED, 0.0, payload)
+                    } else {
+                        Log.e(TAG, "${Event.EVENT_PARAM_SEARCH_STRING} must be populated.")
+                    }
+                }
+                else -> {
+                    if (isStandardEvent(command)) {
+                        val valueToSum = payload.optDouble(Event.VALUE_TO_SUM, 0.0)
+                        logEvent(command, valueToSum, payload)
+                    }
+                }
             }
         }
     }
@@ -232,32 +317,32 @@ open class FacebookRemoteCommand : RemoteCommand {
      * @param commandName - name of the command
      */
     fun isStandardEvent(commandName: String): Boolean {
-        return StandardEventNames.values().map { it.value.toLowerCase() }.contains(commandName)
+        return StandardEvents.standardEventNames.contains(commandName)
     }
 
-    fun logEvent(command: String, valueToSum: Double, eventParameters: JSONObject? = null) {
+    fun logEvent(command: String, valueToSum: Double, eventParameters: JSONObject) {
         val bundle = Bundle()
-        if (valueToSum > 0 && eventParameters != null) {
+        if (valueToSum > 0) {
             valueToSum?.let { sumValue ->
-                eventParameters?.let { parameters ->
-                    mapJsonToBundle(parameters, bundle)
+                if (eventParameters.length() > 0) {
+                    mapJsonToBundle(eventParameters, bundle)
+                    if (bundle.isEmpty) {
+                        tracker.logEvent(command, sumValue)
+                    } else {
+                        tracker.logEvent(command, sumValue, bundle)
+                    }
                 }
-                tracker.logEvent(command, sumValue, bundle)
             }
-        } else if (valueToSum > 0 && eventParameters == null) {
-            valueToSum?.let { sumValue ->
-                tracker.logEvent(command, sumValue)
-            }
-        } else if (valueToSum == 0.0 && eventParameters != null) {
-            eventParameters?.let { eventParameters ->
-                mapJsonToBundle(eventParameters, bundle)
-            }
-            tracker.logEvent(command, bundle)
         } else {
-            tracker.logEvent(command)
+            if (eventParameters.length() > 0) {
+                mapJsonToBundle(eventParameters, bundle)
+                tracker.logEvent(command, bundle)
+            } else {
+                tracker.logEvent(command)
+            }
         }
     }
-    
+
     fun logPurchase(purchase: JSONObject) {
         val amount = purchase.optDouble(Purchase.PURCHASE_AMOUNT) as? Double
         amount?.let {

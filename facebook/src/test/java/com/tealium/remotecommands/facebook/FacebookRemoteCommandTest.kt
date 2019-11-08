@@ -4,6 +4,7 @@ import Advertiser
 import AutoInit
 import AutoLog
 import Commands
+import Event.VALUE_TO_SUM
 import Flush
 import Purchase
 import User
@@ -11,9 +12,9 @@ import android.os.Bundle
 import io.mockk.*
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
-import junit.framework.Assert.assertEquals
 import org.json.JSONObject
-import org.junit.Assert
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotSame
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -40,10 +41,10 @@ class FacebookRemoteCommandTest {
         json.put("command_name", "viewedcontent,addtocart,customizeproduct")
         val commands = facebookRemoteCommand.splitCommands(json)
 
-        Assert.assertEquals(3, commands.count())
-        Assert.assertEquals("viewedcontent", commands[0])
-        Assert.assertEquals("addtocart", commands[1])
-        Assert.assertEquals("customizeproduct", commands[2])
+       assertEquals(3, commands.count())
+       assertEquals("viewedcontent", commands[0])
+       assertEquals("addtocart", commands[1])
+       assertEquals("customizeproduct", commands[2])
     }
 
     @Test
@@ -377,7 +378,7 @@ class FacebookRemoteCommandTest {
 
         assertEquals(bundle.getString("string"), "123")
         assertEquals(bundle.getInt("int"), 123)
-        assertEquals(bundle.getDouble("double"), 0.123)
+        assertEquals(bundle.getDouble("double"), 0.123, 0.1)
         assertEquals(bundle.getBoolean("boolean"), true)
 
         bundle.getStringArray("stringArray")?.forEachIndexed { index, value ->
@@ -392,6 +393,15 @@ class FacebookRemoteCommandTest {
         bundle.getBooleanArray("booleanArray")?.forEachIndexed { index, value ->
             assertEquals(booleanArray[index], value)
         }
+    }
+
+    @Test
+    fun mapJsonToBundleDoesNotMapValueToSum() {
+        val json = JSONObject()
+        val bundle = Bundle()
+        json.put(VALUE_TO_SUM, 10.00)
+        FacebookRemoteCommand.mapJsonToBundle(json, bundle)
+        assertNotSame(10.00, bundle.getDouble(VALUE_TO_SUM))
     }
 
     @Test
