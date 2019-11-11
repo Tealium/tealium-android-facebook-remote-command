@@ -1,14 +1,13 @@
 package com.tealium.remotecommands.facebook
 
 import android.os.Bundle
-import com.facebook.AccessToken
 import com.facebook.appevents.AppEventsLogger
 import java.math.BigDecimal
 import java.util.*
 
 interface FacebookAppEventsTrackable {
     // Initialize
-    fun initialize(applicationId: String?, accessToken: AccessToken?)
+    fun initialize(applicationId: String?)
     fun enableAutoLogAppEvents(enable: Boolean)
     fun enableAutoInitialize(enable: Boolean)
     fun enableAdvertiserIDCollection(enable: Boolean)
