@@ -60,6 +60,7 @@ open class FacebookRemoteCommand : RemoteCommand {
     companion object {
         val DEFAULT_COMMAND_ID = "facebook"
         val DEFAULT_COMMAND_DESCRIPTION = "Tealium-Facebook Remote Command"
+        val REQUIRED_KEY = "key does not exist in the payload."
 
         /**
          * Maps a JSON object to a Bundle. Does not support nested objects.
@@ -156,10 +157,7 @@ open class FacebookRemoteCommand : RemoteCommand {
                                     appId
                                 )
                         } ?: run {
-                            Log.e(
-                                TAG,
-                                "${Initialize.APPLICATION_ID} key does not exist in the payload."
-                            )
+                            Log.e(TAG, "${Initialize.APPLICATION_ID} $REQUIRED_KEY")
                         }
                     }
                 }
@@ -168,7 +166,7 @@ open class FacebookRemoteCommand : RemoteCommand {
                     purchase?.let {
                         logPurchase(it)
                     } ?: run {
-                        Log.e(TAG, "${Purchase.PURCHASE} key does not exist in the payload.")
+                        Log.e(TAG, "${Purchase.PURCHASE} $REQUIRED_KEY")
                     }
                 }
                 Commands.SET_USER -> {
@@ -176,7 +174,7 @@ open class FacebookRemoteCommand : RemoteCommand {
                     userData?.let {
                         setUser(it)
                     } ?: run {
-                        Log.e(TAG, "${User.USER_DATA} key does not exist in the payload.")
+                        Log.e(TAG, "${User.USER_DATA} $REQUIRED_KEY")
                     }
                 }
                 Commands.SET_USER_ID -> {
@@ -185,7 +183,7 @@ open class FacebookRemoteCommand : RemoteCommand {
                         if (it.isNotEmpty()) {
                             tracker.setUserID(it)
                         } else {
-                            Log.e(TAG, "${User.USER_ID} is empty.")
+                            Log.e(TAG, "${User.USER_ID} $REQUIRED_KEY")
                         }
                     }
                 }
@@ -204,7 +202,7 @@ open class FacebookRemoteCommand : RemoteCommand {
                         bundle.putString(key, value)
                         tracker.updateUserProperties(bundle)
                     } else {
-                        Log.e(TAG, "${User.USER_KEY} and ${User.USER_VALUE} must be populated.")
+                        Log.e(TAG, "${User.USER_KEY} and ${User.USER_VALUE} keys do not exist in the payload.")
                     }
                 }
                 Commands.LOG_PRODUCT_ITEM -> {
@@ -212,7 +210,7 @@ open class FacebookRemoteCommand : RemoteCommand {
                     productItem?.let {
                         logProductItem(it)
                     } ?: run {
-                        Log.e(TAG, "${Product.PRODUCT_ITEM} must be populated.")
+                        Log.e(TAG, "${Product.PRODUCT_ITEM} $REQUIRED_KEY")
                     }
                 }
                 Commands.SET_FLUSH_BEHAVIOR -> {
@@ -220,7 +218,7 @@ open class FacebookRemoteCommand : RemoteCommand {
                     if (flushValue.isNotEmpty()) {
                         tracker.setFlushBehavior(flushValue)
                     } else {
-                        Log.e(TAG, "${Flush.FLUSH_BEHAVIOR} must be populated.")
+                        Log.e(TAG, "${Flush.FLUSH_BEHAVIOR} $REQUIRED_KEY")
                     }
                 }
                 Commands.FLUSH -> {
@@ -231,7 +229,7 @@ open class FacebookRemoteCommand : RemoteCommand {
                     if (registrationId.isNotEmpty()) {
                         AppEventsLogger.setPushNotificationsRegistrationId(registrationId)
                     } else {
-                        Log.e(TAG, "${Push.REGISTRATION_ID} must be populated.")
+                        Log.e(TAG, "${Push.REGISTRATION_ID} $REQUIRED_KEY")
                     }
                 }
                 Commands.SET_AUTO_LOG_APP_EVENTS -> {
@@ -251,7 +249,7 @@ open class FacebookRemoteCommand : RemoteCommand {
                     if (levelAchieved.isNotBlank()) {
                         logEvent(Commands.EVENT_NAME_ACHIEVED_LEVEL, 0.0, payload)
                     } else {
-                        Log.e(TAG, "${Event.EVENT_PARAM_LEVEL} must be populated.")
+                        Log.e(TAG, "${Event.EVENT_PARAM_LEVEL} $REQUIRED_KEY")
                     }
                 }
                 Commands.EVENT_NAME_UNLOCKED_ACHIEVEMENT -> {
@@ -259,7 +257,7 @@ open class FacebookRemoteCommand : RemoteCommand {
                     if (achievement.isNotBlank()) {
                         logEvent(Commands.EVENT_NAME_UNLOCKED_ACHIEVEMENT, 0.0, payload)
                     } else {
-                        Log.e(TAG, "${Event.EVENT_PARAM_DESCRIPTION} must be populated.")
+                        Log.e(TAG, "${Event.EVENT_PARAM_DESCRIPTION} $REQUIRED_KEY")
                     }
                 }
                 Commands.EVENT_NAME_COMPLETED_REGISTRATION -> {
@@ -268,10 +266,8 @@ open class FacebookRemoteCommand : RemoteCommand {
                     if (registrationMethod.isNotBlank()) {
                         logEvent(Commands.EVENT_NAME_COMPLETED_REGISTRATION, 0.0, payload)
                     } else {
-                        Log.e(
-                            TAG,
-                            "${Event.EVENT_PARAM_REGISTRATION_METHOD} must be populated."
-                        )
+                        Log.e(TAG,
+                            "${Event.EVENT_PARAM_REGISTRATION_METHOD} $REQUIRED_KEY")
                     }
                 }
                 Commands.EVENT_NAME_COMPLETED_TUTORIAL -> {
@@ -281,16 +277,15 @@ open class FacebookRemoteCommand : RemoteCommand {
                     } else {
                         Log.e(
                             TAG,
-                            "${Event.EVENT_PARAM_CONTENT_ID} must be populated."
-                        )
+                            "${Event.EVENT_PARAM_CONTENT_ID} $REQUIRED_KEY")
                     }
                 }
                 Commands.EVENT_NAME_INITIATED_CHECKOUT -> {
-                    val valueToSum = payload.optDouble(Event.VALUE_TO_SUM, 0.0)
+                    val valueToSum = payload.optDouble(VALUE_TO_SUM, 0.0)
                     if (valueToSum > 0.0) {
                         logEvent(Commands.EVENT_NAME_INITIATED_CHECKOUT, valueToSum, payload)
                     } else {
-                        Log.e(TAG, "${Event.VALUE_TO_SUM} must be populated.")
+                        Log.e(TAG, "${Event.VALUE_TO_SUM} $REQUIRED_KEY")
                     }
                 }
                 Commands.EVENT_NAME_SEARCHED -> {
@@ -298,12 +293,12 @@ open class FacebookRemoteCommand : RemoteCommand {
                     if (contentType.isNotBlank()) {
                         logEvent(Commands.EVENT_NAME_SEARCHED, 0.0, payload)
                     } else {
-                        Log.e(TAG, "${Event.EVENT_PARAM_SEARCH_STRING} must be populated.")
+                        Log.e(TAG, "${Event.EVENT_PARAM_SEARCH_STRING} $REQUIRED_KEY")
                     }
                 }
                 else -> {
                     if (isStandardEvent(command)) {
-                        val valueToSum = payload.optDouble(Event.VALUE_TO_SUM, 0.0)
+                        val valueToSum = payload.optDouble(VALUE_TO_SUM, 0.0)
                         logEvent(command, valueToSum, payload)
                     }
                 }
