@@ -19,7 +19,7 @@ class StandardEventTest {
 
     @InjectMockKs
     var facebookRemoteCommand: FacebookRemoteCommand = FacebookRemoteCommand(null)
-
+    
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
@@ -27,7 +27,7 @@ class StandardEventTest {
 
     @Test
     fun isStandardEventSuccess() {
-        val isStandardEvent = facebookRemoteCommand.isStandardEvent("fb_mobile_level_achieved")
+        val isStandardEvent = facebookRemoteCommand.isStandardEvent("adimpression")
         Assert.assertTrue(isStandardEvent)
     }
 
@@ -40,12 +40,12 @@ class StandardEventTest {
     @Test
     fun logEventCallsEventNameOnly() {
         every {
-            mockTracker.logEvent("fb_mobile_catalog_update")
+            mockTracker.logEvent("adimpression")
         } just Runs
 
-        facebookRemoteCommand.parseCommands(arrayOf("fb_mobile_catalog_update"), JSONObject())
+        facebookRemoteCommand.parseCommands(arrayOf("adimpression"), JSONObject())
         verify {
-            mockTracker.logEvent("fb_mobile_catalog_update")
+            mockTracker.logEvent("adimpression")
         }
         confirmVerified(mockTracker)
     }
@@ -55,12 +55,12 @@ class StandardEventTest {
         val payload = JSONObject()
         payload.put(Event.VALUE_TO_SUM, 1.0)
         every {
-            mockTracker.logEvent("fb_mobile_catalog_update", 1.0)
+            mockTracker.logEvent("adimpression", 1.0)
         } just Runs
 
-        facebookRemoteCommand.parseCommands(arrayOf("fb_mobile_catalog_update"), payload)
+        facebookRemoteCommand.parseCommands(arrayOf("adimpression"), payload)
         verify {
-            mockTracker.logEvent("fb_mobile_catalog_update", 1.0)
+            mockTracker.logEvent("adimpression", 1.0)
         }
         confirmVerified(mockTracker)
     }
@@ -74,12 +74,12 @@ class StandardEventTest {
         payload.put(Event.EVENT, eventParameters)
 
         every {
-            mockTracker.logEvent("fb_mobile_catalog_update", any<Bundle>())
+            mockTracker.logEvent("adimpression", any<Bundle>())
         } just Runs
 
-        facebookRemoteCommand.parseCommands(arrayOf("fb_mobile_catalog_update"), payload)
+        facebookRemoteCommand.parseCommands(arrayOf("adimpression"), payload)
         verify {
-            mockTracker.logEvent("fb_mobile_catalog_update", any<Bundle>())
+            mockTracker.logEvent("adimpression", any<Bundle>())
         }
         confirmVerified(mockTracker)
     }
@@ -95,12 +95,12 @@ class StandardEventTest {
         payload.put(Event.EVENT, eventParameters)
 
         every {
-            mockTracker.logEvent("fb_mobile_catalog_update", 1.0, any<Bundle>())
+            mockTracker.logEvent("adimpression", 1.0, any<Bundle>())
         } just Runs
 
-        facebookRemoteCommand.parseCommands(arrayOf("fb_mobile_catalog_update"), payload)
+        facebookRemoteCommand.parseCommands(arrayOf("adimpression"), payload)
         verify {
-            mockTracker.logEvent("fb_mobile_catalog_update", 1.0, any<Bundle>())
+            mockTracker.logEvent("adimpression", 1.0, any<Bundle>())
         }
         confirmVerified(mockTracker)
     }

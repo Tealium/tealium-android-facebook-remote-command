@@ -21,81 +21,78 @@ object Commands {
     const val SET_AUTO_INITIALIZED = "setautoinitialized"
     const val SET_ADVERTISER_ID_COLLECTION = "setadvertiseridcollection"
     const val LOG_PUSH_NOTIFICATION_OPEN = "logpushnotificationopen"
-    const val EVENT_NAME_ACTIVATED_APP = AppEventsConstants.EVENT_NAME_ACTIVATED_APP
-    const val EVENT_NAME_DEACTIVATED_APP = AppEventsConstants.EVENT_NAME_DEACTIVATED_APP
-    const val EVENT_NAME_SESSION_INTERRUPTIONS = AppEventsConstants.EVENT_NAME_SESSION_INTERRUPTIONS
-    const val EVENT_NAME_TIME_BETWEEN_SESSIONS = AppEventsConstants.EVENT_NAME_TIME_BETWEEN_SESSIONS
-    const val EVENT_NAME_COMPLETED_REGISTRATION =
-        AppEventsConstants.EVENT_NAME_COMPLETED_REGISTRATION
-    const val EVENT_NAME_VIEWED_CONTENT = AppEventsConstants.EVENT_NAME_VIEWED_CONTENT
-    const val EVENT_NAME_SEARCHED = AppEventsConstants.EVENT_NAME_SEARCHED
-    const val EVENT_NAME_RATED = AppEventsConstants.EVENT_NAME_RATED
-    const val EVENT_NAME_COMPLETED_TUTORIAL = AppEventsConstants.EVENT_NAME_COMPLETED_TUTORIAL
-    const val EVENT_NAME_PUSH_TOKEN_OBTAINED = AppEventsConstants.EVENT_NAME_PUSH_TOKEN_OBTAINED
-    const val EVENT_NAME_ADDED_TO_CART = AppEventsConstants.EVENT_NAME_ADDED_TO_CART
-    const val EVENT_NAME_ADDED_TO_WISHLIST = AppEventsConstants.EVENT_NAME_ADDED_TO_WISHLIST
-    const val EVENT_NAME_INITIATED_CHECKOUT = AppEventsConstants.EVENT_NAME_INITIATED_CHECKOUT
-    const val EVENT_NAME_ADDED_PAYMENT_INFO = AppEventsConstants.EVENT_NAME_ADDED_PAYMENT_INFO
-    const val EVENT_NAME_ACHIEVED_LEVEL = AppEventsConstants.EVENT_NAME_ACHIEVED_LEVEL
-    const val EVENT_NAME_UNLOCKED_ACHIEVEMENT = AppEventsConstants.EVENT_NAME_UNLOCKED_ACHIEVEMENT
-    const val EVENT_NAME_SPENT_CREDITS = AppEventsConstants.EVENT_NAME_SPENT_CREDITS
-    const val EVENT_NAME_CONTACT = AppEventsConstants.EVENT_NAME_CONTACT
-    const val EVENT_NAME_CUSTOMIZE_PRODUCT = AppEventsConstants.EVENT_NAME_CUSTOMIZE_PRODUCT
-    const val EVENT_NAME_DONATE = AppEventsConstants.EVENT_NAME_DONATE
-    const val EVENT_NAME_FIND_LOCATION = AppEventsConstants.EVENT_NAME_FIND_LOCATION
-    const val EVENT_NAME_SCHEDULE = AppEventsConstants.EVENT_NAME_SCHEDULE
-    const val EVENT_NAME_START_TRIAL = AppEventsConstants.EVENT_NAME_START_TRIAL
-    const val EVENT_NAME_SUBMIT_APPLICATION = AppEventsConstants.EVENT_NAME_SUBMIT_APPLICATION
-    const val EVENT_NAME_SUBSCRIBE = AppEventsConstants.EVENT_NAME_SUBSCRIBE
-    const val EVENT_NAME_AD_IMPRESSION = AppEventsConstants.EVENT_NAME_AD_IMPRESSION
-    const val EVENT_NAME_AD_CLICK = AppEventsConstants.EVENT_NAME_AD_CLICK
-    const val EVENT_NAME_LIVE_STREAMING_START = AppEventsConstants.EVENT_NAME_LIVE_STREAMING_START
-    const val EVENT_NAME_LIVE_STREAMING_STOP = AppEventsConstants.EVENT_NAME_LIVE_STREAMING_STOP
-    const val EVENT_NAME_LIVE_STREAMING_PAUSE = AppEventsConstants.EVENT_NAME_LIVE_STREAMING_PAUSE
-    const val EVENT_NAME_LIVE_STREAMING_RESUME = AppEventsConstants.EVENT_NAME_LIVE_STREAMING_RESUME
-    const val EVENT_NAME_LIVE_STREAMING_ERROR = AppEventsConstants.EVENT_NAME_LIVE_STREAMING_ERROR
-    const val EVENT_NAME_LIVE_STREAMING_UPDATE_STATUS =
-        AppEventsConstants.EVENT_NAME_LIVE_STREAMING_UPDATE_STATUS
-    const val EVENT_NAME_PRODUCT_CATALOG_UPDATE =
-        AppEventsConstants.EVENT_NAME_PRODUCT_CATALOG_UPDATE
+    const val EVENT_NAME_ACTIVATED_APP = "activiatedapp"
+    const val EVENT_NAME_DEACTIVATED_APP = "deactivatedapp"
+    const val EVENT_NAME_SESSION_INTERRUPTIONS = "sessioninterruptions"
+    const val EVENT_NAME_TIME_BETWEEN_SESSIONS = "timebetweensessions"
+    const val EVENT_NAME_COMPLETED_REGISTRATION = "completedregistration"
+    const val EVENT_NAME_VIEWED_CONTENT = "viewedcontent"
+    const val EVENT_NAME_SEARCHED = "searched"
+    const val EVENT_NAME_RATED = "rated"
+    const val EVENT_NAME_COMPLETED_TUTORIAL = "completedtutorial"
+    const val EVENT_NAME_PUSH_TOKEN_OBTAINED = "pushtokenobtained"
+    const val EVENT_NAME_ADDED_TO_CART = "addedtocart"
+    const val EVENT_NAME_ADDED_TO_WISHLIST = "addedtowishlist"
+    const val EVENT_NAME_INITIATED_CHECKOUT = "initiatedcheckout"
+    const val EVENT_NAME_ADDED_PAYMENT_INFO = "addedpaymentinfo"
+    const val EVENT_NAME_ACHIEVED_LEVEL = "achievedlevel"
+    const val EVENT_NAME_UNLOCKED_ACHIEVEMENT = "unlockedachievement"
+    const val EVENT_NAME_SPENT_CREDITS = "spentcredits"
+    const val EVENT_NAME_CONTACT = "contact"
+    const val EVENT_NAME_CUSTOMIZE_PRODUCT = "customizeproduct"
+    const val EVENT_NAME_DONATE = "donate"
+    const val EVENT_NAME_FIND_LOCATION = "findlocation"
+    const val EVENT_NAME_SCHEDULE = "schedule"
+    const val EVENT_NAME_START_TRIAL = "starttrial"
+    const val EVENT_NAME_SUBMIT_APPLICATION = "submitapplication"
+    const val EVENT_NAME_SUBSCRIBE = "subscribe"
+    const val EVENT_NAME_AD_IMPRESSION = "adimpression"
+    const val EVENT_NAME_AD_CLICK = "adclick"
+    const val EVENT_NAME_LIVE_STREAMING_START = "livestreamingstart"
+    const val EVENT_NAME_LIVE_STREAMING_STOP = "livestreamingstop"
+    const val EVENT_NAME_LIVE_STREAMING_PAUSE = "livestreamingpause"
+    const val EVENT_NAME_LIVE_STREAMING_RESUME = "livestreamingresume"
+    const val EVENT_NAME_LIVE_STREAMING_ERROR = "livestreamingerror"
+    const val EVENT_NAME_LIVE_STREAMING_UPDATE_STATUS = "livestreamingupdatestatus"
+    const val EVENT_NAME_PRODUCT_CATALOG_UPDATE = "productcatalogupdate"
 }
 
 object StandardEvents {
     val standardEventNames = arrayOf(
-        AppEventsConstants.EVENT_NAME_ACTIVATED_APP,
-        AppEventsConstants.EVENT_NAME_DEACTIVATED_APP,
-        AppEventsConstants.EVENT_NAME_SESSION_INTERRUPTIONS,
-        AppEventsConstants.EVENT_NAME_TIME_BETWEEN_SESSIONS,
-        AppEventsConstants.EVENT_NAME_COMPLETED_REGISTRATION,
-        AppEventsConstants.EVENT_NAME_VIEWED_CONTENT,
-        AppEventsConstants.EVENT_NAME_SEARCHED,
-        AppEventsConstants.EVENT_NAME_RATED,
-        AppEventsConstants.EVENT_NAME_COMPLETED_TUTORIAL,
-        AppEventsConstants.EVENT_NAME_PUSH_TOKEN_OBTAINED,
-        AppEventsConstants.EVENT_NAME_ADDED_TO_CART,
-        AppEventsConstants.EVENT_NAME_ADDED_TO_WISHLIST,
-        AppEventsConstants.EVENT_NAME_INITIATED_CHECKOUT,
-        AppEventsConstants.EVENT_NAME_ADDED_PAYMENT_INFO,
-        AppEventsConstants.EVENT_NAME_ACHIEVED_LEVEL,
-        AppEventsConstants.EVENT_NAME_UNLOCKED_ACHIEVEMENT,
-        AppEventsConstants.EVENT_NAME_SPENT_CREDITS,
-        AppEventsConstants.EVENT_NAME_CONTACT,
-        AppEventsConstants.EVENT_NAME_CUSTOMIZE_PRODUCT,
-        AppEventsConstants.EVENT_NAME_DONATE,
-        AppEventsConstants.EVENT_NAME_FIND_LOCATION,
-        AppEventsConstants.EVENT_NAME_SCHEDULE,
-        AppEventsConstants.EVENT_NAME_START_TRIAL,
-        AppEventsConstants.EVENT_NAME_SUBMIT_APPLICATION,
-        AppEventsConstants.EVENT_NAME_SUBSCRIBE,
-        AppEventsConstants.EVENT_NAME_AD_IMPRESSION,
-        AppEventsConstants.EVENT_NAME_AD_CLICK,
-        AppEventsConstants.EVENT_NAME_LIVE_STREAMING_START,
-        AppEventsConstants.EVENT_NAME_LIVE_STREAMING_STOP,
-        AppEventsConstants.EVENT_NAME_LIVE_STREAMING_PAUSE,
-        AppEventsConstants.EVENT_NAME_LIVE_STREAMING_RESUME,
-        AppEventsConstants.EVENT_NAME_LIVE_STREAMING_ERROR,
-        AppEventsConstants.EVENT_NAME_LIVE_STREAMING_UPDATE_STATUS,
-        AppEventsConstants.EVENT_NAME_PRODUCT_CATALOG_UPDATE
+        "activiatedapp",
+        "deactivatedapp",
+        "sessioninterruptions",
+        "timebetweensessions",
+        "completedregistration",
+        "viewedcontent",
+        "searched",
+        "rated",
+        "completedtutorial",
+        "pushtokenobtained",
+        "addedtocart",
+        "addedtowishlist",
+        "initiatedcheckout",
+        "addedpaymentinfo",
+        "achievedlevel",
+        "unlockedachievement",
+        "spentcredits",
+        "contact",
+        "customizeproduct",
+        "donate",
+        "findlocation",
+        "schedule",
+        "starttrial",
+        "submitapplication",
+        "subscribe",
+        "adimpression",
+        "adclick",
+        "livestreamingstart",
+        "livestreamingstop",
+        "livestreamingpause",
+        "livestreamingresume",
+        "livestreamingerror",
+        "livestreamingupdatestatus",
+        "productcatalogupdate"
     )
 }
 
