@@ -21,7 +21,7 @@ object Commands {
     const val SET_AUTO_INITIALIZED = "setautoinitialized"
     const val SET_ADVERTISER_ID_COLLECTION = "setadvertiseridcollection"
     const val LOG_PUSH_NOTIFICATION_OPEN = "logpushnotificationopen"
-    const val ACTIVATED_APP = "activiatedapp"
+    const val ACTIVATED_APP = "activatedapp"
     const val DEACTIVATED_APP = "deactivatedapp"
     const val SESSION_INTERRUPTIONS = "sessioninterruptions"
     const val TIME_BETWEEN_SESSIONS = "timebetweensessions"
@@ -59,7 +59,7 @@ object Commands {
 
 object StandardEvents {
     val standardEventNames = arrayOf(
-        "activiatedapp",
+        "activatedapp",
         "deactivatedapp",
         "sessioninterruptions",
         "timebetweensessions",
