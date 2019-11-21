@@ -71,7 +71,7 @@ class StandardEventTest {
         val eventParameters = JSONObject()
         eventParameters.put("key1", "value1")
         eventParameters.put("key2", 123)
-        payload.put(Event.EVENT, eventParameters)
+        payload.put(Event.EVENT_PARAMETERS, eventParameters)
 
         every {
             mockTracker.logEvent("adimpression", any<Bundle>())
@@ -92,7 +92,7 @@ class StandardEventTest {
         val eventParameters = JSONObject()
         eventParameters.put("key1", "value1")
         eventParameters.put("key2", 123)
-        payload.put(Event.EVENT, eventParameters)
+        payload.put(Event.EVENT_PARAMETERS, eventParameters)
 
         every {
             mockTracker.logEvent("adimpression", 1.0, any<Bundle>())

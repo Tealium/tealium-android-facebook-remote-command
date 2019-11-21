@@ -322,26 +322,26 @@ open class FacebookRemoteCommand : RemoteCommand {
         return StandardEvents.standardEventNames.contains(commandName)
     }
 
-    fun logEvent(command: String, valueToSum: Double, eventParameters: JSONObject) {
+    fun logEvent(command: String, valueToSum: Double, eventParameters: JSONObject? = null) {
         val bundle = Bundle()
-        if (valueToSum > 0) {
+        if (valueToSum > 0 && eventParameters != null) {
             valueToSum?.let { sumValue ->
-                if (eventParameters.length() > 0) {
-                    mapJsonToBundle(eventParameters, bundle)
-                    if (bundle.isEmpty) {
-                        tracker.logEvent(command, sumValue)
-                    } else {
-                        tracker.logEvent(command, sumValue, bundle)
-                    }
+                eventParameters?.let { parameters ->
+                    mapJsonToBundle(parameters, bundle)
                 }
+                tracker.logEvent(command, sumValue, bundle)
             }
-        } else {
-            if (eventParameters.length() > 0) {
+        } else if (valueToSum > 0 && eventParameters == null) {
+            valueToSum?.let { sumValue ->
+                tracker.logEvent(command, sumValue)
+            }
+        } else if (valueToSum == 0.0 && eventParameters != null) {
+            eventParameters?.let { eventParameters ->
                 mapJsonToBundle(eventParameters, bundle)
-                tracker.logEvent(command, bundle)
-            } else {
-                tracker.logEvent(command)
             }
+            tracker.logEvent(command, bundle)
+        } else {
+            tracker.logEvent(command)
         }
     }
 
