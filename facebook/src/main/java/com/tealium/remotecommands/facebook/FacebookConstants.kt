@@ -21,40 +21,40 @@ object Commands {
     const val SET_AUTO_INITIALIZED = "setautoinitialized"
     const val SET_ADVERTISER_ID_COLLECTION = "setadvertiseridcollection"
     const val LOG_PUSH_NOTIFICATION_OPEN = "logpushnotificationopen"
-    const val EVENT_NAME_ACTIVATED_APP = "activiatedapp"
-    const val EVENT_NAME_DEACTIVATED_APP = "deactivatedapp"
-    const val EVENT_NAME_SESSION_INTERRUPTIONS = "sessioninterruptions"
-    const val EVENT_NAME_TIME_BETWEEN_SESSIONS = "timebetweensessions"
-    const val EVENT_NAME_COMPLETED_REGISTRATION = "completedregistration"
-    const val EVENT_NAME_VIEWED_CONTENT = "viewedcontent"
-    const val EVENT_NAME_SEARCHED = "searched"
-    const val EVENT_NAME_RATED = "rated"
-    const val EVENT_NAME_COMPLETED_TUTORIAL = "completedtutorial"
-    const val EVENT_NAME_PUSH_TOKEN_OBTAINED = "pushtokenobtained"
-    const val EVENT_NAME_ADDED_TO_CART = "addedtocart"
-    const val EVENT_NAME_ADDED_TO_WISHLIST = "addedtowishlist"
-    const val EVENT_NAME_INITIATED_CHECKOUT = "initiatedcheckout"
-    const val EVENT_NAME_ADDED_PAYMENT_INFO = "addedpaymentinfo"
-    const val EVENT_NAME_ACHIEVED_LEVEL = "achievedlevel"
-    const val EVENT_NAME_UNLOCKED_ACHIEVEMENT = "unlockedachievement"
-    const val EVENT_NAME_SPENT_CREDITS = "spentcredits"
-    const val EVENT_NAME_CONTACT = "contact"
-    const val EVENT_NAME_CUSTOMIZE_PRODUCT = "customizeproduct"
-    const val EVENT_NAME_DONATE = "donate"
-    const val EVENT_NAME_FIND_LOCATION = "findlocation"
-    const val EVENT_NAME_SCHEDULE = "schedule"
-    const val EVENT_NAME_START_TRIAL = "starttrial"
-    const val EVENT_NAME_SUBMIT_APPLICATION = "submitapplication"
-    const val EVENT_NAME_SUBSCRIBE = "subscribe"
-    const val EVENT_NAME_AD_IMPRESSION = "adimpression"
-    const val EVENT_NAME_AD_CLICK = "adclick"
-    const val EVENT_NAME_LIVE_STREAMING_START = "livestreamingstart"
-    const val EVENT_NAME_LIVE_STREAMING_STOP = "livestreamingstop"
-    const val EVENT_NAME_LIVE_STREAMING_PAUSE = "livestreamingpause"
-    const val EVENT_NAME_LIVE_STREAMING_RESUME = "livestreamingresume"
-    const val EVENT_NAME_LIVE_STREAMING_ERROR = "livestreamingerror"
-    const val EVENT_NAME_LIVE_STREAMING_UPDATE_STATUS = "livestreamingupdatestatus"
-    const val EVENT_NAME_PRODUCT_CATALOG_UPDATE = "productcatalogupdate"
+    const val ACTIVATED_APP = "activiatedapp"
+    const val DEACTIVATED_APP = "deactivatedapp"
+    const val SESSION_INTERRUPTIONS = "sessioninterruptions"
+    const val TIME_BETWEEN_SESSIONS = "timebetweensessions"
+    const val COMPLETED_REGISTRATION = "completedregistration"
+    const val VIEWED_CONTENT = "viewedcontent"
+    const val SEARCHED = "searched"
+    const val RATED = "rated"
+    const val COMPLETED_TUTORIAL = "completedtutorial"
+    const val PUSH_TOKEN_OBTAINED = "pushtokenobtained"
+    const val ADDED_TO_CART = "addedtocart"
+    const val ADDED_TO_WISHLIST = "addedtowishlist"
+    const val INITIATED_CHECKOUT = "initiatedcheckout"
+    const val ADDED_PAYMENT_INFO = "addedpaymentinfo"
+    const val ACHIEVED_LEVEL = "achievedlevel"
+    const val UNLOCKED_ACHIEVEMENT = "unlockedachievement"
+    const val SPENT_CREDITS = "spentcredits"
+    const val CONTACT = "contact"
+    const val CUSTOMIZE_PRODUCT = "customizeproduct"
+    const val DONATE = "donate"
+    const val FIND_LOCATION = "findlocation"
+    const val SCHEDULE = "schedule"
+    const val START_TRIAL = "starttrial"
+    const val SUBMIT_APPLICATION = "submitapplication"
+    const val SUBSCRIBE = "subscribe"
+    const val AD_IMPRESSION = "adimpression"
+    const val AD_CLICK = "adclick"
+    const val LIVE_STREAMING_START = "livestreamingstart"
+    const val LIVE_STREAMING_STOP = "livestreamingstop"
+    const val LIVE_STREAMING_PAUSE = "livestreamingpause"
+    const val LIVE_STREAMING_RESUME = "livestreamingresume"
+    const val LIVE_STREAMING_ERROR = "livestreamingerror"
+    const val LIVE_STREAMING_UPDATE_STATUS = "livestreamingupdatestatus"
+    const val PRODUCT_CATALOG_UPDATE = "productcatalogupdate"
 }
 
 object StandardEvents {
@@ -97,72 +97,71 @@ object StandardEvents {
 }
 
 object Event {
-    const val EVENT = "event"
-    const val VALUE_TO_SUM = "fb_value_to_sum"
+    const val EVENT_PARAMETERS = "event"
+    const val VALUE_TO_SUM = "_valueToSum"
 
-    const val EVENT_PARAM_LIVE_STREAMING_PREV_STATUS =
+    const val LIVE_STREAMING_PREV_STATUS =
         AppEventsConstants.EVENT_PARAM_LIVE_STREAMING_PREV_STATUS
-    const val EVENT_PARAM_LIVE_STREAMING_STATUS =
+    const val LIVE_STREAMING_STATUS =
         AppEventsConstants.EVENT_PARAM_LIVE_STREAMING_STATUS
-    const val EVENT_PARAM_LIVE_STREAMING_ERROR = AppEventsConstants.EVENT_PARAM_LIVE_STREAMING_ERROR
-    const val EVENT_PARAM_CURRENCY = AppEventsConstants.EVENT_PARAM_CURRENCY
-    const val EVENT_PARAM_REGISTRATION_METHOD = AppEventsConstants.EVENT_PARAM_REGISTRATION_METHOD
-    const val EVENT_PARAM_CONTENT_TYPE = AppEventsConstants.EVENT_PARAM_CONTENT_TYPE
-    const val EVENT_PARAM_CONTENT = AppEventsConstants.EVENT_PARAM_CONTENT
-    const val EVENT_PARAM_CONTENT_ID = AppEventsConstants.EVENT_PARAM_CONTENT_ID
-    const val EVENT_PARAM_SEARCH_STRING = AppEventsConstants.EVENT_PARAM_SEARCH_STRING
-    const val EVENT_PARAM_SUCCESS = AppEventsConstants.EVENT_PARAM_SUCCESS
-    const val EVENT_PARAM_MAX_RATING_VALUE = AppEventsConstants.EVENT_PARAM_MAX_RATING_VALUE
-    const val EVENT_PARAM_PAYMENT_INFO_AVAILABLE =
+    const val LIVE_STREAMING_ERROR = AppEventsConstants.EVENT_PARAM_LIVE_STREAMING_ERROR
+    const val CURRENCY = AppEventsConstants.EVENT_PARAM_CURRENCY
+    const val REGISTRATION_METHOD = AppEventsConstants.EVENT_PARAM_REGISTRATION_METHOD
+    const val CONTENT_TYPE = AppEventsConstants.EVENT_PARAM_CONTENT_TYPE
+    const val CONTENT = AppEventsConstants.EVENT_PARAM_CONTENT
+    const val CONTENT_ID = AppEventsConstants.EVENT_PARAM_CONTENT_ID
+    const val SEARCH_STRING = AppEventsConstants.EVENT_PARAM_SEARCH_STRING
+    const val SUCCESS = AppEventsConstants.EVENT_PARAM_SUCCESS
+    const val MAX_RATING_VALUE = AppEventsConstants.EVENT_PARAM_MAX_RATING_VALUE
+    const val PAYMENT_INFO_AVAILABLE =
         AppEventsConstants.EVENT_PARAM_PAYMENT_INFO_AVAILABLE
-    const val EVENT_PARAM_NUM_ITEMS = AppEventsConstants.EVENT_PARAM_NUM_ITEMS
-    const val EVENT_PARAM_LEVEL = AppEventsConstants.EVENT_PARAM_LEVEL
-    const val EVENT_PARAM_DESCRIPTION = AppEventsConstants.EVENT_PARAM_DESCRIPTION
-    const val EVENT_PARAM_SOURCE_APPLICATION = AppEventsConstants.EVENT_PARAM_SOURCE_APPLICATION
-    const val EVENT_PARAM_VALUE_YES = AppEventsConstants.EVENT_PARAM_VALUE_YES
-    const val EVENT_PARAM_VALUE_NO = AppEventsConstants.EVENT_PARAM_VALUE_NO
-    const val EVENT_PARAM_AD_TYPE = AppEventsConstants.EVENT_PARAM_AD_TYPE
-    const val EVENT_PARAM_ORDER_ID = AppEventsConstants.EVENT_PARAM_ORDER_ID
-    const val EVENT_PARAM_VALUE_TO_SUM = AppEventsConstants.EVENT_PARAM_VALUE_TO_SUM
-    const val EVENT_PARAM_PRODUCT_CUSTOM_LABEL_0 =
+    const val NUM_ITEMS = AppEventsConstants.EVENT_PARAM_NUM_ITEMS
+    const val LEVEL = AppEventsConstants.EVENT_PARAM_LEVEL
+    const val DESCRIPTION = AppEventsConstants.EVENT_PARAM_DESCRIPTION
+    const val SOURCE_APPLICATION = AppEventsConstants.EVENT_PARAM_SOURCE_APPLICATION
+    const val VALUE_YES = AppEventsConstants.EVENT_PARAM_VALUE_YES
+    const val VALUE_NO = AppEventsConstants.EVENT_PARAM_VALUE_NO
+    const val AD_TYPE = AppEventsConstants.EVENT_PARAM_AD_TYPE
+    const val ORDER_ID = AppEventsConstants.EVENT_PARAM_ORDER_ID
+    const val PRODUCT_CUSTOM_LABEL_0 =
         AppEventsConstants.EVENT_PARAM_PRODUCT_CUSTOM_LABEL_0
-    const val EVENT_PARAM_PRODUCT_CUSTOM_LABEL_1 =
+    const val PRODUCT_CUSTOM_LABEL_1 =
         AppEventsConstants.EVENT_PARAM_PRODUCT_CUSTOM_LABEL_1
-    const val EVENT_PARAM_PRODUCT_CUSTOM_LABEL_2 =
+    const val PARAM_PRODUCT_CUSTOM_LABEL_2 =
         AppEventsConstants.EVENT_PARAM_PRODUCT_CUSTOM_LABEL_2
-    const val EVENT_PARAM_PRODUCT_CUSTOM_LABEL_3 =
+    const val PARAM_PRODUCT_CUSTOM_LABEL_3 =
         AppEventsConstants.EVENT_PARAM_PRODUCT_CUSTOM_LABEL_3
-    const val EVENT_PARAM_PRODUCT_CUSTOM_LABEL_4 =
+    const val PARAM_PRODUCT_CUSTOM_LABEL_4 =
         AppEventsConstants.EVENT_PARAM_PRODUCT_CUSTOM_LABEL_4
-    const val EVENT_PARAM_PRODUCT_APPLINK_IOS_URL =
+    const val PARAM_PRODUCT_APPLINK_IOS_URL =
         AppEventsConstants.EVENT_PARAM_PRODUCT_APPLINK_IOS_URL
-    const val EVENT_PARAM_PRODUCT_APPLINK_IOS_APP_STORE_ID =
+    const val PARAM_PRODUCT_APPLINK_IOS_APP_STORE_ID =
         AppEventsConstants.EVENT_PARAM_PRODUCT_APPLINK_IOS_APP_STORE_ID
-    const val EVENT_PARAM_PRODUCT_APPLINK_IOS_APP_NAME =
+    const val PARAM_PRODUCT_APPLINK_IOS_APP_NAME =
         AppEventsConstants.EVENT_PARAM_PRODUCT_APPLINK_IOS_APP_NAME
-    const val EVENT_PARAM_PRODUCT_APPLINK_IPHONE_URL =
+    const val PARAM_PRODUCT_APPLINK_IPHONE_URL =
         AppEventsConstants.EVENT_PARAM_PRODUCT_APPLINK_IPHONE_URL
-    const val EVENT_PARAM_PRODUCT_APPLINK_IPHONE_APP_STORE_ID =
+    const val PARAM_PRODUCT_APPLINK_IPHONE_APP_STORE_ID =
         AppEventsConstants.EVENT_PARAM_PRODUCT_APPLINK_IPHONE_APP_STORE_ID
-    const val EVENT_PARAM_PRODUCT_APPLINK_IPHONE_APP_NAME =
+    const val PARAM_PRODUCT_APPLINK_IPHONE_APP_NAME =
         AppEventsConstants.EVENT_PARAM_PRODUCT_APPLINK_IPHONE_APP_NAME
-    const val EVENT_PARAM_PRODUCT_APPLINK_IPAD_URL =
+    const val PARAM_PRODUCT_APPLINK_IPAD_URL =
         AppEventsConstants.EVENT_PARAM_PRODUCT_APPLINK_IPAD_URL
-    const val EVENT_PARAM_PRODUCT_APPLINK_IPAD_APP_STORE_ID =
+    const val PARAM_PRODUCT_APPLINK_IPAD_APP_STORE_ID =
         AppEventsConstants.EVENT_PARAM_PRODUCT_APPLINK_IPAD_APP_STORE_ID
-    const val EVENT_PARAM_PRODUCT_APPLINK_IPAD_APP_NAME =
+    const val PARAM_PRODUCT_APPLINK_IPAD_APP_NAME =
         AppEventsConstants.EVENT_PARAM_PRODUCT_APPLINK_IPAD_APP_NAME
-    const val EVENT_PARAM_PRODUCT_APPLINK_ANDROID_URL =
+    const val PARAM_PRODUCT_APPLINK_ANDROID_URL =
         AppEventsConstants.EVENT_PARAM_PRODUCT_APPLINK_ANDROID_URL
-    const val EVENT_PARAM_PRODUCT_APPLINK_ANDROID_PACKAGE =
+    const val PARAM_PRODUCT_APPLINK_ANDROID_PACKAGE =
         AppEventsConstants.EVENT_PARAM_PRODUCT_APPLINK_ANDROID_PACKAGE
-    const val EVENT_PARAM_PRODUCT_APPLINK_ANDROID_APP_NAME =
+    const val PARAM_PRODUCT_APPLINK_ANDROID_APP_NAME =
         AppEventsConstants.EVENT_PARAM_PRODUCT_APPLINK_ANDROID_APP_NAME
-    const val EVENT_PARAM_PRODUCT_APPLINK_WINDOWS_PHONE_URL =
+    const val PARAM_PRODUCT_APPLINK_WINDOWS_PHONE_URL =
         AppEventsConstants.EVENT_PARAM_PRODUCT_APPLINK_WINDOWS_PHONE_URL
-    const val EVENT_PARAM_PRODUCT_APPLINK_WINDOWS_PHONE_APP_ID =
+    const val PARAM_PRODUCT_APPLINK_WINDOWS_PHONE_APP_ID =
         AppEventsConstants.EVENT_PARAM_PRODUCT_APPLINK_WINDOWS_PHONE_APP_ID
-    const val EVENT_PARAM_PRODUCT_APPLINK_WINDOWS_PHONE_APP_NAME =
+    const val PARAM_PRODUCT_APPLINK_WINDOWS_PHONE_APP_NAME =
         AppEventsConstants.EVENT_PARAM_PRODUCT_APPLINK_WINDOWS_PHONE_APP_NAME
 }
 

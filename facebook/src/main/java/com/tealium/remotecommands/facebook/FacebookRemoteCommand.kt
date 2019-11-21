@@ -244,62 +244,69 @@ open class FacebookRemoteCommand : RemoteCommand {
                     val advertiserIDEnable = payload.optBoolean(Advertiser.ADVERTISER_COLLECTION)
                     tracker.enableAdvertiserIDCollection(advertiserIDEnable)
                 }
-                Commands.EVENT_NAME_ACHIEVED_LEVEL -> {
-                    val levelAchieved = payload.optString(Event.EVENT_PARAM_LEVEL)
+                Commands.ACHIEVED_LEVEL -> {
+                    val eventParameters = payload.optJSONObject(Event.EVENT_PARAMETERS)
+                    val levelAchieved = eventParameters.optString(Event.LEVEL)
                     if (levelAchieved.isNotBlank()) {
-                        logEvent(Commands.EVENT_NAME_ACHIEVED_LEVEL, 0.0, payload)
+                        logEvent(Commands.ACHIEVED_LEVEL, 0.0, payload)
                     } else {
-                        Log.e(TAG, "${Event.EVENT_PARAM_LEVEL} $REQUIRED_KEY")
+                        Log.e(TAG, "${Event.LEVEL} $REQUIRED_KEY")
                     }
                 }
-                Commands.EVENT_NAME_UNLOCKED_ACHIEVEMENT -> {
-                    val achievement = payload.optString(Event.EVENT_PARAM_DESCRIPTION)
+                Commands.UNLOCKED_ACHIEVEMENT -> {
+                    val eventParameters = payload.optJSONObject(Event.EVENT_PARAMETERS)
+                    val achievement = eventParameters.optString(Event.DESCRIPTION)
                     if (achievement.isNotBlank()) {
-                        logEvent(Commands.EVENT_NAME_UNLOCKED_ACHIEVEMENT, 0.0, payload)
+                        logEvent(Commands.UNLOCKED_ACHIEVEMENT, 0.0, payload)
                     } else {
-                        Log.e(TAG, "${Event.EVENT_PARAM_DESCRIPTION} $REQUIRED_KEY")
+                        Log.e(TAG, "${Event.DESCRIPTION} $REQUIRED_KEY")
                     }
                 }
-                Commands.EVENT_NAME_COMPLETED_REGISTRATION -> {
+                Commands.COMPLETED_REGISTRATION -> {
+                    val eventParameters = payload.optJSONObject(Event.EVENT_PARAMETERS)
                     val registrationMethod =
-                        payload.optString(Event.EVENT_PARAM_REGISTRATION_METHOD)
+                        eventParameters.optString(Event.REGISTRATION_METHOD)
                     if (registrationMethod.isNotBlank()) {
-                        logEvent(Commands.EVENT_NAME_COMPLETED_REGISTRATION, 0.0, payload)
+                        logEvent(Commands.COMPLETED_REGISTRATION, 0.0, payload)
                     } else {
                         Log.e(TAG,
-                            "${Event.EVENT_PARAM_REGISTRATION_METHOD} $REQUIRED_KEY")
+                            "${Event.REGISTRATION_METHOD} $REQUIRED_KEY")
                     }
                 }
-                Commands.EVENT_NAME_COMPLETED_TUTORIAL -> {
-                    val contentId = payload.optString(Event.EVENT_PARAM_CONTENT_ID)
+                Commands.COMPLETED_TUTORIAL -> {
+                    val eventParameters = payload.optJSONObject(Event.EVENT_PARAMETERS)
+                    val contentId = eventParameters.optString(Event.CONTENT_ID)
                     if (contentId.isNotBlank()) {
-                        logEvent(Commands.EVENT_NAME_COMPLETED_TUTORIAL, 0.0, payload)
+                        logEvent(Commands.COMPLETED_TUTORIAL, 0.0, payload)
                     } else {
                         Log.e(
                             TAG,
-                            "${Event.EVENT_PARAM_CONTENT_ID} $REQUIRED_KEY")
+                            "${Event.CONTENT_ID} $REQUIRED_KEY")
                     }
                 }
-                Commands.EVENT_NAME_INITIATED_CHECKOUT -> {
-                    val valueToSum = payload.optDouble(VALUE_TO_SUM, 0.0)
+                Commands.INITIATED_CHECKOUT -> {
+                    val eventParameters = payload.optJSONObject(Event.EVENT_PARAMETERS)
+                    val valueToSum = eventParameters.optDouble(VALUE_TO_SUM, 0.0)
                     if (valueToSum > 0.0) {
-                        logEvent(Commands.EVENT_NAME_INITIATED_CHECKOUT, valueToSum, payload)
+                        logEvent(Commands.INITIATED_CHECKOUT, valueToSum, payload)
                     } else {
                         Log.e(TAG, "${Event.VALUE_TO_SUM} $REQUIRED_KEY")
                     }
                 }
-                Commands.EVENT_NAME_SEARCHED -> {
-                    val contentType = payload.optString(Event.EVENT_PARAM_SEARCH_STRING)
+                Commands.SEARCHED -> {
+                    val eventParameters = payload.optJSONObject(Event.EVENT_PARAMETERS)
+                    val contentType = eventParameters.optString(Event.SEARCH_STRING)
                     if (contentType.isNotBlank()) {
-                        logEvent(Commands.EVENT_NAME_SEARCHED, 0.0, payload)
+                        logEvent(Commands.SEARCHED, 0.0, payload)
                     } else {
-                        Log.e(TAG, "${Event.EVENT_PARAM_SEARCH_STRING} $REQUIRED_KEY")
+                        Log.e(TAG, "${Event.SEARCH_STRING} $REQUIRED_KEY")
                     }
                 }
                 else -> {
                     if (isStandardEvent(command)) {
                         val valueToSum = payload.optDouble(VALUE_TO_SUM, 0.0)
-                        logEvent(command, valueToSum, payload)
+                        val eventParameters = payload.optJSONObject(Event.EVENT_PARAMETERS)
+                        logEvent(command, valueToSum, eventParameters)
                     }
                 }
             }
