@@ -246,67 +246,77 @@ open class FacebookRemoteCommand : RemoteCommand {
                 }
                 Commands.ACHIEVED_LEVEL -> {
                     val eventParameters = payload.optJSONObject(Event.EVENT_PARAMETERS)
-                    val levelAchieved = eventParameters.optString(Event.LEVEL)
-                    if (levelAchieved.isNotBlank()) {
-                        logEvent(Commands.ACHIEVED_LEVEL, 0.0, payload)
-                    } else {
-                        Log.e(TAG, "${Event.LEVEL} $REQUIRED_KEY")
+                    eventParameters?.let {
+                        val levelAchieved = it.optString(Event.LEVEL)
+                        if (levelAchieved.isNotBlank()) {
+                            logEvent(Commands.ACHIEVED_LEVEL, 0.0, it)
+                        } else {
+                            Log.e(TAG, "${Event.LEVEL} $REQUIRED_KEY")
+                        }
                     }
                 }
                 Commands.UNLOCKED_ACHIEVEMENT -> {
                     val eventParameters = payload.optJSONObject(Event.EVENT_PARAMETERS)
-                    val achievement = eventParameters.optString(Event.DESCRIPTION)
-                    if (achievement.isNotBlank()) {
-                        logEvent(Commands.UNLOCKED_ACHIEVEMENT, 0.0, payload)
-                    } else {
-                        Log.e(TAG, "${Event.DESCRIPTION} $REQUIRED_KEY")
+                    eventParameters?.let {
+                        val achievement = it.optString(Event.DESCRIPTION)
+                        if (achievement.isNotBlank()) {
+                            logEvent(Commands.UNLOCKED_ACHIEVEMENT, 0.0, it)
+                        } else {
+                            Log.e(TAG, "${Event.DESCRIPTION} $REQUIRED_KEY")
+                        }
                     }
                 }
                 Commands.COMPLETED_REGISTRATION -> {
                     val eventParameters = payload.optJSONObject(Event.EVENT_PARAMETERS)
-                    val registrationMethod =
-                        eventParameters.optString(Event.REGISTRATION_METHOD)
-                    if (registrationMethod.isNotBlank()) {
-                        logEvent(Commands.COMPLETED_REGISTRATION, 0.0, payload)
-                    } else {
-                        Log.e(TAG,
-                            "${Event.REGISTRATION_METHOD} $REQUIRED_KEY")
+                    eventParameters?.let {
+                        val registrationMethod = it.optString(Event.REGISTRATION_METHOD)
+                        if (registrationMethod.isNotBlank()) {
+                            logEvent(Commands.COMPLETED_REGISTRATION, 0.0, it)
+                        } else {
+                            Log.e(TAG, "${Event.REGISTRATION_METHOD} $REQUIRED_KEY")
+                        }
                     }
+
                 }
                 Commands.COMPLETED_TUTORIAL -> {
                     val eventParameters = payload.optJSONObject(Event.EVENT_PARAMETERS)
-                    val contentId = eventParameters.optString(Event.CONTENT_ID)
-                    if (contentId.isNotBlank()) {
-                        logEvent(Commands.COMPLETED_TUTORIAL, 0.0, payload)
-                    } else {
-                        Log.e(
-                            TAG,
-                            "${Event.CONTENT_ID} $REQUIRED_KEY")
+                    eventParameters?.let {
+                        val contentId = it.optString(Event.CONTENT_ID)
+                        if (contentId.isNotBlank()) {
+                            logEvent(Commands.COMPLETED_TUTORIAL, 0.0, it)
+                        } else {
+                            Log.e(TAG, "${Event.CONTENT_ID} $REQUIRED_KEY"
+                            )
+                        }
                     }
                 }
                 Commands.INITIATED_CHECKOUT -> {
                     val eventParameters = payload.optJSONObject(Event.EVENT_PARAMETERS)
-                    val valueToSum = eventParameters.optDouble(VALUE_TO_SUM, 0.0)
-                    if (valueToSum > 0.0) {
-                        logEvent(Commands.INITIATED_CHECKOUT, valueToSum, payload)
-                    } else {
-                        Log.e(TAG, "${Event.VALUE_TO_SUM} $REQUIRED_KEY")
+                    eventParameters?.let {
+                        val valueToSum = it.optDouble(VALUE_TO_SUM, 0.0)
+                        if (valueToSum > 0.0) {
+                            logEvent(Commands.INITIATED_CHECKOUT, valueToSum, it)
+                        } else {
+                            Log.e(TAG, "${Event.VALUE_TO_SUM} $REQUIRED_KEY")
+                        }
                     }
                 }
                 Commands.SEARCHED -> {
                     val eventParameters = payload.optJSONObject(Event.EVENT_PARAMETERS)
-                    val contentType = eventParameters.optString(Event.SEARCH_STRING)
-                    if (contentType.isNotBlank()) {
-                        logEvent(Commands.SEARCHED, 0.0, payload)
-                    } else {
-                        Log.e(TAG, "${Event.SEARCH_STRING} $REQUIRED_KEY")
+                    eventParameters?.let {
+                        val contentType = it.optString(Event.SEARCH_STRING)
+                        if (contentType.isNotBlank()) {
+                            logEvent(Commands.SEARCHED, 0.0, it)
+                        } else {
+                            Log.e(TAG, "${Event.SEARCH_STRING} $REQUIRED_KEY")
+                        }
                     }
                 }
                 else -> {
-                    if (isStandardEvent(command)) {
+                    standardEvent(command)?.let { facebookEventName ->
                         val valueToSum = payload.optDouble(VALUE_TO_SUM, 0.0)
                         val eventParameters = payload.optJSONObject(Event.EVENT_PARAMETERS)
-                        logEvent(command, valueToSum, eventParameters)
+                        logEvent(facebookEventName, valueToSum, eventParameters)
                     }
                 }
             }
@@ -314,12 +324,12 @@ open class FacebookRemoteCommand : RemoteCommand {
     }
 
     /**
-     * Checks if the event is a standard Facebook event name.
+     * Returns the Facebook standard event name if it exists.
      *
-     * @param commandName - name of the command
+     * @param commandName - name of the Tealium command name.
      */
-    fun isStandardEvent(commandName: String): Boolean {
-        return StandardEvents.standardEventNames.contains(commandName)
+    fun standardEvent(commandName: String): String? {
+        return StandardEvents.standardEventNames[commandName]
     }
 
     fun logEvent(command: String, valueToSum: Double, eventParameters: JSONObject? = null) {
