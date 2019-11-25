@@ -21,7 +21,7 @@ object Commands {
     const val SET_AUTO_INITIALIZED = "setautoinitialized"
     const val SET_ADVERTISER_ID_COLLECTION = "setadvertiseridcollection"
     const val LOG_PUSH_NOTIFICATION_OPEN = "logpushnotificationopen"
-    const val ACTIVATED_APP = "activiatedapp"
+    const val ACTIVATED_APP = "activatedapp"
     const val DEACTIVATED_APP = "deactivatedapp"
     const val SESSION_INTERRUPTIONS = "sessioninterruptions"
     const val TIME_BETWEEN_SESSIONS = "timebetweensessions"
@@ -58,41 +58,41 @@ object Commands {
 }
 
 object StandardEvents {
-    val standardEventNames = arrayOf(
-        "activiatedapp",
-        "deactivatedapp",
-        "sessioninterruptions",
-        "timebetweensessions",
-        "completedregistration",
-        "viewedcontent",
-        "searched",
-        "rated",
-        "completedtutorial",
-        "pushtokenobtained",
-        "addedtocart",
-        "addedtowishlist",
-        "initiatedcheckout",
-        "addedpaymentinfo",
-        "achievedlevel",
-        "unlockedachievement",
-        "spentcredits",
-        "contact",
-        "customizeproduct",
-        "donate",
-        "findlocation",
-        "schedule",
-        "starttrial",
-        "submitapplication",
-        "subscribe",
-        "adimpression",
-        "adclick",
-        "livestreamingstart",
-        "livestreamingstop",
-        "livestreamingpause",
-        "livestreamingresume",
-        "livestreamingerror",
-        "livestreamingupdatestatus",
-        "productcatalogupdate"
+    val standardEventNames = mapOf(
+        "activatedapp" to AppEventsConstants.EVENT_NAME_ACTIVATED_APP,
+        "deactivatedapp" to AppEventsConstants.EVENT_NAME_DEACTIVATED_APP,
+        "sessioninterruptions" to AppEventsConstants.EVENT_NAME_SESSION_INTERRUPTIONS,
+        "timebetweensessions" to AppEventsConstants.EVENT_NAME_TIME_BETWEEN_SESSIONS,
+        "completedregistration" to AppEventsConstants.EVENT_NAME_COMPLETED_REGISTRATION,
+        "viewedcontent" to AppEventsConstants.EVENT_NAME_VIEWED_CONTENT,
+        "searched" to AppEventsConstants.EVENT_NAME_SEARCHED,
+        "rated" to AppEventsConstants.EVENT_NAME_RATED,
+        "completedtutorial" to AppEventsConstants.EVENT_NAME_COMPLETED_TUTORIAL,
+        "pushtokenobtained" to AppEventsConstants.EVENT_NAME_PUSH_TOKEN_OBTAINED,
+        "addedtocart" to AppEventsConstants.EVENT_NAME_ADDED_TO_CART,
+        "addedtowishlist" to AppEventsConstants.EVENT_NAME_ADDED_TO_WISHLIST,
+        "initiatedcheckout" to AppEventsConstants.EVENT_NAME_INITIATED_CHECKOUT,
+        "addedpaymentinfo" to AppEventsConstants.EVENT_NAME_ADDED_PAYMENT_INFO,
+        "achievedlevel" to AppEventsConstants.EVENT_NAME_ACHIEVED_LEVEL,
+        "unlockedachievement" to AppEventsConstants.EVENT_NAME_UNLOCKED_ACHIEVEMENT,
+        "spentcredits" to AppEventsConstants.EVENT_NAME_SPENT_CREDITS,
+        "contact" to AppEventsConstants.EVENT_NAME_CONTACT,
+        "customizeproduct" to AppEventsConstants.EVENT_NAME_CUSTOMIZE_PRODUCT,
+        "donate" to AppEventsConstants.EVENT_NAME_DONATE,
+        "findlocation" to AppEventsConstants.EVENT_NAME_FIND_LOCATION,
+        "schedule" to AppEventsConstants.EVENT_NAME_SCHEDULE,
+        "starttrial" to AppEventsConstants.EVENT_NAME_START_TRIAL,
+        "submitapplication" to AppEventsConstants.EVENT_NAME_SUBMIT_APPLICATION,
+        "subscribe" to AppEventsConstants.EVENT_NAME_SUBSCRIBE,
+        "adimpression" to AppEventsConstants.EVENT_NAME_AD_IMPRESSION,
+        "adclick" to AppEventsConstants.EVENT_NAME_AD_CLICK,
+        "livestreamingstart" to AppEventsConstants.EVENT_NAME_LIVE_STREAMING_START,
+        "livestreamingstop" to AppEventsConstants.EVENT_NAME_LIVE_STREAMING_STOP,
+        "livestreamingpause" to AppEventsConstants.EVENT_NAME_LIVE_STREAMING_PAUSE,
+        "livestreamingresume" to AppEventsConstants.EVENT_NAME_LIVE_STREAMING_RESUME,
+        "livestreamingerror" to AppEventsConstants.EVENT_NAME_LIVE_STREAMING_ERROR,
+        "livestreamingupdatestatus" to AppEventsConstants.EVENT_NAME_LIVE_STREAMING_UPDATE_STATUS,
+        "productcatalogupdate" to AppEventsConstants.EVENT_NAME_PRODUCT_CATALOG_UPDATE
     )
 }
 
@@ -100,10 +100,8 @@ object Event {
     const val EVENT_PARAMETERS = "event"
     const val VALUE_TO_SUM = "_valueToSum"
 
-    const val LIVE_STREAMING_PREV_STATUS =
-        AppEventsConstants.EVENT_PARAM_LIVE_STREAMING_PREV_STATUS
-    const val LIVE_STREAMING_STATUS =
-        AppEventsConstants.EVENT_PARAM_LIVE_STREAMING_STATUS
+    const val LIVE_STREAMING_PREV_STATUS = AppEventsConstants.EVENT_PARAM_LIVE_STREAMING_PREV_STATUS
+    const val LIVE_STREAMING_STATUS = AppEventsConstants.EVENT_PARAM_LIVE_STREAMING_STATUS
     const val LIVE_STREAMING_ERROR = AppEventsConstants.EVENT_PARAM_LIVE_STREAMING_ERROR
     const val CURRENCY = AppEventsConstants.EVENT_PARAM_CURRENCY
     const val REGISTRATION_METHOD = AppEventsConstants.EVENT_PARAM_REGISTRATION_METHOD
@@ -113,8 +111,7 @@ object Event {
     const val SEARCH_STRING = AppEventsConstants.EVENT_PARAM_SEARCH_STRING
     const val SUCCESS = AppEventsConstants.EVENT_PARAM_SUCCESS
     const val MAX_RATING_VALUE = AppEventsConstants.EVENT_PARAM_MAX_RATING_VALUE
-    const val PAYMENT_INFO_AVAILABLE =
-        AppEventsConstants.EVENT_PARAM_PAYMENT_INFO_AVAILABLE
+    const val PAYMENT_INFO_AVAILABLE = AppEventsConstants.EVENT_PARAM_PAYMENT_INFO_AVAILABLE
     const val NUM_ITEMS = AppEventsConstants.EVENT_PARAM_NUM_ITEMS
     const val LEVEL = AppEventsConstants.EVENT_PARAM_LEVEL
     const val DESCRIPTION = AppEventsConstants.EVENT_PARAM_DESCRIPTION
@@ -123,46 +120,26 @@ object Event {
     const val VALUE_NO = AppEventsConstants.EVENT_PARAM_VALUE_NO
     const val AD_TYPE = AppEventsConstants.EVENT_PARAM_AD_TYPE
     const val ORDER_ID = AppEventsConstants.EVENT_PARAM_ORDER_ID
-    const val PRODUCT_CUSTOM_LABEL_0 =
-        AppEventsConstants.EVENT_PARAM_PRODUCT_CUSTOM_LABEL_0
-    const val PRODUCT_CUSTOM_LABEL_1 =
-        AppEventsConstants.EVENT_PARAM_PRODUCT_CUSTOM_LABEL_1
-    const val PARAM_PRODUCT_CUSTOM_LABEL_2 =
-        AppEventsConstants.EVENT_PARAM_PRODUCT_CUSTOM_LABEL_2
-    const val PARAM_PRODUCT_CUSTOM_LABEL_3 =
-        AppEventsConstants.EVENT_PARAM_PRODUCT_CUSTOM_LABEL_3
-    const val PARAM_PRODUCT_CUSTOM_LABEL_4 =
-        AppEventsConstants.EVENT_PARAM_PRODUCT_CUSTOM_LABEL_4
-    const val PARAM_PRODUCT_APPLINK_IOS_URL =
-        AppEventsConstants.EVENT_PARAM_PRODUCT_APPLINK_IOS_URL
-    const val PARAM_PRODUCT_APPLINK_IOS_APP_STORE_ID =
-        AppEventsConstants.EVENT_PARAM_PRODUCT_APPLINK_IOS_APP_STORE_ID
-    const val PARAM_PRODUCT_APPLINK_IOS_APP_NAME =
-        AppEventsConstants.EVENT_PARAM_PRODUCT_APPLINK_IOS_APP_NAME
-    const val PARAM_PRODUCT_APPLINK_IPHONE_URL =
-        AppEventsConstants.EVENT_PARAM_PRODUCT_APPLINK_IPHONE_URL
-    const val PARAM_PRODUCT_APPLINK_IPHONE_APP_STORE_ID =
-        AppEventsConstants.EVENT_PARAM_PRODUCT_APPLINK_IPHONE_APP_STORE_ID
-    const val PARAM_PRODUCT_APPLINK_IPHONE_APP_NAME =
-        AppEventsConstants.EVENT_PARAM_PRODUCT_APPLINK_IPHONE_APP_NAME
-    const val PARAM_PRODUCT_APPLINK_IPAD_URL =
-        AppEventsConstants.EVENT_PARAM_PRODUCT_APPLINK_IPAD_URL
-    const val PARAM_PRODUCT_APPLINK_IPAD_APP_STORE_ID =
-        AppEventsConstants.EVENT_PARAM_PRODUCT_APPLINK_IPAD_APP_STORE_ID
-    const val PARAM_PRODUCT_APPLINK_IPAD_APP_NAME =
-        AppEventsConstants.EVENT_PARAM_PRODUCT_APPLINK_IPAD_APP_NAME
-    const val PARAM_PRODUCT_APPLINK_ANDROID_URL =
-        AppEventsConstants.EVENT_PARAM_PRODUCT_APPLINK_ANDROID_URL
-    const val PARAM_PRODUCT_APPLINK_ANDROID_PACKAGE =
-        AppEventsConstants.EVENT_PARAM_PRODUCT_APPLINK_ANDROID_PACKAGE
-    const val PARAM_PRODUCT_APPLINK_ANDROID_APP_NAME =
-        AppEventsConstants.EVENT_PARAM_PRODUCT_APPLINK_ANDROID_APP_NAME
-    const val PARAM_PRODUCT_APPLINK_WINDOWS_PHONE_URL =
-        AppEventsConstants.EVENT_PARAM_PRODUCT_APPLINK_WINDOWS_PHONE_URL
-    const val PARAM_PRODUCT_APPLINK_WINDOWS_PHONE_APP_ID =
-        AppEventsConstants.EVENT_PARAM_PRODUCT_APPLINK_WINDOWS_PHONE_APP_ID
-    const val PARAM_PRODUCT_APPLINK_WINDOWS_PHONE_APP_NAME =
-        AppEventsConstants.EVENT_PARAM_PRODUCT_APPLINK_WINDOWS_PHONE_APP_NAME
+    const val PARAM_PRODUCT_CUSTOM_LABEL_0 = AppEventsConstants.EVENT_PARAM_PRODUCT_CUSTOM_LABEL_0
+    const val PARAM_PRODUCT_CUSTOM_LABEL_1 = AppEventsConstants.EVENT_PARAM_PRODUCT_CUSTOM_LABEL_1
+    const val PARAM_PRODUCT_CUSTOM_LABEL_2 = AppEventsConstants.EVENT_PARAM_PRODUCT_CUSTOM_LABEL_2
+    const val PARAM_PRODUCT_CUSTOM_LABEL_3 = AppEventsConstants.EVENT_PARAM_PRODUCT_CUSTOM_LABEL_3
+    const val PARAM_PRODUCT_CUSTOM_LABEL_4 = AppEventsConstants.EVENT_PARAM_PRODUCT_CUSTOM_LABEL_4
+    const val PARAM_PRODUCT_APPLINK_IOS_URL = AppEventsConstants.EVENT_PARAM_PRODUCT_APPLINK_IOS_URL
+    const val PARAM_PRODUCT_APPLINK_IOS_APP_STORE_ID = AppEventsConstants.EVENT_PARAM_PRODUCT_APPLINK_IOS_APP_STORE_ID
+    const val PARAM_PRODUCT_APPLINK_IOS_APP_NAME = AppEventsConstants.EVENT_PARAM_PRODUCT_APPLINK_IOS_APP_NAME
+    const val PARAM_PRODUCT_APPLINK_IPHONE_URL = AppEventsConstants.EVENT_PARAM_PRODUCT_APPLINK_IPHONE_URL
+    const val PARAM_PRODUCT_APPLINK_IPHONE_APP_STORE_ID = AppEventsConstants.EVENT_PARAM_PRODUCT_APPLINK_IPHONE_APP_STORE_ID
+    const val PARAM_PRODUCT_APPLINK_IPHONE_APP_NAME = AppEventsConstants.EVENT_PARAM_PRODUCT_APPLINK_IPHONE_APP_NAME
+    const val PARAM_PRODUCT_APPLINK_IPAD_URL = AppEventsConstants.EVENT_PARAM_PRODUCT_APPLINK_IPAD_URL
+    const val PARAM_PRODUCT_APPLINK_IPAD_APP_STORE_ID = AppEventsConstants.EVENT_PARAM_PRODUCT_APPLINK_IPAD_APP_STORE_ID
+    const val PARAM_PRODUCT_APPLINK_IPAD_APP_NAME = AppEventsConstants.EVENT_PARAM_PRODUCT_APPLINK_IPAD_APP_NAME
+    const val PARAM_PRODUCT_APPLINK_ANDROID_URL = AppEventsConstants.EVENT_PARAM_PRODUCT_APPLINK_ANDROID_URL
+    const val PARAM_PRODUCT_APPLINK_ANDROID_PACKAGE = AppEventsConstants.EVENT_PARAM_PRODUCT_APPLINK_ANDROID_PACKAGE
+    const val PARAM_PRODUCT_APPLINK_ANDROID_APP_NAME = AppEventsConstants.EVENT_PARAM_PRODUCT_APPLINK_ANDROID_APP_NAME
+    const val PARAM_PRODUCT_APPLINK_WINDOWS_PHONE_URL = AppEventsConstants.EVENT_PARAM_PRODUCT_APPLINK_WINDOWS_PHONE_URL
+    const val PARAM_PRODUCT_APPLINK_WINDOWS_PHONE_APP_ID = AppEventsConstants.EVENT_PARAM_PRODUCT_APPLINK_WINDOWS_PHONE_APP_ID
+    const val PARAM_PRODUCT_APPLINK_WINDOWS_PHONE_APP_NAME = AppEventsConstants.EVENT_PARAM_PRODUCT_APPLINK_WINDOWS_PHONE_APP_NAME
 }
 
 object ProductItemParameters {
