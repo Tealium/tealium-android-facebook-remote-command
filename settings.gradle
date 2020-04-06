@@ -1,1 +1,2 @@
 include ':app', ':facebook'
+rootProject.name='tealium-android-facebook-remote-command'
