@@ -244,62 +244,79 @@ open class FacebookRemoteCommand : RemoteCommand {
                     val advertiserIDEnable = payload.optBoolean(Advertiser.ADVERTISER_COLLECTION)
                     tracker.enableAdvertiserIDCollection(advertiserIDEnable)
                 }
-                Commands.EVENT_NAME_ACHIEVED_LEVEL -> {
-                    val levelAchieved = payload.optString(Event.EVENT_PARAM_LEVEL)
-                    if (levelAchieved.isNotBlank()) {
-                        logEvent(Commands.EVENT_NAME_ACHIEVED_LEVEL, 0.0, payload)
-                    } else {
-                        Log.e(TAG, "${Event.EVENT_PARAM_LEVEL} $REQUIRED_KEY")
+                Commands.ACHIEVED_LEVEL -> {
+                    val eventParameters = payload.optJSONObject(Event.EVENT_PARAMETERS)
+                    eventParameters?.let {
+                        val levelAchieved = it.optString(Event.LEVEL)
+                        if (levelAchieved.isNotBlank()) {
+                            logEvent(Commands.ACHIEVED_LEVEL, 0.0, it)
+                        } else {
+                            Log.e(TAG, "${Event.LEVEL} $REQUIRED_KEY")
+                        }
                     }
                 }
-                Commands.EVENT_NAME_UNLOCKED_ACHIEVEMENT -> {
-                    val achievement = payload.optString(Event.EVENT_PARAM_DESCRIPTION)
-                    if (achievement.isNotBlank()) {
-                        logEvent(Commands.EVENT_NAME_UNLOCKED_ACHIEVEMENT, 0.0, payload)
-                    } else {
-                        Log.e(TAG, "${Event.EVENT_PARAM_DESCRIPTION} $REQUIRED_KEY")
+                Commands.UNLOCKED_ACHIEVEMENT -> {
+                    val eventParameters = payload.optJSONObject(Event.EVENT_PARAMETERS)
+                    eventParameters?.let {
+                        val achievement = it.optString(Event.DESCRIPTION)
+                        if (achievement.isNotBlank()) {
+                            logEvent(Commands.UNLOCKED_ACHIEVEMENT, 0.0, it)
+                        } else {
+                            Log.e(TAG, "${Event.DESCRIPTION} $REQUIRED_KEY")
+                        }
                     }
                 }
-                Commands.EVENT_NAME_COMPLETED_REGISTRATION -> {
-                    val registrationMethod =
-                        payload.optString(Event.EVENT_PARAM_REGISTRATION_METHOD)
-                    if (registrationMethod.isNotBlank()) {
-                        logEvent(Commands.EVENT_NAME_COMPLETED_REGISTRATION, 0.0, payload)
-                    } else {
-                        Log.e(TAG,
-                            "${Event.EVENT_PARAM_REGISTRATION_METHOD} $REQUIRED_KEY")
+                Commands.COMPLETED_REGISTRATION -> {
+                    val eventParameters = payload.optJSONObject(Event.EVENT_PARAMETERS)
+                    eventParameters?.let {
+                        val registrationMethod = it.optString(Event.REGISTRATION_METHOD)
+                        if (registrationMethod.isNotBlank()) {
+                            logEvent(Commands.COMPLETED_REGISTRATION, 0.0, it)
+                        } else {
+                            Log.e(TAG, "${Event.REGISTRATION_METHOD} $REQUIRED_KEY")
+                        }
+                    }
+
+                }
+                Commands.COMPLETED_TUTORIAL -> {
+                    val eventParameters = payload.optJSONObject(Event.EVENT_PARAMETERS)
+                    eventParameters?.let {
+                        val contentId = it.optString(Event.CONTENT_ID)
+                        if (contentId.isNotBlank()) {
+                            logEvent(Commands.COMPLETED_TUTORIAL, 0.0, it)
+                        } else {
+                            Log.e(TAG, "${Event.CONTENT_ID} $REQUIRED_KEY"
+                            )
+                        }
                     }
                 }
-                Commands.EVENT_NAME_COMPLETED_TUTORIAL -> {
-                    val contentId = payload.optString(Event.EVENT_PARAM_CONTENT_ID)
-                    if (contentId.isNotBlank()) {
-                        logEvent(Commands.EVENT_NAME_COMPLETED_TUTORIAL, 0.0, payload)
-                    } else {
-                        Log.e(
-                            TAG,
-                            "${Event.EVENT_PARAM_CONTENT_ID} $REQUIRED_KEY")
+                Commands.INITIATED_CHECKOUT -> {
+                    val eventParameters = payload.optJSONObject(Event.EVENT_PARAMETERS)
+                    eventParameters?.let {
+                        val valueToSum = it.optDouble(VALUE_TO_SUM, 0.0)
+                        if (valueToSum > 0.0) {
+                            logEvent(Commands.INITIATED_CHECKOUT, valueToSum, it)
+                        } else {
+                            Log.e(TAG, "${Event.VALUE_TO_SUM} $REQUIRED_KEY")
+                        }
                     }
                 }
-                Commands.EVENT_NAME_INITIATED_CHECKOUT -> {
-                    val valueToSum = payload.optDouble(VALUE_TO_SUM, 0.0)
-                    if (valueToSum > 0.0) {
-                        logEvent(Commands.EVENT_NAME_INITIATED_CHECKOUT, valueToSum, payload)
-                    } else {
-                        Log.e(TAG, "${Event.VALUE_TO_SUM} $REQUIRED_KEY")
-                    }
-                }
-                Commands.EVENT_NAME_SEARCHED -> {
-                    val contentType = payload.optString(Event.EVENT_PARAM_SEARCH_STRING)
-                    if (contentType.isNotBlank()) {
-                        logEvent(Commands.EVENT_NAME_SEARCHED, 0.0, payload)
-                    } else {
-                        Log.e(TAG, "${Event.EVENT_PARAM_SEARCH_STRING} $REQUIRED_KEY")
+                Commands.SEARCHED -> {
+                    val eventParameters = payload.optJSONObject(Event.EVENT_PARAMETERS)
+                    eventParameters?.let {
+                        val contentType = it.optString(Event.SEARCH_STRING)
+                        if (contentType.isNotBlank()) {
+                            logEvent(Commands.SEARCHED, 0.0, it)
+                        } else {
+                            Log.e(TAG, "${Event.SEARCH_STRING} $REQUIRED_KEY")
+                        }
                     }
                 }
                 else -> {
-                    if (isStandardEvent(command)) {
+                    standardEvent(command)?.let { facebookEventName ->
                         val valueToSum = payload.optDouble(VALUE_TO_SUM, 0.0)
-                        logEvent(command, valueToSum, payload)
+                        val eventParameters = payload.optJSONObject(Event.EVENT_PARAMETERS)
+                        logEvent(facebookEventName, valueToSum, eventParameters)
                     }
                 }
             }
@@ -307,34 +324,34 @@ open class FacebookRemoteCommand : RemoteCommand {
     }
 
     /**
-     * Checks if the event is a standard Facebook event name.
+     * Returns the Facebook standard event name if it exists.
      *
-     * @param commandName - name of the command
+     * @param commandName - name of the Tealium command name.
      */
-    fun isStandardEvent(commandName: String): Boolean {
-        return StandardEvents.standardEventNames.contains(commandName)
+    fun standardEvent(commandName: String): String? {
+        return StandardEvents.standardEventNames[commandName]
     }
 
-    fun logEvent(command: String, valueToSum: Double, eventParameters: JSONObject) {
+    fun logEvent(command: String, valueToSum: Double, eventParameters: JSONObject? = null) {
         val bundle = Bundle()
-        if (valueToSum > 0) {
+        if (valueToSum > 0 && eventParameters != null) {
             valueToSum?.let { sumValue ->
-                if (eventParameters.length() > 0) {
-                    mapJsonToBundle(eventParameters, bundle)
-                    if (bundle.isEmpty) {
-                        tracker.logEvent(command, sumValue)
-                    } else {
-                        tracker.logEvent(command, sumValue, bundle)
-                    }
+                eventParameters?.let { parameters ->
+                    mapJsonToBundle(parameters, bundle)
                 }
+                tracker.logEvent(command, sumValue, bundle)
             }
-        } else {
-            if (eventParameters.length() > 0) {
+        } else if (valueToSum > 0 && eventParameters == null) {
+            valueToSum?.let { sumValue ->
+                tracker.logEvent(command, sumValue)
+            }
+        } else if (valueToSum == 0.0 && eventParameters != null) {
+            eventParameters?.let { eventParameters ->
                 mapJsonToBundle(eventParameters, bundle)
-                tracker.logEvent(command, bundle)
-            } else {
-                tracker.logEvent(command)
             }
+            tracker.logEvent(command, bundle)
+        } else {
+            tracker.logEvent(command)
         }
     }
 
