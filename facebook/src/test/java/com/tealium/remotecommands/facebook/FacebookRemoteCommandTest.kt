@@ -38,7 +38,7 @@ class FacebookRemoteCommandTest {
     @Test
     fun splitCommands() {
         val json = JSONObject()
-        json.put("command_name", "viewedcontent,addtocart,customizeproduct")
+        json.put("command_name", "viewedcontent,addtocart,    customizeProducT    ")
         val commands = facebookRemoteCommand.splitCommands(json)
 
        assertEquals(3, commands.count())

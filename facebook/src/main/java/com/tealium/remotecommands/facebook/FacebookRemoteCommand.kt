@@ -471,6 +471,9 @@ open class FacebookRemoteCommand : RemoteCommand {
             .dropLastWhile {
                 it.isEmpty()
             }
+            .map {
+                it.trim().toLowerCase()
+            }
             .toTypedArray()
     }
 

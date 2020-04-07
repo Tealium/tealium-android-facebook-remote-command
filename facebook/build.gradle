@@ -1,6 +1,7 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-android'
+apply plugin: 'maven-publish'
 
 android {
     compileSdkVersion 29
@@ -14,6 +15,7 @@ android {
         versionName "$tealium_facebook_version"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles 'consumer-rules.pro'
 
     }
 
@@ -26,9 +28,30 @@ android {
 
 }
 
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            groupId 'com.tealium.remotecommands'
+            artifactId 'facebook'
+            version "$tealium_facebook_version"
+            artifact("$buildDir/outputs/aar/facebook-release.aar")
+        }
+    }
+    repositories {
+        maven {
+            url "s3://maven.tealiumiq.com/android/releases/"
+            credentials(AwsCredentials) {
+                // Dummy credentials provided in project's gradle.properties; these will be overridden by your global settings in ~/.gradle/gradle.properties
+                accessKey AWS_ACCESS_KEY
+                secretKey AWS_SECRET_KEY
+            }
+        }
+    }
+}
+
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'com.facebook.android:facebook-android-sdk:[5,6)'
+    api 'com.facebook.android:facebook-android-sdk:[5,6)'
     implementation "com.tealium:library:$tealium_version"
     implementation 'androidx.appcompat:appcompat:1.0.2'
     testImplementation 'junit:junit:4.12'

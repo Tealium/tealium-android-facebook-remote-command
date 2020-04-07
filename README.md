@@ -1,7 +1,7 @@
 # tealium-android-facebook-remote-command
 
 [![License](https://img.shields.io/badge/license-Proprietary-blue.svg?style=flat
-           )](https://github.com/Tealium/tealium-swift/blob/master/LICENSE.txt)
+           )](https://github.com/Tealium/tealium-android/blob/master/LICENSE.txt)
 [![Platform](https://img.shields.io/badge/Platform-Android-lightgrey.svg?style=flat
              )](https://developer.android.com/guide/index.html)
 [![Language](https://img.shields.io/badge/Language-Kotlin-orange.svg?style=flat
