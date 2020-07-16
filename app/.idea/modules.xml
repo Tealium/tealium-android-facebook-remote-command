@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app.iml" filepath="$PROJECT_DIR$/.idea/modules/app.iml" group="tealium-android-facebook-remote-command/app" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/-542992735/facebook.iml" filepath="$PROJECT_DIR$/.idea/modules/-542992735/facebook.iml" group="tealium-android-facebook-remote-command/facebook" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/1098019796/tealium-android-facebook-remote-command.iml" filepath="$PROJECT_DIR$/.idea/modules/1098019796/tealium-android-facebook-remote-command.iml" group="tealium-android-facebook-remote-command" />
+    </modules>
+  </component>
+</project>

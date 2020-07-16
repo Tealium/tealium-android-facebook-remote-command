@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="Gradle: com.tealium:library:5.7.0@aar">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/25311bbc77e2f20cc14e28c66cb2c08d/jetified-library-5.7.0/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/25311bbc77e2f20cc14e28c66cb2c08d/jetified-library-5.7.0/res" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

@@ -17,7 +17,7 @@ class App: Application() {
             WebView.setWebContentsDebuggingEnabled(true)
         }
 
-        val config = Tealium.Config.create(this, "tealiummobile", "facebook", "dev")
+        val config = Tealium.Config.create(this, "tealiummobile", "facebook-tag", "dev")
         config.forceOverrideLogLevel = "dev"
         tealium = Tealium.createInstance(TealiumHelper.instanceName, config)
         val facebookRemoteCommand = FacebookRemoteCommand(this)

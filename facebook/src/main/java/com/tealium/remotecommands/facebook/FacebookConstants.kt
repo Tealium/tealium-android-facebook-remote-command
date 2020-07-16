@@ -5,6 +5,7 @@ import com.facebook.appevents.AppEventsConstants
 object Commands {
     const val COMMAND_KEY = "command_name"
     const val SEPARATOR = ","
+    const val DEBUG = "debug"
 
     const val INITIALIZE = "initialize"
     const val LOG_PURCHASE = "logpurchase"
@@ -25,18 +26,18 @@ object Commands {
     const val DEACTIVATED_APP = "deactivatedapp"
     const val SESSION_INTERRUPTIONS = "sessioninterruptions"
     const val TIME_BETWEEN_SESSIONS = "timebetweensessions"
-    const val COMPLETED_REGISTRATION = "completedregistration"
+    const val COMPLETED_REGISTRATION = "completeregistration"
     const val VIEWED_CONTENT = "viewedcontent"
-    const val SEARCHED = "searched"
-    const val RATED = "rated"
-    const val COMPLETED_TUTORIAL = "completedtutorial"
+    const val SEARCHED = "search"
+    const val RATED = "rate"
+    const val COMPLETED_TUTORIAL = "completetutorial"
     const val PUSH_TOKEN_OBTAINED = "pushtokenobtained"
     const val ADDED_TO_CART = "addedtocart"
     const val ADDED_TO_WISHLIST = "addedtowishlist"
-    const val INITIATED_CHECKOUT = "initiatedcheckout"
-    const val ADDED_PAYMENT_INFO = "addedpaymentinfo"
-    const val ACHIEVED_LEVEL = "achievedlevel"
-    const val UNLOCKED_ACHIEVEMENT = "unlockedachievement"
+    const val INITIATED_CHECKOUT = "initiatecheckout"
+    const val ADDED_PAYMENT_INFO = "addpaymentinfo"
+    const val ACHIEVED_LEVEL = "achievelevel"
+    const val UNLOCKED_ACHIEVEMENT = "unlockachievement"
     const val SPENT_CREDITS = "spentcredits"
     const val CONTACT = "contact"
     const val CUSTOMIZE_PRODUCT = "customizeproduct"
@@ -67,14 +68,14 @@ object StandardEvents {
         "viewedcontent" to AppEventsConstants.EVENT_NAME_VIEWED_CONTENT,
         "searched" to AppEventsConstants.EVENT_NAME_SEARCHED,
         "rated" to AppEventsConstants.EVENT_NAME_RATED,
-        "completedtutorial" to AppEventsConstants.EVENT_NAME_COMPLETED_TUTORIAL,
+        "completetutorial" to AppEventsConstants.EVENT_NAME_COMPLETED_TUTORIAL,
         "pushtokenobtained" to AppEventsConstants.EVENT_NAME_PUSH_TOKEN_OBTAINED,
-        "addedtocart" to AppEventsConstants.EVENT_NAME_ADDED_TO_CART,
-        "addedtowishlist" to AppEventsConstants.EVENT_NAME_ADDED_TO_WISHLIST,
-        "initiatedcheckout" to AppEventsConstants.EVENT_NAME_INITIATED_CHECKOUT,
-        "addedpaymentinfo" to AppEventsConstants.EVENT_NAME_ADDED_PAYMENT_INFO,
-        "achievedlevel" to AppEventsConstants.EVENT_NAME_ACHIEVED_LEVEL,
-        "unlockedachievement" to AppEventsConstants.EVENT_NAME_UNLOCKED_ACHIEVEMENT,
+        "addtocart" to AppEventsConstants.EVENT_NAME_ADDED_TO_CART,
+        "addtowishlist" to AppEventsConstants.EVENT_NAME_ADDED_TO_WISHLIST,
+        "initiatecheckout" to AppEventsConstants.EVENT_NAME_INITIATED_CHECKOUT,
+        "addpaymentinfo" to AppEventsConstants.EVENT_NAME_ADDED_PAYMENT_INFO,
+        "achievelevel" to AppEventsConstants.EVENT_NAME_ACHIEVED_LEVEL,
+        "unlockachievement" to AppEventsConstants.EVENT_NAME_UNLOCKED_ACHIEVEMENT,
         "spentcredits" to AppEventsConstants.EVENT_NAME_SPENT_CREDITS,
         "contact" to AppEventsConstants.EVENT_NAME_CONTACT,
         "customizeproduct" to AppEventsConstants.EVENT_NAME_CUSTOMIZE_PRODUCT,
@@ -175,7 +176,7 @@ object User {
     const val ZIP = "zp"
     const val COUNTRY = "country"
 
-    const val USER_ID = "user_id"
+    const val USER_ID = "fb_user_id"
 }
 
 object Product {

@@ -1,13 +1,18 @@
 <resources>
     <string name="app_name">TealiumFacebook</string>
-    <string name="facebook_app_id">YOUR_FACEBOOK_APP_ID</string>
-    <string name="fb_login_protocol_scheme">YOUR_FACEBOOK_LOGIN</string>
+    <!--<string name="facebook_app_id">YOUR_FACEBOOK_APP_ID</string>
+    <string name="fb_login_protocol_scheme">YOUR_FACEBOOK_LOGIN</string>-->
+    <string name="facebook_app_id">407125680222876</string>
+    <string name="fb_login_protocol_scheme">fb407125680222876</string>
     <string name="purchase">Purchase</string>
     <string name="set_user">Set User</string>
+    <string name="add_to_cart">Add To Cart</string>
     <string name="update_user_value">Update User Value</string>
     <string name="log_product">Log Product</string>
     <string name="flush">Flush</string>
     <string name="about_title">Tealium Facebook %1$s</string>
     <string name="about_message">Tealium Android Library %1$s</string>
     <string name="achieve_level">Achieve Level</string>
+    <string name="complete_registration">Complete Registration</string>
+    <string name="set_user_id">Set User Id</string>
 </resources>

@@ -47,11 +47,46 @@
             app:layout_constraintStart_toStartOf="@+id/purchase_button"/>
 
     <Button
-            android:id="@+id/achieve_level_button"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="@string/achieve_level"
-            app:layout_constraintEnd_toEndOf="@+id/purchase_button"
-            app:layout_constraintStart_toStartOf="@+id/purchase_button"
-            app:layout_constraintTop_toBottomOf="@+id/flush_button" />
+        android:id="@+id/achieve_level_button"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/achieve_level"
+        app:layout_constraintEnd_toEndOf="@+id/purchase_button"
+        app:layout_constraintStart_toStartOf="@+id/purchase_button"
+        app:layout_constraintTop_toBottomOf="@+id/flush_button" />
+
+    <Button
+        android:id="@+id/complete_reg_button"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/complete_registration"
+        app:layout_constraintEnd_toEndOf="@+id/purchase_button"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/purchase_button"
+        app:layout_constraintTop_toBottomOf="@+id/achieve_level_button" />
+
+    <Button
+        android:id="@+id/add_to_cart_button"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/add_to_cart"
+        app:layout_constraintEnd_toEndOf="@+id/purchase_button"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/purchase_button"
+        app:layout_constraintTop_toBottomOf="@+id/complete_reg_button" />
+
+    <Button
+        android:id="@+id/set_user_id_button"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/set_user_id"
+        app:layout_constraintEnd_toEndOf="@+id/purchase_button"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/purchase_button"
+        app:layout_constraintTop_toBottomOf="@+id/add_to_cart_button" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

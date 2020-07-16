@@ -28,6 +28,7 @@ open class FacebookRemoteCommand : RemoteCommand {
 
     lateinit var tracker: FacebookAppEventsTrackable
     var application: Application? = null
+    var debug = false
 
     /**
      * Constructs a RemoteCommand that integrates with the Facebook App Events SDK to allow Facebook API calls to be implemented through Tealium.
@@ -131,6 +132,10 @@ open class FacebookRemoteCommand : RemoteCommand {
     @Throws(Exception::class)
     override fun onInvoke(response: Response) {
         val payload = response.requestPayload
+        val tagDebug = payload[Commands.DEBUG] as? Boolean
+        tagDebug?.let {
+            debug = it
+        }
         val commands = splitCommands(payload)
         parseCommands(commands, payload)
     }
@@ -157,7 +162,9 @@ open class FacebookRemoteCommand : RemoteCommand {
                                     appId
                                 )
                         } ?: run {
-                            Log.e(TAG, "${Initialize.APPLICATION_ID} $REQUIRED_KEY")
+                            if (debug) {
+                                Log.e(TAG, "${Initialize.APPLICATION_ID} $REQUIRED_KEY")
+                            }
                         }
                     }
                 }
@@ -166,7 +173,9 @@ open class FacebookRemoteCommand : RemoteCommand {
                     purchase?.let {
                         logPurchase(it)
                     } ?: run {
-                        Log.e(TAG, "${Purchase.PURCHASE} $REQUIRED_KEY")
+                        if (debug) {
+                            Log.e(TAG, "${Purchase.PURCHASE} $REQUIRED_KEY")
+                        }
                     }
                 }
                 Commands.SET_USER -> {
@@ -174,7 +183,9 @@ open class FacebookRemoteCommand : RemoteCommand {
                     userData?.let {
                         setUser(it)
                     } ?: run {
-                        Log.e(TAG, "${User.USER_DATA} $REQUIRED_KEY")
+                        if (debug) {
+                            Log.e(TAG, "${User.USER_DATA} $REQUIRED_KEY")
+                        }
                     }
                 }
                 Commands.SET_USER_ID -> {
@@ -183,7 +194,9 @@ open class FacebookRemoteCommand : RemoteCommand {
                         if (it.isNotEmpty()) {
                             tracker.setUserID(it)
                         } else {
-                            Log.e(TAG, "${User.USER_ID} $REQUIRED_KEY")
+                            if (debug) {
+                                Log.e(TAG, "${User.USER_ID} $REQUIRED_KEY")
+                            }
                         }
                     }
                 }
@@ -202,7 +215,9 @@ open class FacebookRemoteCommand : RemoteCommand {
                         bundle.putString(key, value)
                         tracker.updateUserProperties(bundle)
                     } else {
-                        Log.e(TAG, "${User.USER_KEY} and ${User.USER_VALUE} keys do not exist in the payload.")
+                        if (debug) {
+                            Log.e(TAG, "${User.USER_KEY} and ${User.USER_VALUE} keys do not exist in the payload.")
+                        }
                     }
                 }
                 Commands.LOG_PRODUCT_ITEM -> {
@@ -210,7 +225,9 @@ open class FacebookRemoteCommand : RemoteCommand {
                     productItem?.let {
                         logProductItem(it)
                     } ?: run {
-                        Log.e(TAG, "${Product.PRODUCT_ITEM} $REQUIRED_KEY")
+                        if (debug) {
+                            Log.e(TAG, "${Product.PRODUCT_ITEM} $REQUIRED_KEY")
+                        }
                     }
                 }
                 Commands.SET_FLUSH_BEHAVIOR -> {
@@ -218,7 +235,9 @@ open class FacebookRemoteCommand : RemoteCommand {
                     if (flushValue.isNotEmpty()) {
                         tracker.setFlushBehavior(flushValue)
                     } else {
-                        Log.e(TAG, "${Flush.FLUSH_BEHAVIOR} $REQUIRED_KEY")
+                        if (debug) {
+                            Log.e(TAG, "${Flush.FLUSH_BEHAVIOR} $REQUIRED_KEY")
+                        }
                     }
                 }
                 Commands.FLUSH -> {
@@ -229,7 +248,9 @@ open class FacebookRemoteCommand : RemoteCommand {
                     if (registrationId.isNotEmpty()) {
                         AppEventsLogger.setPushNotificationsRegistrationId(registrationId)
                     } else {
-                        Log.e(TAG, "${Push.REGISTRATION_ID} $REQUIRED_KEY")
+                        if (debug) {
+                            Log.e(TAG, "${Push.REGISTRATION_ID} $REQUIRED_KEY")
+                        }
                     }
                 }
                 Commands.SET_AUTO_LOG_APP_EVENTS -> {
@@ -251,7 +272,9 @@ open class FacebookRemoteCommand : RemoteCommand {
                         if (levelAchieved.isNotBlank()) {
                             logEvent(Commands.ACHIEVED_LEVEL, 0.0, it)
                         } else {
-                            Log.e(TAG, "${Event.LEVEL} $REQUIRED_KEY")
+                            if (debug) {
+                                Log.e(TAG, "${Event.LEVEL} $REQUIRED_KEY")
+                            }
                         }
                     }
                 }
@@ -262,7 +285,9 @@ open class FacebookRemoteCommand : RemoteCommand {
                         if (achievement.isNotBlank()) {
                             logEvent(Commands.UNLOCKED_ACHIEVEMENT, 0.0, it)
                         } else {
-                            Log.e(TAG, "${Event.DESCRIPTION} $REQUIRED_KEY")
+                            if (debug) {
+                                Log.e(TAG, "${Event.DESCRIPTION} $REQUIRED_KEY")
+                            }
                         }
                     }
                 }
@@ -273,7 +298,9 @@ open class FacebookRemoteCommand : RemoteCommand {
                         if (registrationMethod.isNotBlank()) {
                             logEvent(Commands.COMPLETED_REGISTRATION, 0.0, it)
                         } else {
-                            Log.e(TAG, "${Event.REGISTRATION_METHOD} $REQUIRED_KEY")
+                            if (debug) {
+                                Log.e(TAG, "${Event.REGISTRATION_METHOD} $REQUIRED_KEY")
+                            }
                         }
                     }
 
@@ -285,8 +312,9 @@ open class FacebookRemoteCommand : RemoteCommand {
                         if (contentId.isNotBlank()) {
                             logEvent(Commands.COMPLETED_TUTORIAL, 0.0, it)
                         } else {
-                            Log.e(TAG, "${Event.CONTENT_ID} $REQUIRED_KEY"
-                            )
+                            if (debug) {
+                                Log.e(TAG, "${Event.CONTENT_ID} $REQUIRED_KEY")
+                            }
                         }
                     }
                 }
@@ -297,7 +325,9 @@ open class FacebookRemoteCommand : RemoteCommand {
                         if (valueToSum > 0.0) {
                             logEvent(Commands.INITIATED_CHECKOUT, valueToSum, it)
                         } else {
-                            Log.e(TAG, "${Event.VALUE_TO_SUM} $REQUIRED_KEY")
+                            if (debug) {
+                                Log.e(TAG, "${Event.VALUE_TO_SUM} $REQUIRED_KEY")
+                            }
                         }
                     }
                 }
@@ -308,7 +338,9 @@ open class FacebookRemoteCommand : RemoteCommand {
                         if (contentType.isNotBlank()) {
                             logEvent(Commands.SEARCHED, 0.0, it)
                         } else {
-                            Log.e(TAG, "${Event.SEARCH_STRING} $REQUIRED_KEY")
+                            if (debug) {
+                                Log.e(TAG, "${Event.SEARCH_STRING} $REQUIRED_KEY")
+                            }
                         }
                     }
                 }
@@ -403,6 +435,7 @@ open class FacebookRemoteCommand : RemoteCommand {
     }
 
     fun logProductItem(productItem: JSONObject) {
+        // TODO: Handle arrays when tag is updated
         val productId = productItem.optString(ProductItemParameters.PRODUCT_ID)
         val productAvailability = productItem.optInt(ProductItemParameters.PRODUCT_AVAILABILITY)
         val productCondition = productItem.optInt(ProductItemParameters.PRODUCT_CONDITION)
@@ -501,7 +534,9 @@ open class FacebookRemoteCommand : RemoteCommand {
         return try {
             Currency.getInstance(currencyString)
         } catch (e: IllegalArgumentException) {
-            Log.e(TAG, e.toString())
+            if (debug) {
+                Log.e(TAG, e.toString())
+            }
             null
         }
     }
