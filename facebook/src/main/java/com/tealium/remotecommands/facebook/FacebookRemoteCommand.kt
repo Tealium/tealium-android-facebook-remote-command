@@ -7,16 +7,21 @@ import Commands
 import Event
 import Event.VALUE_TO_SUM
 import Flush
+import Initialize
 import Product
 import ProductItemParameters
 import Purchase
 import Push
+import StandardEvents
 import User
 import android.app.Application
 import android.os.Bundle
 import android.util.Log
 import com.facebook.appevents.AppEventsLogger
+//import com.sun.org.apache.xalan.internal.lib.ExsltDynamic.closure
 import com.tealium.internal.tagbridge.RemoteCommand
+import org.json.JSONArray
+import org.json.JSONException
 import org.json.JSONObject
 import java.math.BigDecimal
 import java.util.*
@@ -435,7 +440,74 @@ open class FacebookRemoteCommand : RemoteCommand {
     }
 
     fun logProductItem(productItem: JSONObject) {
-        // TODO: Handle arrays when tag is updated
+        logForEachProduct(productItem)
+    }
+
+    private fun logForEachProduct(productItem: JSONObject) {
+        val productItemMap = toMap(productItem)
+        val productId = productItemMap?.get(ProductItemParameters.PRODUCT_ID) as? ArrayList<String>
+        val productAvailability = productItemMap?.get(ProductItemParameters.PRODUCT_AVAILABILITY) as? ArrayList<Int>
+        val productCondition = productItemMap?.get(ProductItemParameters.PRODUCT_CONDITION) as? ArrayList<Int>
+        val productDescription = productItemMap?.get(ProductItemParameters.PRODUCT_DESCRIPTION) as? ArrayList<String>
+        val productImageLink = productItemMap?.get(ProductItemParameters.PRODUCT_IMAGE_LINK) as? ArrayList<String>
+        val productLink = productItemMap?.get(ProductItemParameters.PRODUCT_LINK) as? ArrayList<String>
+        val productTitle = productItemMap?.get(ProductItemParameters.PRODUCT_TITLE) as? ArrayList<String>
+        val productPriceAmount = productItemMap?.get(ProductItemParameters.PRODUCT_PRICE_AMOUNT) as? ArrayList<Double>
+        val productGtin = productItemMap?.get(ProductItemParameters.PRODUCT_GTIN) as? ArrayList<String>
+        val productMpn = productItemMap?.get(ProductItemParameters.PRODUCT_MPN) as? ArrayList<String>
+        val productBrand = productItemMap?.get(ProductItemParameters.PRODUCT_BRAND) as? ArrayList<String>
+        val productPriceCurrency = productItemMap?.get(ProductItemParameters.PRODUCT_PRICE_CURRENCY) as? ArrayList<String>
+        val productParameters = productItemMap?.get(ProductItemParameters.PRODUCT_PARAMETERS) as? Map<String, Any>
+
+        var result = JSONObject()
+        var productParamsResult = JSONObject()
+        productId?.forEachIndexed { index, element ->
+            result.put(ProductItemParameters.PRODUCT_ID, element)
+            productAvailability?.let {
+                result.put(ProductItemParameters.PRODUCT_AVAILABILITY, it[index])
+            }
+            productCondition?.let {
+                result.put(ProductItemParameters.PRODUCT_CONDITION, it[index])
+            }
+            productDescription?.let {
+                result.put(ProductItemParameters.PRODUCT_DESCRIPTION, it[index])
+            }
+            productImageLink?.let {
+                result.put(ProductItemParameters.PRODUCT_IMAGE_LINK, it[index])
+            }
+            productLink?.let {
+                result.put(ProductItemParameters.PRODUCT_LINK, it[index])
+            }
+            productTitle?.let {
+                result.put(ProductItemParameters.PRODUCT_TITLE, it[index])
+            }
+            productPriceAmount?.let {
+                result.put(ProductItemParameters.PRODUCT_PRICE_AMOUNT, it[index])
+            }
+            productGtin?.let {
+                result.put(ProductItemParameters.PRODUCT_GTIN, it[index])
+            }
+            productMpn?.let {
+                result.put(ProductItemParameters.PRODUCT_MPN, it[index])
+            }
+            productBrand?.let {
+                result.put(ProductItemParameters.PRODUCT_BRAND, it[index])
+            }
+            productPriceCurrency?.let {
+                result.put(ProductItemParameters.PRODUCT_PRICE_CURRENCY, it[index])
+            }
+            productParameters?.forEach { param ->
+                val value = param.value as? ArrayList<*>
+                value?.let {
+                    productParamsResult.put(param.key, it[index])
+                }
+            }
+            result.put(ProductItemParameters.PRODUCT_PARAMETERS, productParamsResult)
+            log(result)
+        }
+    }
+
+    private fun log(productItem: JSONObject) {
         val productId = productItem.optString(ProductItemParameters.PRODUCT_ID)
         val productAvailability = productItem.optInt(ProductItemParameters.PRODUCT_AVAILABILITY)
         val productCondition = productItem.optInt(ProductItemParameters.PRODUCT_CONDITION)
@@ -538,6 +610,63 @@ open class FacebookRemoteCommand : RemoteCommand {
                 Log.e(TAG, e.toString())
             }
             null
+        }
+    }
+
+    @Throws(JSONException::class)
+    private fun toMap(`object`: JSONObject): Map<String, Any>? {
+        var map: MutableMap<String, Any> = HashMap()
+        val keys: Iterator<*> = `object`.keys()
+        while (keys.hasNext()) {
+            val key = keys.next() as String
+            fromJson(`object`[key])?.let {
+                map[key] = it
+            }
+        }
+        return map
+    }
+
+    @Throws(JSONException::class)
+    private fun toList(array: JSONArray): List<*>? {
+        val list: MutableList<Any> = ArrayList<Any>()
+        for (i in 0 until array.length()) {
+            fromJson(array[i])?.let {
+                list.add(it)
+            }
+        }
+        return list
+    }
+
+    @Throws(JSONException::class)
+    private fun fromJson(json: Any): Any? {
+        return if (json === JSONObject.NULL) {
+            null
+        } else if (json is JSONObject) {
+            toMap(json)
+        } else if (json is JSONArray) {
+            toList(json)
+        } else {
+            json
+        }
+    }
+
+    @Throws(JSONException::class)
+    private fun toJson(`object`: Any?): Any? {
+        return if (`object` is Map<*, *>) {
+            val json = JSONObject()
+            val map = `object` as Map<*, *>
+            for (key in map.keys) {
+                json.put(key.toString(), toJson(map[key]))
+            }
+            json
+        } else if (`object` is Iterable<*>) {
+            val json = JSONArray()
+            for (value in `object` as Iterable<*>) {
+                json.put(value)
+            }
+            json
+        } else {
+            `object`
         }
     }
 
