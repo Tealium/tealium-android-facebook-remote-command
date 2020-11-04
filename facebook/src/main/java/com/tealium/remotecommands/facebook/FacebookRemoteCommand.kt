@@ -16,17 +16,18 @@ import android.app.Application
 import android.os.Bundle
 import android.util.Log
 import com.facebook.appevents.AppEventsLogger
-import com.tealium.internal.tagbridge.RemoteCommand
+import com.tealium.remotecommands.RemoteCommand
 import org.json.JSONObject
 import java.math.BigDecimal
 import java.util.*
+import kotlin.jvm.Throws
 
 
 open class FacebookRemoteCommand : RemoteCommand {
 
     private val TAG = this::class.java.simpleName
 
-    lateinit var tracker: FacebookAppEventsTrackable
+    lateinit var facebookInstance: FacebookCommand
     var application: Application? = null
 
     /**
@@ -37,10 +38,11 @@ open class FacebookRemoteCommand : RemoteCommand {
         application: Application? = null,
         commandId: String = DEFAULT_COMMAND_ID,
         description: String = DEFAULT_COMMAND_DESCRIPTION,
-        facebookApplicationId: String? = null
+        facebookApplicationId: String? = null,
+        debugEnabled: Boolean? = null
     ) : super(commandId, description) {
         application?.let {
-            tracker = FacebookAppEventsTracker(it, facebookApplicationId)
+            facebookInstance = FacebookInstance(it, facebookApplicationId, debugEnabled)
             this.application = it
         }
     }
@@ -59,7 +61,7 @@ open class FacebookRemoteCommand : RemoteCommand {
 
     companion object {
         val DEFAULT_COMMAND_ID = "facebook"
-        val DEFAULT_COMMAND_DESCRIPTION = "Tealium-Facebook Remote Command"
+        val DEFAULT_COMMAND_DESCRIPTION = "TealiumFacebook Remote Command"
         val REQUIRED_KEY = "key does not exist in the payload."
 
         /**
@@ -149,12 +151,16 @@ open class FacebookRemoteCommand : RemoteCommand {
                         if (payload.optString(Initialize.APPLICATION_ID).isNotBlank()) payload.optString(
                             Initialize.APPLICATION_ID
                         ) else null
+                    val debugEnabled = if (payload.optString(Initialize.DEBUG_ENABLED).isNotBlank()) payload.optBoolean(
+                        Initialize.DEBUG_ENABLED
+                    ) else null
                     application?.let { appContext ->
                         applicationId?.let { appId ->
-                            tracker =
-                                FacebookAppEventsTracker(
+                            facebookInstance =
+                                FacebookInstance(
                                     appContext,
-                                    appId
+                                    appId,
+                                    debugEnabled
                                 )
                         } ?: run {
                             Log.e(TAG, "${Initialize.APPLICATION_ID} $REQUIRED_KEY")
@@ -164,6 +170,8 @@ open class FacebookRemoteCommand : RemoteCommand {
                 Commands.LOG_PURCHASE -> {
                     val purchase: JSONObject? = payload.optJSONObject(Purchase.PURCHASE)
                     purchase?.let {
+                        val purchaseParameters: JSONObject? = payload.optJSONObject(Purchase.PURCHASE_PARAMETERS)
+                        it.putOpt(Purchase.PURCHASE_PARAMETERS, purchaseParameters)
                         logPurchase(it)
                     } ?: run {
                         Log.e(TAG, "${Purchase.PURCHASE} $REQUIRED_KEY")
@@ -181,17 +189,17 @@ open class FacebookRemoteCommand : RemoteCommand {
                     val userId: String? = payload.optString(User.USER_ID)
                     userId?.let {
                         if (it.isNotEmpty()) {
-                            tracker.setUserID(it)
+                            facebookInstance.setUserID(it)
                         } else {
                             Log.e(TAG, "${User.USER_ID} $REQUIRED_KEY")
                         }
                     }
                 }
                 Commands.CLEAR_USER_DATA -> {
-                    tracker.clearUserData()
+                    facebookInstance.clearUserData()
                 }
                 Commands.CLEAR_USER_ID -> {
-                    tracker.clearUserID()
+                    facebookInstance.clearUserID()
                 }
                 Commands.UPDATE_USER_VALUE -> {
                     val userValue = payload.optString(User.USER_VALUE)
@@ -200,7 +208,7 @@ open class FacebookRemoteCommand : RemoteCommand {
                     val (key, value) = guardLet(userKey, userValue) { return }
                     if (key.isNotEmpty()) {
                         bundle.putString(key, value)
-                        tracker.updateUserProperties(bundle)
+                        facebookInstance.updateUserProperties(bundle)
                     } else {
                         Log.e(TAG, "${User.USER_KEY} and ${User.USER_VALUE} keys do not exist in the payload.")
                     }
@@ -208,6 +216,8 @@ open class FacebookRemoteCommand : RemoteCommand {
                 Commands.LOG_PRODUCT_ITEM -> {
                     val productItem = payload.optJSONObject(Product.PRODUCT_ITEM)
                     productItem?.let {
+                        val productParameters: JSONObject? = payload.optJSONObject(Product.PRODUCT_PARAMETERS)
+                        it.putOpt(Product.PRODUCT_PARAMETERS, productParameters)
                         logProductItem(it)
                     } ?: run {
                         Log.e(TAG, "${Product.PRODUCT_ITEM} $REQUIRED_KEY")
@@ -216,13 +226,13 @@ open class FacebookRemoteCommand : RemoteCommand {
                 Commands.SET_FLUSH_BEHAVIOR -> {
                     val flushValue = payload.optString(Flush.FLUSH_BEHAVIOR)
                     if (flushValue.isNotEmpty()) {
-                        tracker.setFlushBehavior(flushValue)
+                        facebookInstance.setFlushBehavior(flushValue)
                     } else {
                         Log.e(TAG, "${Flush.FLUSH_BEHAVIOR} $REQUIRED_KEY")
                     }
                 }
                 Commands.FLUSH -> {
-                    tracker.flush()
+                    facebookInstance.flush()
                 }
                 Commands.SET_PUSH_REGISTRATION_ID -> {
                     val registrationId = payload.optString(Push.REGISTRATION_ID)
@@ -234,15 +244,15 @@ open class FacebookRemoteCommand : RemoteCommand {
                 }
                 Commands.SET_AUTO_LOG_APP_EVENTS -> {
                     val autoLogEnable = payload.optBoolean(AutoLog.AUTO_LOG)
-                    tracker.enableAutoLogAppEvents(autoLogEnable)
+                    facebookInstance.enableAutoLogAppEvents(autoLogEnable)
                 }
                 Commands.SET_AUTO_INITIALIZED -> {
                     val autoInitEnable = payload.optBoolean(AutoInit.AUTO_INITIALIZED)
-                    tracker.enableAutoInitialize(autoInitEnable)
+                    facebookInstance.enableAutoInitialize(autoInitEnable)
                 }
                 Commands.SET_ADVERTISER_ID_COLLECTION -> {
                     val advertiserIDEnable = payload.optBoolean(Advertiser.ADVERTISER_COLLECTION)
-                    tracker.enableAdvertiserIDCollection(advertiserIDEnable)
+                    facebookInstance.enableAdvertiserIDCollection(advertiserIDEnable)
                 }
                 Commands.ACHIEVED_LEVEL -> {
                     val eventParameters = payload.optJSONObject(Event.EVENT_PARAMETERS)
@@ -339,19 +349,19 @@ open class FacebookRemoteCommand : RemoteCommand {
                 eventParameters?.let { parameters ->
                     mapJsonToBundle(parameters, bundle)
                 }
-                tracker.logEvent(command, sumValue, bundle)
+                facebookInstance.logEvent(command, sumValue, bundle)
             }
         } else if (valueToSum > 0 && eventParameters == null) {
             valueToSum?.let { sumValue ->
-                tracker.logEvent(command, sumValue)
+                facebookInstance.logEvent(command, sumValue)
             }
         } else if (valueToSum == 0.0 && eventParameters != null) {
             eventParameters?.let { eventParameters ->
                 mapJsonToBundle(eventParameters, bundle)
             }
-            tracker.logEvent(command, bundle)
+            facebookInstance.logEvent(command, bundle)
         } else {
-            tracker.logEvent(command)
+            facebookInstance.logEvent(command)
         }
     }
 
@@ -370,9 +380,9 @@ open class FacebookRemoteCommand : RemoteCommand {
         parameters?.let { purchaseParameters ->
             val bundle = Bundle()
             mapJsonToBundle(purchaseParameters, bundle)
-            tracker.logPurchase(purchaseAmount, currency, bundle)
+            facebookInstance.logPurchase(purchaseAmount, currency, bundle)
         } ?: run {
-            tracker.logPurchase(purchaseAmount, currency)
+            facebookInstance.logPurchase(purchaseAmount, currency)
         }
     }
 
@@ -388,7 +398,7 @@ open class FacebookRemoteCommand : RemoteCommand {
         val zip = user.optString(User.ZIP)
         val country = user.optString(User.COUNTRY)
 
-        tracker.setUserData(
+        facebookInstance.setUserData(
             email,
             firstName,
             lastName,
@@ -442,7 +452,7 @@ open class FacebookRemoteCommand : RemoteCommand {
                 ) {
                     return
                 }
-                tracker.logProductItem(
+                facebookInstance.logProductItem(
                     productId,
                     availability,
                     condition,
@@ -462,7 +472,7 @@ open class FacebookRemoteCommand : RemoteCommand {
     }
 
     fun enableAutoLogAppEvents(enable: Boolean) {
-        tracker.enableAutoLogAppEvents(enable)
+        facebookInstance.enableAutoLogAppEvents(enable)
     }
 
     fun splitCommands(payload: JSONObject): Array<String> {

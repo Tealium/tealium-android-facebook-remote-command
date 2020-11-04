@@ -17,9 +17,9 @@ object Commands {
     const val SET_FLUSH_BEHAVIOR = "setflushbehavior"
     const val FLUSH = "flush"
     const val SET_PUSH_REGISTRATION_ID = "setpushregistrationid"
-    const val SET_AUTO_LOG_APP_EVENTS = "setautologappevents"
-    const val SET_AUTO_INITIALIZED = "setautoinitialized"
-    const val SET_ADVERTISER_ID_COLLECTION = "setadvertiseridcollection"
+    const val SET_AUTO_LOG_APP_EVENTS = "setautologappeventsenabled"
+    const val SET_AUTO_INITIALIZED = "setautoinitenabled"
+    const val SET_ADVERTISER_ID_COLLECTION = "enableadvertiseridcollection"
     const val LOG_PUSH_NOTIFICATION_OPEN = "logpushnotificationopen"
     const val ACTIVATED_APP = "activatedapp"
     const val DEACTIVATED_APP = "deactivatedapp"
@@ -175,7 +175,7 @@ object User {
     const val ZIP = "zp"
     const val COUNTRY = "country"
 
-    const val USER_ID = "user_id"
+    const val USER_ID = "fb_user_id"
 }
 
 object Product {
@@ -243,4 +243,5 @@ object Advertiser {
 
 object Initialize {
     const val APPLICATION_ID = "applicationid"
+    const val DEBUG_ENABLED = "debug"
 }

@@ -4,25 +4,32 @@ import Flush
 import android.app.Application
 import android.os.Bundle
 import com.facebook.FacebookSdk
+import com.facebook.LoggingBehavior
 import com.facebook.appevents.AppEventsLogger
 import java.math.BigDecimal
 import java.util.*
 
-class FacebookAppEventsTracker(
+class FacebookInstance(
     val application: Application,
-    applicationId: String?
-) : FacebookAppEventsTrackable {
+    applicationId: String?,
+    debugEnabled: Boolean?
+) : FacebookCommand {
 
     lateinit var logger: AppEventsLogger
 
     init {
-        initialize(applicationId)
+        initialize(applicationId, debugEnabled)
     }
 
-    override fun initialize(applicationId: String?) {
+    override fun initialize(applicationId: String?, debugEnabled: Boolean?) {
         applicationId?.let { appId ->
             FacebookSdk.setApplicationId(applicationId)
-            FacebookSdk.sdkInitialize(application)
+            FacebookSdk.fullyInitialize()
+            debugEnabled?.let {
+                FacebookSdk.setIsDebugEnabled(it)
+                FacebookSdk.addLoggingBehavior(LoggingBehavior.APP_EVENTS)
+            }
+            AppEventsLogger.activateApp(application)
             AppEventsLogger.initializeLib(application, appId)
             logger = AppEventsLogger.newLogger(application, applicationId)
         } ?: run {

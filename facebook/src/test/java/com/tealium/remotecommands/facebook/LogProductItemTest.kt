@@ -20,7 +20,7 @@ import java.util.*
 class LogProductItemTest {
 
     @MockK
-    lateinit var mockTracker: FacebookAppEventsTrackable
+    lateinit var mockInstance: FacebookCommand
 
     @InjectMockKs
     var facebookRemoteCommand: FacebookRemoteCommand = FacebookRemoteCommand(null)
@@ -34,9 +34,9 @@ class LogProductItemTest {
     fun logProductItemNotCalledWithoutProductItemKey() {
         facebookRemoteCommand.parseCommands(arrayOf(Commands.LOG_PRODUCT_ITEM), JSONObject())
         verify {
-            mockTracker wasNot Called
+            mockInstance wasNot Called
         }
-        confirmVerified(mockTracker)
+        confirmVerified(mockInstance)
     }
 
     @Test
@@ -44,7 +44,7 @@ class LogProductItemTest {
         val payload = createProductItemJson()
 
         every {
-            mockTracker.logProductItem(
+            mockInstance.logProductItem(
                 any(),
                 any(),
                 any(),
@@ -63,7 +63,7 @@ class LogProductItemTest {
 
         facebookRemoteCommand.parseCommands(arrayOf(Commands.LOG_PRODUCT_ITEM), payload)
         verify {
-            mockTracker.logProductItem(
+            mockInstance.logProductItem(
                 "product_id",
                 AppEventsLogger.ProductAvailability.AVALIABLE_FOR_ORDER,
                 AppEventsLogger.ProductCondition.NEW,
@@ -79,7 +79,7 @@ class LogProductItemTest {
                 any()
             )
         }
-        confirmVerified(mockTracker)
+        confirmVerified(mockInstance)
     }
 
     @Test
@@ -89,9 +89,9 @@ class LogProductItemTest {
 
         facebookRemoteCommand.parseCommands(arrayOf(Commands.LOG_PRODUCT_ITEM), payload)
         verify {
-            mockTracker wasNot Called
+            mockInstance wasNot Called
         }
-        confirmVerified(mockTracker)
+        confirmVerified(mockInstance)
     }
 
     @Test
@@ -101,9 +101,9 @@ class LogProductItemTest {
 
         facebookRemoteCommand.parseCommands(arrayOf(Commands.LOG_PRODUCT_ITEM), payload)
         verify {
-            mockTracker wasNot Called
+            mockInstance wasNot Called
         }
-        confirmVerified(mockTracker)
+        confirmVerified(mockInstance)
     }
 
     @Test
@@ -113,9 +113,9 @@ class LogProductItemTest {
 
         facebookRemoteCommand.parseCommands(arrayOf(Commands.LOG_PRODUCT_ITEM), payload)
         verify {
-            mockTracker wasNot Called
+            mockInstance wasNot Called
         }
-        confirmVerified(mockTracker)
+        confirmVerified(mockInstance)
     }
 
     @Test
@@ -125,9 +125,9 @@ class LogProductItemTest {
 
         facebookRemoteCommand.parseCommands(arrayOf(Commands.LOG_PRODUCT_ITEM), payload)
         verify {
-            mockTracker wasNot Called
+            mockInstance wasNot Called
         }
-        confirmVerified(mockTracker)
+        confirmVerified(mockInstance)
     }
 
     @Test
@@ -137,9 +137,9 @@ class LogProductItemTest {
 
         facebookRemoteCommand.parseCommands(arrayOf(Commands.LOG_PRODUCT_ITEM), payload)
         verify {
-            mockTracker wasNot Called
+            mockInstance wasNot Called
         }
-        confirmVerified(mockTracker)
+        confirmVerified(mockInstance)
     }
 
     @Test
@@ -149,9 +149,9 @@ class LogProductItemTest {
 
         facebookRemoteCommand.parseCommands(arrayOf(Commands.LOG_PRODUCT_ITEM), payload)
         verify {
-            mockTracker wasNot Called
+            mockInstance wasNot Called
         }
-        confirmVerified(mockTracker)
+        confirmVerified(mockInstance)
     }
 
     @Test
@@ -161,9 +161,9 @@ class LogProductItemTest {
 
         facebookRemoteCommand.parseCommands(arrayOf(Commands.LOG_PRODUCT_ITEM), payload)
         verify {
-            mockTracker wasNot Called
+            mockInstance wasNot Called
         }
-        confirmVerified(mockTracker)
+        confirmVerified(mockInstance)
     }
 
     @Test
@@ -173,9 +173,9 @@ class LogProductItemTest {
 
         facebookRemoteCommand.parseCommands(arrayOf(Commands.LOG_PRODUCT_ITEM), payload)
         verify {
-            mockTracker wasNot Called
+            mockInstance wasNot Called
         }
-        confirmVerified(mockTracker)
+        confirmVerified(mockInstance)
     }
 
     private fun createProductItemJson(): JSONObject {
@@ -195,7 +195,7 @@ class LogProductItemTest {
         productItemParameters.put(ProductItemParameters.PRODUCT_GTIN, "gtin")
         productItemParameters.put(ProductItemParameters.PRODUCT_MPN, "mpn")
         productItemParameters.put(ProductItemParameters.PRODUCT_BRAND, "tealium")
-//        productItemParameters.put(ProductItemParameters.PRODUCT_PARAMETERS, "my toy")
+        productItemParameters.put(ProductItemParameters.PRODUCT_PARAMETERS, "my toy")
 
         val payload = JSONObject()
         payload.put(Product.PRODUCT_ITEM, productItemParameters)

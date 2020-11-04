@@ -11,10 +11,12 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var purchaseButton: Button
     private lateinit var setUserButton: Button
+    private lateinit var setUserIdButton: Button
     private lateinit var updateUserValueButton: Button
     private lateinit var logProductButton: Button
     private lateinit var flushButton: Button
     private lateinit var achieveLevelButton: Button
+    private lateinit var addToCartButton: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,6 +27,9 @@ class MainActivity : AppCompatActivity() {
 
         setUserButton = findViewById(R.id.set_user_button)
         setUserButton.setOnClickListener { setUser() }
+
+        setUserIdButton = findViewById(R.id.set_user_id_button)
+        setUserIdButton.setOnClickListener { setUserId() }
 
         updateUserValueButton = findViewById(R.id.update_user_value_button)
         updateUserValueButton.setOnClickListener { updateUser() }
@@ -37,6 +42,9 @@ class MainActivity : AppCompatActivity() {
 
         achieveLevelButton = findViewById(R.id.achieve_level_button)
         achieveLevelButton.setOnClickListener { achieveLevel() }
+
+        addToCartButton = findViewById(R.id.add_to_cart_button)
+        addToCartButton.setOnClickListener { addToCart() }
 
         TealiumHelper.trackView("home_view")
     }
@@ -55,19 +63,30 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun logPurchase() {
-        TealiumHelper.trackEvent("logpurchase")
+        TealiumHelper.trackEvent("logpurchase", Purchase.info)
     }
 
     private fun setUser() {
-        TealiumHelper.trackEvent("setuser")
+        TealiumHelper.trackEvent("setuser", User.profile)
+    }
+
+    private fun setUserId() {
+        val userId = mutableMapOf<String, Any>(
+            "customer_id" to User.customerId
+        )
+        TealiumHelper.trackEvent("setuserid", userId)
     }
 
     private fun updateUser() {
-        TealiumHelper.trackEvent("updateuservalue")
+        val updateUser = mutableMapOf<String, Any>(
+            "customer_update_key" to "customer_last_name",
+            "customer_update_value" to "Smith"
+        )
+        TealiumHelper.trackEvent("updateuservalue", updateUser)
     }
 
     private fun logProductItem() {
-        TealiumHelper.trackEvent("logproductitem")
+        TealiumHelper.trackEvent("logproductitem", Product.info)
     }
 
     private fun flush() {
@@ -75,7 +94,18 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun achieveLevel() {
-        TealiumHelper.trackEvent("achievelevel")
+        val achievedLevel = mutableMapOf<String, Any>(
+            "level" to "5"
+        )
+        TealiumHelper.trackEvent("achievelevel", achievedLevel)
+    }
+
+    private fun addToCart() {
+        val addToCart = mutableMapOf<String, Any>(
+            "product_id" to Product.productId,
+            "product_unit_price" to Product.productPrice
+        )
+        TealiumHelper.trackEvent("addtocart", addToCart)
     }
 
     private fun showInfo() {
@@ -84,5 +114,57 @@ class MainActivity : AppCompatActivity() {
         builder.setTitle(dialogTitle)
         builder.setMessage(getString(R.string.about_message, BuildConfig.TEALIUM_VERSION))
         builder.create().show()
+    }
+}
+
+class Purchase {
+    companion object {
+        val info = mutableMapOf<String, Any>(
+            "order_id" to "order123",
+            "currency" to "USD",
+            "order_subtotal" to 19.99,
+            "bulk_discount" to "15",
+            "online_store_id" to 50
+        )
+    }
+}
+
+class User {
+    companion object {
+        val customerId = "cust123"
+        val profile = mutableMapOf<String, String>(
+            "customer_email" to "test@test.com",
+            "customer_id" to customerId,
+            "customer_first_name" to "John",
+            "customer_last_name" to "Doe",
+            "customer_phone" to "858-555-6666",
+            "customer_gender" to "M",
+            "customer_city" to "San Diego",
+            "customer_state" to "CA",
+            "customer_zip" to "92121",
+            "customer_country" to "US"
+        )
+    }
+}
+
+class Product {
+    companion object {
+        val productId = "abc123"
+        val productPrice = 19.99
+        val info = mutableMapOf<String, Any>(
+            "product_id" to productId,
+            "product_availability" to 1,
+            "product_condition" to 2,
+            "product_description" to "really cool",
+            "product_image_url" to "https://link.to.image",
+            "product_url" to "https://link.to.product",
+            "product_name" to "some cool product",
+            "product_gtin" to "ASDF235562SDFSDF",
+            "product_brand" to "awesome brand",
+            "product_unit_price" to productPrice,
+            "currency" to "USD",
+            "online_store_id" to "ABC234SDF",
+            "bulk_discount" to "15"
+        )
     }
 }
