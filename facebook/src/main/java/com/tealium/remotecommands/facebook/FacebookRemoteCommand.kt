@@ -60,9 +60,9 @@ open class FacebookRemoteCommand : RemoteCommand {
     }
 
     companion object {
-        val DEFAULT_COMMAND_ID = "facebook"
-        val DEFAULT_COMMAND_DESCRIPTION = "TealiumFacebook Remote Command"
-        val REQUIRED_KEY = "key does not exist in the payload."
+        const val DEFAULT_COMMAND_ID = "facebook"
+        const val DEFAULT_COMMAND_DESCRIPTION = "Tealium-Facebook Remote Command"
+        const val REQUIRED_KEY = "key does not exist in the payload."
 
         /**
          * Maps a JSON object to a Bundle. Does not support nested objects.
@@ -168,7 +168,7 @@ open class FacebookRemoteCommand : RemoteCommand {
                     }
                 }
                 Commands.LOG_PURCHASE -> {
-                    val purchase: JSONObject? = payload.optJSONObject(Purchase.PURCHASE)
+                    val purchase = payload.optJSONObject(Purchase.PURCHASE)
                     purchase?.let {
                         val purchaseParameters: JSONObject? = payload.optJSONObject(Purchase.PURCHASE_PARAMETERS)
                         it.putOpt(Purchase.PURCHASE_PARAMETERS, purchaseParameters)
@@ -178,7 +178,7 @@ open class FacebookRemoteCommand : RemoteCommand {
                     }
                 }
                 Commands.SET_USER -> {
-                    val userData: JSONObject? = payload.optJSONObject(User.USER_DATA)
+                    val userData = payload.optJSONObject(User.USER_DATA)
                     userData?.let {
                         setUser(it)
                     } ?: run {
@@ -186,7 +186,7 @@ open class FacebookRemoteCommand : RemoteCommand {
                     }
                 }
                 Commands.SET_USER_ID -> {
-                    val userId: String? = payload.optString(User.USER_ID)
+                    val userId = payload.optString(User.USER_ID)
                     userId?.let {
                         if (it.isNotEmpty()) {
                             facebookInstance.setUserID(it)

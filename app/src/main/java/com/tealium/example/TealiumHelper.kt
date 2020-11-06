@@ -19,9 +19,7 @@ object TealiumHelper {
 
     @JvmStatic
     fun initialize(application: Application) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && BuildConfig.DEBUG) {
-            WebView.setWebContentsDebuggingEnabled(true)
-        }
+        WebView.setWebContentsDebuggingEnabled(true)
 
         val config = TealiumConfig(application,
             "tealiummobile",
