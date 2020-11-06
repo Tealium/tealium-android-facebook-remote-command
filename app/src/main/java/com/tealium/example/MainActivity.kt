@@ -71,18 +71,16 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setUserId() {
-        val userId = mutableMapOf<String, Any>(
+        TealiumHelper.trackEvent("setuserid", mutableMapOf<String, Any>(
             "customer_id" to User.customerId
-        )
-        TealiumHelper.trackEvent("setuserid", userId)
+        ))
     }
 
     private fun updateUser() {
-        val updateUser = mutableMapOf<String, Any>(
+        TealiumHelper.trackEvent("updateuservalue", mutableMapOf<String, Any>(
             "customer_update_key" to "customer_last_name",
             "customer_update_value" to "Smith"
-        )
-        TealiumHelper.trackEvent("updateuservalue", updateUser)
+        ))
     }
 
     private fun logProductItem() {
@@ -94,18 +92,16 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun achieveLevel() {
-        val achievedLevel = mutableMapOf<String, Any>(
+        TealiumHelper.trackEvent("achievelevel", mutableMapOf<String, Any>(
             "level" to "5"
-        )
-        TealiumHelper.trackEvent("achievelevel", achievedLevel)
+        ))
     }
 
     private fun addToCart() {
-        val addToCart = mutableMapOf<String, Any>(
+        TealiumHelper.trackEvent("addtocart", mutableMapOf<String, Any>(
             "product_id" to Product.productId,
             "product_unit_price" to Product.productPrice
-        )
-        TealiumHelper.trackEvent("addtocart", addToCart)
+        ))
     }
 
     private fun showInfo() {
@@ -117,8 +113,8 @@ class MainActivity : AppCompatActivity() {
     }
 }
 
-class Purchase {
-    companion object {
+object Purchase {
+    //companion object {
         val info = mutableMapOf<String, Any>(
             "order_id" to "order123",
             "currency" to "USD",
@@ -126,45 +122,41 @@ class Purchase {
             "bulk_discount" to "15",
             "online_store_id" to 50
         )
-    }
+    //}
 }
 
-class User {
-    companion object {
-        val customerId = "cust123"
-        val profile = mutableMapOf<String, String>(
-            "customer_email" to "test@test.com",
-            "customer_id" to customerId,
-            "customer_first_name" to "John",
-            "customer_last_name" to "Doe",
-            "customer_phone" to "858-555-6666",
-            "customer_gender" to "M",
-            "customer_city" to "San Diego",
-            "customer_state" to "CA",
-            "customer_zip" to "92121",
-            "customer_country" to "US"
-        )
-    }
+object User {
+    val customerId = "cust123"
+    val profile = mutableMapOf<String, String>(
+        "customer_email" to "test@test.com",
+        "customer_id" to customerId,
+        "customer_first_name" to "John",
+        "customer_last_name" to "Doe",
+        "customer_phone" to "858-555-6666",
+        "customer_gender" to "M",
+        "customer_city" to "San Diego",
+        "customer_state" to "CA",
+        "customer_zip" to "92121",
+        "customer_country" to "US"
+    )
 }
 
-class Product {
-    companion object {
-        val productId = "abc123"
-        val productPrice = 19.99
-        val info = mutableMapOf<String, Any>(
-            "product_id" to productId,
-            "product_availability" to 1,
-            "product_condition" to 2,
-            "product_description" to "really cool",
-            "product_image_url" to "https://link.to.image",
-            "product_url" to "https://link.to.product",
-            "product_name" to "some cool product",
-            "product_gtin" to "ASDF235562SDFSDF",
-            "product_brand" to "awesome brand",
-            "product_unit_price" to productPrice,
-            "currency" to "USD",
-            "online_store_id" to "ABC234SDF",
-            "bulk_discount" to "15"
-        )
-    }
+object Product {
+    val productId = "abc123"
+    val productPrice = 19.99
+    val info = mutableMapOf<String, Any>(
+        "product_id" to productId,
+        "product_availability" to 1,
+        "product_condition" to 2,
+        "product_description" to "really cool",
+        "product_image_url" to "https://link.to.image",
+        "product_url" to "https://link.to.product",
+        "product_name" to "some cool product",
+        "product_gtin" to "ASDF235562SDFSDF",
+        "product_brand" to "awesome brand",
+        "product_unit_price" to productPrice,
+        "currency" to "USD",
+        "online_store_id" to "ABC234SDF",
+        "bulk_discount" to "15"
+    )
 }
