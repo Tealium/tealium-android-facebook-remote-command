@@ -114,15 +114,13 @@ class MainActivity : AppCompatActivity() {
 }
 
 object Purchase {
-    //companion object {
-        val info = mutableMapOf<String, Any>(
-            "order_id" to "order123",
-            "currency" to "USD",
-            "order_subtotal" to 19.99,
-            "bulk_discount" to "15",
-            "online_store_id" to 50
-        )
-    //}
+    val info = mutableMapOf<String, Any>(
+        "order_id" to "order123",
+        "currency" to "USD",
+        "order_subtotal" to 19.99,
+        "bulk_discount" to "15",
+        "online_store_id" to 50
+    )
 }
 
 object User {
