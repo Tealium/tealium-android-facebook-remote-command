@@ -37,11 +37,11 @@ publishing {
             artifact("$buildDir/outputs/aar/facebook-release.aar")
         }
     }
+
     repositories {
 //        maven {
 //            url "s3://maven.tealiumiq.com/android/releases/"
 //            credentials(AwsCredentials) {
-//                // Dummy credentials provided in project's gradle.properties; these will be overridden by your global settings in ~/.gradle/gradle.properties
 //                accessKey AWS_ACCESS_KEY
 //                secretKey AWS_SECRET_KEY
 //            }
