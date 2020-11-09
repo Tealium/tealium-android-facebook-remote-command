@@ -1,6 +1,6 @@
 apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
 apply plugin: 'maven-publish'
 
 android {
@@ -9,7 +9,7 @@ android {
 
 
     defaultConfig {
-        minSdkVersion 19
+        minSdkVersion 21
         targetSdkVersion 29
         versionCode 1
         versionName "$tealium_facebook_version"
@@ -37,22 +37,22 @@ publishing {
             artifact("$buildDir/outputs/aar/facebook-release.aar")
         }
     }
+
     repositories {
-        maven {
-            url "s3://maven.tealiumiq.com/android/releases/"
-            credentials(AwsCredentials) {
-                // Dummy credentials provided in project's gradle.properties; these will be overridden by your global settings in ~/.gradle/gradle.properties
-                accessKey AWS_ACCESS_KEY
-                secretKey AWS_SECRET_KEY
-            }
-        }
+//        maven {
+//            url "s3://maven.tealiumiq.com/android/releases/"
+//            credentials(AwsCredentials) {
+//                accessKey AWS_ACCESS_KEY
+//                secretKey AWS_SECRET_KEY
+//            }
+//        }
     }
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     api 'com.facebook.android:facebook-android-sdk:[5,6)'
-    implementation "com.tealium:library:$tealium_version"
+    implementation 'com.tealium:remotecommands:1.0.0'
     implementation 'androidx.appcompat:appcompat:1.0.2'
     testImplementation 'junit:junit:4.12'
     testImplementation "org.robolectric:robolectric:4.2"

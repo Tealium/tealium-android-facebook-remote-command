@@ -25,7 +25,7 @@ import java.util.*
 class FacebookRemoteCommandTest {
 
     @MockK
-    lateinit var mockTracker: FacebookAppEventsTrackable
+    lateinit var mockInstance: FacebookCommand
 
     @InjectMockKs
     var facebookRemoteCommand: FacebookRemoteCommand = FacebookRemoteCommand(null)
@@ -56,13 +56,13 @@ class FacebookRemoteCommandTest {
         val purchase = JSONObject()
         purchase.put(Purchase.PURCHASE, purchaseProperties)
 
-        every { mockTracker.logPurchase(any(), any()) } just Runs
+        every { mockInstance.logPurchase(any(), any()) } just Runs
 
         facebookRemoteCommand.parseCommands(arrayOf(Commands.LOG_PURCHASE), purchase)
         verify {
-            mockTracker.logPurchase(9.99.toBigDecimal(), Currency.getInstance("USD"))
+            mockInstance.logPurchase(9.99.toBigDecimal(), Currency.getInstance("USD"))
         }
-        confirmVerified(mockTracker)
+        confirmVerified(mockInstance)
     }
 
     @Test
@@ -79,14 +79,14 @@ class FacebookRemoteCommandTest {
         val purchase = JSONObject()
         purchase.put(Purchase.PURCHASE, purchaseProperties)
 
-        every { mockTracker.logPurchase(any(), any(), any()) } just Runs
+        every { mockInstance.logPurchase(any(), any(), any()) } just Runs
 
         facebookRemoteCommand.parseCommands(arrayOf(Commands.LOG_PURCHASE), purchase)
 
         verify {
-            mockTracker.logPurchase(9.99.toBigDecimal(), Currency.getInstance("USD"), any())
+            mockInstance.logPurchase(9.99.toBigDecimal(), Currency.getInstance("USD"), any())
         }
-        confirmVerified(mockTracker)
+        confirmVerified(mockInstance)
     }
 
     @Test
@@ -100,9 +100,9 @@ class FacebookRemoteCommandTest {
 
         facebookRemoteCommand.parseCommands(arrayOf(Commands.LOG_PURCHASE), purchase)
         verify {
-            mockTracker wasNot Called
+            mockInstance wasNot Called
         }
-        confirmVerified(mockTracker)
+        confirmVerified(mockInstance)
     }
 
     @Test
@@ -116,9 +116,9 @@ class FacebookRemoteCommandTest {
 
         facebookRemoteCommand.parseCommands(arrayOf(Commands.LOG_PURCHASE), purchase)
         verify {
-            mockTracker wasNot Called
+            mockInstance wasNot Called
         }
-        confirmVerified(mockTracker)
+        confirmVerified(mockInstance)
     }
 
     @Test
@@ -130,7 +130,7 @@ class FacebookRemoteCommandTest {
         user.put(User.USER_DATA, userProperties)
 
         every {
-            mockTracker.setUserData(
+            mockInstance.setUserData(
                 any(),
                 any(),
                 any(),
@@ -146,7 +146,7 @@ class FacebookRemoteCommandTest {
 
         facebookRemoteCommand.parseCommands(arrayOf(Commands.SET_USER), user)
         verify {
-            mockTracker.setUserData(
+            mockInstance.setUserData(
                 any(),
                 any(),
                 any(),
@@ -159,7 +159,7 @@ class FacebookRemoteCommandTest {
                 any()
             )
         }
-        confirmVerified(mockTracker)
+        confirmVerified(mockInstance)
     }
 
     @Test
@@ -170,9 +170,9 @@ class FacebookRemoteCommandTest {
 
         facebookRemoteCommand.parseCommands(arrayOf(Commands.SET_USER), user)
         verify {
-            mockTracker wasNot Called
+            mockInstance wasNot Called
         }
-        confirmVerified(mockTracker)
+        confirmVerified(mockInstance)
     }
 
     @Test
@@ -180,13 +180,13 @@ class FacebookRemoteCommandTest {
         val payload = JSONObject()
         payload.put(User.USER_ID, "testuser")
 
-        every { mockTracker.setUserID("testuser") } just Runs
+        every { mockInstance.setUserID("testuser") } just Runs
 
         facebookRemoteCommand.parseCommands(arrayOf(Commands.SET_USER_ID), payload)
         verify {
-            mockTracker.setUserID("testuser")
+            mockInstance.setUserID("testuser")
         }
-        confirmVerified(mockTracker)
+        confirmVerified(mockInstance)
     }
 
     @Test
@@ -195,9 +195,9 @@ class FacebookRemoteCommandTest {
 
         facebookRemoteCommand.parseCommands(arrayOf(Commands.SET_USER_ID), payload)
         verify {
-            mockTracker wasNot Called
+            mockInstance wasNot Called
         }
-        confirmVerified(mockTracker)
+        confirmVerified(mockInstance)
     }
 
     @Test
@@ -207,35 +207,35 @@ class FacebookRemoteCommandTest {
 
         facebookRemoteCommand.parseCommands(arrayOf(Commands.SET_USER_ID), payload)
         verify {
-            mockTracker wasNot Called
+            mockInstance wasNot Called
         }
-        confirmVerified(mockTracker)
+        confirmVerified(mockInstance)
     }
 
     @Test
     fun clearUserDataCalledWithCommand() {
         every {
-            mockTracker.clearUserData()
+            mockInstance.clearUserData()
         } just Runs
 
         facebookRemoteCommand.parseCommands(arrayOf(Commands.CLEAR_USER_DATA), JSONObject())
         verify {
-            mockTracker.clearUserData()
+            mockInstance.clearUserData()
         }
-        confirmVerified(mockTracker)
+        confirmVerified(mockInstance)
     }
 
     @Test
     fun clearUserIDCalledWithCommand() {
         every {
-            mockTracker.clearUserID()
+            mockInstance.clearUserID()
         } just Runs
 
         facebookRemoteCommand.parseCommands(arrayOf(Commands.CLEAR_USER_ID), JSONObject())
         verify {
-            mockTracker.clearUserID()
+            mockInstance.clearUserID()
         }
-        confirmVerified(mockTracker)
+        confirmVerified(mockInstance)
     }
 
     @Test
@@ -245,15 +245,15 @@ class FacebookRemoteCommandTest {
         payload.put(User.USER_VALUE, "value1")
 
         every {
-            mockTracker.updateUserProperties(any())
+            mockInstance.updateUserProperties(any())
         } just Runs
 
 
         facebookRemoteCommand.parseCommands(arrayOf(Commands.UPDATE_USER_VALUE), payload)
         verify {
-            mockTracker.updateUserProperties(any())
+            mockInstance.updateUserProperties(any())
         }
-        confirmVerified(mockTracker)
+        confirmVerified(mockInstance)
     }
 
     @Test
@@ -262,15 +262,15 @@ class FacebookRemoteCommandTest {
         payload.put(User.USER_VALUE, "value1")
 
         every {
-            mockTracker.updateUserProperties(any())
+            mockInstance.updateUserProperties(any())
         } just Runs
 
 
         facebookRemoteCommand.parseCommands(arrayOf(Commands.UPDATE_USER_VALUE), payload)
         verify {
-            mockTracker wasNot Called
+            mockInstance wasNot Called
         }
-        confirmVerified(mockTracker)
+        confirmVerified(mockInstance)
     }
 
     @Test
@@ -280,14 +280,14 @@ class FacebookRemoteCommandTest {
         payload.put(User.USER_VALUE, "value1")
 
         every {
-            mockTracker.updateUserProperties(any())
+            mockInstance.updateUserProperties(any())
         } just Runs
 
         facebookRemoteCommand.parseCommands(arrayOf(Commands.UPDATE_USER_VALUE), payload)
         verify {
-            mockTracker wasNot Called
+            mockInstance wasNot Called
         }
-        confirmVerified(mockTracker)
+        confirmVerified(mockInstance)
     }
 
     @Test
@@ -296,14 +296,14 @@ class FacebookRemoteCommandTest {
         payload.put(Flush.FLUSH_BEHAVIOR, Flush.AUTO)
 
         every {
-            mockTracker.setFlushBehavior(Flush.AUTO)
+            mockInstance.setFlushBehavior(Flush.AUTO)
         } just Runs
 
         facebookRemoteCommand.parseCommands(arrayOf(Commands.SET_FLUSH_BEHAVIOR), payload)
         verify {
-            mockTracker.setFlushBehavior(Flush.AUTO)
+            mockInstance.setFlushBehavior(Flush.AUTO)
         }
-        confirmVerified(mockTracker)
+        confirmVerified(mockInstance)
     }
 
     @Test
@@ -312,14 +312,14 @@ class FacebookRemoteCommandTest {
         payload.put(Flush.FLUSH_BEHAVIOR, Flush.EXPLICIT_ONLY)
 
         every {
-            mockTracker.setFlushBehavior(Flush.EXPLICIT_ONLY)
+            mockInstance.setFlushBehavior(Flush.EXPLICIT_ONLY)
         } just Runs
 
         facebookRemoteCommand.parseCommands(arrayOf(Commands.SET_FLUSH_BEHAVIOR), payload)
         verify {
-            mockTracker.setFlushBehavior(Flush.EXPLICIT_ONLY)
+            mockInstance.setFlushBehavior(Flush.EXPLICIT_ONLY)
         }
-        confirmVerified(mockTracker)
+        confirmVerified(mockInstance)
     }
 
     @Test
@@ -328,22 +328,22 @@ class FacebookRemoteCommandTest {
 
         facebookRemoteCommand.parseCommands(arrayOf(Commands.SET_FLUSH_BEHAVIOR), payload)
         verify {
-            mockTracker wasNot Called
+            mockInstance wasNot Called
         }
-        confirmVerified(mockTracker)
+        confirmVerified(mockInstance)
     }
 
     @Test
     fun flushCalled() {
         every {
-            mockTracker.flush()
+            mockInstance.flush()
         } just Runs
 
         facebookRemoteCommand.parseCommands(arrayOf(Commands.FLUSH), JSONObject())
         verify {
-            mockTracker.flush()
+            mockInstance.flush()
         }
-        confirmVerified(mockTracker)
+        confirmVerified(mockInstance)
     }
 
     @Test
@@ -352,9 +352,9 @@ class FacebookRemoteCommandTest {
 
         facebookRemoteCommand.parseCommands(arrayOf(Commands.SET_PUSH_REGISTRATION_ID), payload)
         verify {
-            mockTracker wasNot Called
+            mockInstance wasNot Called
         }
-        confirmVerified(mockTracker)
+        confirmVerified(mockInstance)
     }
 
     @Test
@@ -409,28 +409,28 @@ class FacebookRemoteCommandTest {
         val payload = JSONObject()
         payload.put(AutoLog.AUTO_LOG, true)
         every {
-            mockTracker.enableAutoLogAppEvents(true)
+            mockInstance.enableAutoLogAppEvents(true)
         } just Runs
 
         facebookRemoteCommand.parseCommands(arrayOf(Commands.SET_AUTO_LOG_APP_EVENTS), payload)
         verify {
-            mockTracker.enableAutoLogAppEvents(true)
+            mockInstance.enableAutoLogAppEvents(true)
         }
-        confirmVerified(mockTracker)
+        confirmVerified(mockInstance)
     }
 
     @Test
     fun setAutoLogAppEventsSetToFalseWithoutKey() {
         val payload = JSONObject()
         every {
-            mockTracker.enableAutoLogAppEvents(false)
+            mockInstance.enableAutoLogAppEvents(false)
         } just Runs
 
         facebookRemoteCommand.parseCommands(arrayOf(Commands.SET_AUTO_LOG_APP_EVENTS), payload)
         verify {
-            mockTracker.enableAutoLogAppEvents(false)
+            mockInstance.enableAutoLogAppEvents(false)
         }
-        confirmVerified(mockTracker)
+        confirmVerified(mockInstance)
     }
 
     @Test
@@ -438,28 +438,28 @@ class FacebookRemoteCommandTest {
         val payload = JSONObject()
         payload.put(AutoInit.AUTO_INITIALIZED, true)
         every {
-            mockTracker.enableAutoInitialize(true)
+            mockInstance.enableAutoInitialize(true)
         } just Runs
 
         facebookRemoteCommand.parseCommands(arrayOf(Commands.SET_AUTO_INITIALIZED), payload)
         verify {
-            mockTracker.enableAutoInitialize(true)
+            mockInstance.enableAutoInitialize(true)
         }
-        confirmVerified(mockTracker)
+        confirmVerified(mockInstance)
     }
 
     @Test
     fun setAutoInitSetToFalseWithoutKey() {
         val payload = JSONObject()
         every {
-            mockTracker.enableAutoInitialize(false)
+            mockInstance.enableAutoInitialize(false)
         } just Runs
 
         facebookRemoteCommand.parseCommands(arrayOf(Commands.SET_AUTO_INITIALIZED), payload)
         verify {
-            mockTracker.enableAutoInitialize(false)
+            mockInstance.enableAutoInitialize(false)
         }
-        confirmVerified(mockTracker)
+        confirmVerified(mockInstance)
     }
 
     @Test
@@ -467,27 +467,27 @@ class FacebookRemoteCommandTest {
         val payload = JSONObject()
         payload.put(Advertiser.ADVERTISER_COLLECTION, true)
         every {
-            mockTracker.enableAdvertiserIDCollection(true)
+            mockInstance.enableAdvertiserIDCollection(true)
         } just Runs
 
         facebookRemoteCommand.parseCommands(arrayOf(Commands.SET_ADVERTISER_ID_COLLECTION), payload)
         verify {
-            mockTracker.enableAdvertiserIDCollection(true)
+            mockInstance.enableAdvertiserIDCollection(true)
         }
-        confirmVerified(mockTracker)
+        confirmVerified(mockInstance)
     }
 
     @Test
     fun setAdvertiserIDSetToFalseWithoutKey() {
         val payload = JSONObject()
         every {
-            mockTracker.enableAdvertiserIDCollection(false)
+            mockInstance.enableAdvertiserIDCollection(false)
         } just Runs
 
         facebookRemoteCommand.parseCommands(arrayOf(Commands.SET_ADVERTISER_ID_COLLECTION), payload)
         verify {
-            mockTracker.enableAdvertiserIDCollection(false)
+            mockInstance.enableAdvertiserIDCollection(false)
         }
-        confirmVerified(mockTracker)
+        confirmVerified(mockInstance)
     }
 }

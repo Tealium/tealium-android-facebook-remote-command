@@ -15,7 +15,7 @@ import org.robolectric.RobolectricTestRunner
 @RunWith(RobolectricTestRunner::class)
 class StandardEventTest {
     @MockK
-    lateinit var mockTracker: FacebookAppEventsTrackable
+    lateinit var mockInstance: FacebookCommand
 
     @InjectMockKs
     var facebookRemoteCommand: FacebookRemoteCommand = FacebookRemoteCommand(null)
@@ -40,16 +40,16 @@ class StandardEventTest {
     @Test
     fun logEventCallsEventNameOnly() {
         every {
-            mockTracker.logEvent("AdImpression", any<Bundle>())
+            mockInstance.logEvent("AdImpression", any<Bundle>())
         } just Runs
 
         val payload = JSONObject()
         payload.put("event", JSONObject())
         facebookRemoteCommand.parseCommands(arrayOf("adimpression"), payload)
         verify {
-            mockTracker.logEvent("AdImpression", any<Bundle>())
+            mockInstance.logEvent("AdImpression", any<Bundle>())
         }
-        confirmVerified(mockTracker)
+        confirmVerified(mockInstance)
     }
 
     @Test
@@ -57,14 +57,14 @@ class StandardEventTest {
         val payload = JSONObject()
         payload.put(Event.VALUE_TO_SUM, 1.0)
         every {
-            mockTracker.logEvent("AdImpression", 1.0)
+            mockInstance.logEvent("AdImpression", 1.0)
         } just Runs
 
         facebookRemoteCommand.parseCommands(arrayOf("adimpression"), payload)
         verify {
-            mockTracker.logEvent("AdImpression", 1.0)
+            mockInstance.logEvent("AdImpression", 1.0)
         }
-        confirmVerified(mockTracker)
+        confirmVerified(mockInstance)
     }
 
     @Test
@@ -76,14 +76,14 @@ class StandardEventTest {
         payload.put(Event.EVENT_PARAMETERS, eventParameters)
 
         every {
-            mockTracker.logEvent("AdImpression", any<Bundle>())
+            mockInstance.logEvent("AdImpression", any<Bundle>())
         } just Runs
 
         facebookRemoteCommand.parseCommands(arrayOf("adimpression"), payload)
         verify {
-            mockTracker.logEvent("AdImpression", any<Bundle>())
+            mockInstance.logEvent("AdImpression", any<Bundle>())
         }
-        confirmVerified(mockTracker)
+        confirmVerified(mockInstance)
     }
 
     @Test
@@ -97,13 +97,13 @@ class StandardEventTest {
         payload.put(Event.EVENT_PARAMETERS, eventParameters)
 
         every {
-            mockTracker.logEvent("AdImpression", 1.0, any<Bundle>())
+            mockInstance.logEvent("AdImpression", 1.0, any<Bundle>())
         } just Runs
 
         facebookRemoteCommand.parseCommands(arrayOf("adimpression"), payload)
         verify {
-            mockTracker.logEvent("AdImpression", 1.0, any<Bundle>())
+            mockInstance.logEvent("AdImpression", 1.0, any<Bundle>())
         }
-        confirmVerified(mockTracker)
+        confirmVerified(mockInstance)
     }
 }

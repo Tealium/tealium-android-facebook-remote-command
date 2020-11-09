@@ -5,9 +5,9 @@ import com.facebook.appevents.AppEventsLogger
 import java.math.BigDecimal
 import java.util.*
 
-interface FacebookAppEventsTrackable {
+interface FacebookCommand {
     // Initialize
-    fun initialize(applicationId: String?)
+    fun initialize(applicationId: String?, debugEnabled: Boolean?)
     fun enableAutoLogAppEvents(enable: Boolean)
     fun enableAutoInitialize(enable: Boolean)
     fun enableAdvertiserIDCollection(enable: Boolean)
