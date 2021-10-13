@@ -323,11 +323,10 @@ open class FacebookRemoteCommand : RemoteCommand {
                     }
                 }
                 else -> {
-                    standardEvent(command)?.let { facebookEventName ->
-                        val valueToSum = payload.optDouble(VALUE_TO_SUM, 0.0)
-                        val eventParameters = payload.optJSONObject(Event.EVENT_PARAMETERS)
-                        logEvent(facebookEventName, valueToSum, eventParameters)
-                    }
+                    val event = standardEvent(command)
+                    val valueToSum = payload.optDouble(VALUE_TO_SUM, 0.0)
+                    val eventParameters = payload.optJSONObject(Event.EVENT_PARAMETERS)
+                    logEvent(event, valueToSum, eventParameters)
                 }
             }
         }
@@ -338,8 +337,12 @@ open class FacebookRemoteCommand : RemoteCommand {
      *
      * @param commandName - name of the Tealium command name.
      */
-    fun standardEvent(commandName: String): String? {
-        return StandardEvents.standardEventNames[commandName]
+    fun standardEvent(commandName: String): String {
+        StandardEvents.standardEventNames[commandName]?.let { standardEvent ->
+            return standardEvent
+        } ?: run {
+            return commandName
+        }
     }
 
     fun logEvent(command: String, valueToSum: Double, eventParameters: JSONObject? = null) {
