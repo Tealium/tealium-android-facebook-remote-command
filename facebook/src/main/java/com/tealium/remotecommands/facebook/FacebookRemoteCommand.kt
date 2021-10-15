@@ -338,11 +338,7 @@ open class FacebookRemoteCommand : RemoteCommand {
      * @param commandName - name of the Tealium command name.
      */
     fun standardEvent(commandName: String): String {
-        StandardEvents.standardEventNames[commandName]?.let { standardEvent ->
-            return standardEvent
-        } ?: run {
-            return commandName
-        }
+        return StandardEvents.standardEventNames[commandName] ?: commandName
     }
 
     fun logEvent(command: String, valueToSum: Double, eventParameters: JSONObject? = null) {
