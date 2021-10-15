@@ -32,12 +32,6 @@ class StandardEventTest {
     }
 
     @Test
-    fun standardEventFailure() {
-        val isStandardEvent = facebookRemoteCommand.standardEvent("notanevent")
-        Assert.assertNull(isStandardEvent)
-    }
-
-    @Test
     fun logEventCallsEventNameOnly() {
         every {
             mockInstance.logEvent("AdImpression", any<Bundle>())
@@ -48,6 +42,19 @@ class StandardEventTest {
         facebookRemoteCommand.parseCommands(arrayOf("adimpression"), payload)
         verify {
             mockInstance.logEvent("AdImpression", any<Bundle>())
+        }
+        confirmVerified(mockInstance)
+    }
+
+    @Test
+    fun logCustomEvent() {
+        every {
+            mockInstance.logEvent("customfbevent")
+        } just Runs
+
+        facebookRemoteCommand.parseCommands(arrayOf("customfbevent"), JSONObject())
+        verify {
+            mockInstance.logEvent("customfbevent")
         }
         confirmVerified(mockInstance)
     }
