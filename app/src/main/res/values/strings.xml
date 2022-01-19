@@ -12,4 +12,5 @@
     <string name="about_message">Tealium Kotlin Library %1$s</string>
     <string name="achieve_level">Achieve Level</string>
     <string name="add_to_cart">Add To Cart</string>
+    <string name="custom_event">Custom Event</string>
 </resources>

@@ -4,7 +4,7 @@ buildscript {
     ext.kotlin_version = '1.4.10'
     ext.mockk_version = '1.9'
     ext.tealium_version = '1.0.0'
-    ext.tealium_facebook_version = '2.0.0'
+    ext.tealium_facebook_version = '2.0.1'
     repositories {
         google()
         jcenter()
