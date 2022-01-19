@@ -72,4 +72,13 @@
         app:layout_constraintStart_toStartOf="@+id/purchase_button"
         app:layout_constraintTop_toBottomOf="@+id/achieve_level_button" />
 
+    <Button
+        android:id="@+id/custom_event"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/custom_event"
+        app:layout_constraintEnd_toEndOf="@+id/purchase_button"
+        app:layout_constraintStart_toStartOf="@+id/purchase_button"
+        app:layout_constraintTop_toBottomOf="@+id/add_to_cart_button" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

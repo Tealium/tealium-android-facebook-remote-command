@@ -17,6 +17,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var flushButton: Button
     private lateinit var achieveLevelButton: Button
     private lateinit var addToCartButton: Button
+    private lateinit var customEventButton: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,6 +46,9 @@ class MainActivity : AppCompatActivity() {
 
         addToCartButton = findViewById(R.id.add_to_cart_button)
         addToCartButton.setOnClickListener { addToCart() }
+
+        customEventButton = findViewById(R.id.custom_event)
+        customEventButton.setOnClickListener { customEvent() }
 
         TealiumHelper.trackView("home_view")
     }
@@ -102,6 +106,10 @@ class MainActivity : AppCompatActivity() {
             "product_id" to Product.productId,
             "product_unit_price" to Product.productPrice
         ))
+    }
+
+    private fun customEvent() {
+        TealiumHelper.trackEvent("customfbevent")
     }
 
     private fun showInfo() {
