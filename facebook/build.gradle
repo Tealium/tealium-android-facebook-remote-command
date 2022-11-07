@@ -12,6 +12,7 @@ android {
         targetSdkVersion 31
         versionCode 1
         versionName "$tealium_facebook_version"
+        buildConfigField 'String', "TEALIUM_FACEBOOK_VERSION", "\"$tealium_facebook_version\""
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles 'consumer-rules.pro'
@@ -56,6 +57,7 @@ afterEvaluate {
     //            credentials(AwsCredentials) {
     //                accessKey AWS_ACCESS_KEY
     //                secretKey AWS_SECRET_KEY
+    //                sessionToken AWS_SESSION_TOKEN
     //            }
     //        }
         }
@@ -64,11 +66,11 @@ afterEvaluate {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    api 'com.facebook.android:facebook-android-sdk:[5,6)'
-    implementation 'com.tealium:remotecommands:1.0.0'
+    api "com.facebook.android:facebook-android-sdk:$facebook_version"
+    implementation 'com.tealium:remotecommands:1.0.1'
     implementation 'androidx.appcompat:appcompat:1.4.1'
     testImplementation 'junit:junit:4.13.2'
-    testImplementation "org.robolectric:robolectric:4.6.1"
+    testImplementation "org.robolectric:robolectric:4.8"
     testImplementation "io.mockk:mockk:$mockk_version"
     androidTestImplementation 'androidx.test:runner:1.4.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'

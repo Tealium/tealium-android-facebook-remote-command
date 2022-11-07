@@ -40,7 +40,7 @@ open class FacebookRemoteCommand : RemoteCommand {
         description: String = DEFAULT_COMMAND_DESCRIPTION,
         facebookApplicationId: String? = null,
         debugEnabled: Boolean? = null
-    ) : super(commandId, description) {
+    ) : super(commandId, description, BuildConfig.TEALIUM_FACEBOOK_VERSION) {
         application?.let {
             facebookInstance = FacebookInstance(it, facebookApplicationId, debugEnabled)
             this.application = it
@@ -53,7 +53,7 @@ open class FacebookRemoteCommand : RemoteCommand {
         application: Application? = null,
         commandId: String = DEFAULT_COMMAND_ID,
         description: String = DEFAULT_COMMAND_DESCRIPTION
-    ) : super(commandId, description) {
+    ) : super(commandId, description, BuildConfig.TEALIUM_FACEBOOK_VERSION) {
         application?.let {
             this.application = it
         }
@@ -200,18 +200,6 @@ open class FacebookRemoteCommand : RemoteCommand {
                 }
                 Commands.CLEAR_USER_ID -> {
                     facebookInstance.clearUserID()
-                }
-                Commands.UPDATE_USER_VALUE -> {
-                    val userValue = payload.optString(User.USER_VALUE)
-                    val userKey = payload.optString(User.USER_KEY)
-                    val bundle = Bundle()
-                    val (key, value) = guardLet(userKey, userValue) { return }
-                    if (key.isNotEmpty()) {
-                        bundle.putString(key, value)
-                        facebookInstance.updateUserProperties(bundle)
-                    } else {
-                        Log.e(TAG, "${User.USER_KEY} and ${User.USER_VALUE} keys do not exist in the payload.")
-                    }
                 }
                 Commands.LOG_PRODUCT_ITEM -> {
                     val productItem = payload.optJSONObject(Product.PRODUCT_ITEM)

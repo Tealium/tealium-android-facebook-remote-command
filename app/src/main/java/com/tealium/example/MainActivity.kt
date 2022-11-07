@@ -4,51 +4,35 @@ import android.app.AlertDialog
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
+import com.tealium.example.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var purchaseButton: Button
-    private lateinit var setUserButton: Button
-    private lateinit var setUserIdButton: Button
-    private lateinit var updateUserValueButton: Button
-    private lateinit var logProductButton: Button
-    private lateinit var flushButton: Button
-    private lateinit var achieveLevelButton: Button
-    private lateinit var addToCartButton: Button
-    private lateinit var customEventButton: Button
+    lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        purchaseButton = findViewById(R.id.purchase_button)
-        purchaseButton.setOnClickListener { logPurchase() }
+        binding.purchaseButton.setOnClickListener { logPurchase() }
 
-        setUserButton = findViewById(R.id.set_user_button)
-        setUserButton.setOnClickListener { setUser() }
+        binding.setUserButton.setOnClickListener { setUser() }
 
-        setUserIdButton = findViewById(R.id.set_user_id_button)
-        setUserIdButton.setOnClickListener { setUserId() }
+        binding.setUserIdButton.setOnClickListener { setUserId() }
 
-        updateUserValueButton = findViewById(R.id.update_user_value_button)
-        updateUserValueButton.setOnClickListener { updateUser() }
+        binding.updateUserValueButton.setOnClickListener { updateUser() }
 
-        logProductButton = findViewById(R.id.log_product_item_button)
-        logProductButton.setOnClickListener { logProductItem() }
+        binding.logProductItemButton.setOnClickListener { logProductItem() }
 
-        flushButton = findViewById(R.id.flush_button)
-        flushButton.setOnClickListener { flush() }
+        binding.flushButton.setOnClickListener { flush() }
 
-        achieveLevelButton = findViewById(R.id.achieve_level_button)
-        achieveLevelButton.setOnClickListener { achieveLevel() }
+        binding.achieveLevelButton.setOnClickListener { achieveLevel() }
 
-        addToCartButton = findViewById(R.id.add_to_cart_button)
-        addToCartButton.setOnClickListener { addToCart() }
+        binding.addToCartButton.setOnClickListener { addToCart() }
 
-        customEventButton = findViewById(R.id.custom_event)
-        customEventButton.setOnClickListener { customEvent() }
+        binding.customEvent.setOnClickListener { customEvent() }
 
         TealiumHelper.trackView("home_view")
     }

@@ -87,8 +87,8 @@ class FacebookInstance(
         )
     }
 
-    override fun setUserID(userID: String) {
-        AppEventsLogger.setUserID(userID)
+    override fun setUserID(userId: String) {
+        AppEventsLogger.setUserID(userId)
     }
 
     override fun clearUserData() {
@@ -97,10 +97,6 @@ class FacebookInstance(
 
     override fun clearUserID() {
         AppEventsLogger.clearUserID()
-    }
-
-    override fun updateUserProperties(bundle: Bundle) {
-        AppEventsLogger.updateUserProperties(bundle, null)
     }
 
     override fun logProductItem(
