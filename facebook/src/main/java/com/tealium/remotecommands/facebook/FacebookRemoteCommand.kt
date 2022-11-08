@@ -23,7 +23,7 @@ import java.util.*
 import kotlin.jvm.Throws
 
 
-open class FacebookRemoteCommand : RemoteCommand {
+class FacebookRemoteCommand : RemoteCommand {
 
     private val TAG = this::class.java.simpleName
 
@@ -41,9 +41,11 @@ open class FacebookRemoteCommand : RemoteCommand {
         facebookApplicationId: String? = null,
         debugEnabled: Boolean? = null
     ) : super(commandId, description, BuildConfig.TEALIUM_FACEBOOK_VERSION) {
-        application?.let {
-            facebookInstance = FacebookInstance(it, facebookApplicationId, debugEnabled)
-            this.application = it
+        application?.let { app ->
+            this.application = app
+            facebookApplicationId?.let {
+                facebookInstance = FacebookInstance(app, it, debugEnabled)
+            }
         }
     }
 

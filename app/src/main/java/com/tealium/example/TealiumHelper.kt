@@ -1,8 +1,6 @@
 package com.tealium.example
 
-import android.app.Activity
 import android.app.Application
-import android.os.Build
 import android.webkit.WebView
 import com.tealium.core.*
 import com.tealium.dispatcher.TealiumEvent

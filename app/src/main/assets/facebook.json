@@ -44,6 +44,10 @@
     "push_payload": "push.fb_push_payload"
   },
   "commands": {
+    "init": "initialize",
+    "autologappevents": "setautologappeventsenabled",
+    "autoinit": "setautoinitenabled",
+    "adIdCollection": "enableadvertiseridcollection",
     "launch": "initialize,setautologappeventsenabled,setautoinitenabled,enableadvertiseridcollection",
     "setuser": "setuser",
     "setuserid": "setuserid",

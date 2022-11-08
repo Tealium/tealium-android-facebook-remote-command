@@ -59,16 +59,20 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setUserId() {
-        TealiumHelper.trackEvent("setuserid", mutableMapOf<String, Any>(
-            "customer_id" to User.customerId
-        ))
+        TealiumHelper.trackEvent(
+            "setuserid", mutableMapOf<String, Any>(
+                "customer_id" to User.customerId
+            )
+        )
     }
 
     private fun updateUser() {
-        TealiumHelper.trackEvent("updateuservalue", mutableMapOf<String, Any>(
-            "customer_update_key" to "customer_last_name",
-            "customer_update_value" to "Smith"
-        ))
+        TealiumHelper.trackEvent(
+            "updateuservalue", mutableMapOf<String, Any>(
+                "customer_update_key" to "customer_last_name",
+                "customer_update_value" to "Smith"
+            )
+        )
     }
 
     private fun logProductItem() {
@@ -80,16 +84,20 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun achieveLevel() {
-        TealiumHelper.trackEvent("achievelevel", mutableMapOf<String, Any>(
-            "level" to "5"
-        ))
+        TealiumHelper.trackEvent(
+            "achievelevel", mutableMapOf<String, Any>(
+                "level" to "5"
+            )
+        )
     }
 
     private fun addToCart() {
-        TealiumHelper.trackEvent("addtocart", mutableMapOf<String, Any>(
-            "product_id" to Product.productId,
-            "product_unit_price" to Product.productPrice
-        ))
+        TealiumHelper.trackEvent(
+            "addtocart", mutableMapOf<String, Any>(
+                "product_id" to Product.productId,
+                "product_unit_price" to Product.productPrice
+            )
+        )
     }
 
     private fun customEvent() {
