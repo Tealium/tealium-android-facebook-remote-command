@@ -239,58 +239,6 @@ class FacebookRemoteCommandTest {
     }
 
     @Test
-    fun updateUserValueCalledWithUserKeyAndUserValue() {
-        val payload = JSONObject()
-        payload.put(User.USER_KEY, "key1")
-        payload.put(User.USER_VALUE, "value1")
-
-        every {
-            mockInstance.updateUserProperties(any())
-        } just Runs
-
-
-        facebookRemoteCommand.parseCommands(arrayOf(Commands.UPDATE_USER_VALUE), payload)
-        verify {
-            mockInstance.updateUserProperties(any())
-        }
-        confirmVerified(mockInstance)
-    }
-
-    @Test
-    fun updateUserValueNotCalledWithoutUserKey() {
-        val payload = JSONObject()
-        payload.put(User.USER_VALUE, "value1")
-
-        every {
-            mockInstance.updateUserProperties(any())
-        } just Runs
-
-
-        facebookRemoteCommand.parseCommands(arrayOf(Commands.UPDATE_USER_VALUE), payload)
-        verify {
-            mockInstance wasNot Called
-        }
-        confirmVerified(mockInstance)
-    }
-
-    @Test
-    fun updateUserValueNotCalledWithEmptyUserKey() {
-        val payload = JSONObject()
-        payload.put(User.USER_KEY, "")
-        payload.put(User.USER_VALUE, "value1")
-
-        every {
-            mockInstance.updateUserProperties(any())
-        } just Runs
-
-        facebookRemoteCommand.parseCommands(arrayOf(Commands.UPDATE_USER_VALUE), payload)
-        verify {
-            mockInstance wasNot Called
-        }
-        confirmVerified(mockInstance)
-    }
-
-    @Test
     fun setFlushBehaviorCalledWithFlushBehaviorAutoKey() {
         val payload = JSONObject()
         payload.put(Flush.FLUSH_BEHAVIOR, Flush.AUTO)

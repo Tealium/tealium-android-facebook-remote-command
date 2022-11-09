@@ -22,7 +22,6 @@ import java.math.BigDecimal
 import java.util.*
 import kotlin.jvm.Throws
 
-
 class FacebookRemoteCommand : RemoteCommand {
 
     private val TAG = this::class.java.simpleName
