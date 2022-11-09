@@ -1,8 +1,5 @@
 apply plugin: 'com.android.application'
-
 apply plugin: 'kotlin-android'
-
-apply plugin: 'kotlin-android-extensions'
 
 android {
     compileSdkVersion 31
@@ -36,15 +33,19 @@ android {
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_1_8
     }
+
+    buildFeatures {
+        viewBinding = true
+    }
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     debugImplementation project(path: ':facebook')
     releaseImplementation "com.tealium.remotecommands:facebook:$tealium_facebook_version"
-    implementation "com.tealium:kotlin-remotecommand-dispatcher:1.1.0"
-    implementation "com.tealium:kotlin-tagmanagement-dispatcher:1.1.0"
-    implementation "com.tealium:kotlin-lifecycle:1.1.0"
+    implementation "com.tealium:kotlin-remotecommand-dispatcher:1.2.0"
+    implementation "com.tealium:kotlin-tagmanagement-dispatcher:1.2.0"
+    implementation "com.tealium:kotlin-lifecycle:1.1.1"
     implementation"org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'androidx.appcompat:appcompat:1.4.1'
     implementation 'androidx.core:core-ktx:1.7.0'

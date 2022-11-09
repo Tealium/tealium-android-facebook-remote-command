@@ -34,7 +34,6 @@ interface FacebookCommand {
     fun setUserID(userId: String)
     fun clearUserData()
     fun clearUserID()
-    fun updateUserProperties(bundle: Bundle)
     // Product
     fun logProductItem(
         itemID: String,

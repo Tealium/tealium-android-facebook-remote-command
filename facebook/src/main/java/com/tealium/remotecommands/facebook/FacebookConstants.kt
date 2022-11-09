@@ -12,7 +12,6 @@ object Commands {
     const val SET_USER_ID = "setuserid"
     const val CLEAR_USER_DATA = "clearuserdata"
     const val CLEAR_USER_ID = "clearuserid"
-    const val UPDATE_USER_VALUE = "updateuservalue"
     const val LOG_PRODUCT_ITEM = "logproductitem"
     const val SET_FLUSH_BEHAVIOR = "setflushbehavior"
     const val FLUSH = "flush"
