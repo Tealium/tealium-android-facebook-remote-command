@@ -3,7 +3,7 @@
 buildscript {
     ext.kotlin_version = '1.6.0'
     ext.mockk_version = '1.12.8'
-    ext.facebook_version = '[7,16)'
+    ext.facebook_version = '18.0.3'
     ext.tealium_version = '1.0.0'
     ext.tealium_facebook_version = '2.0.2'
     repositories {
@@ -30,6 +30,6 @@ allprojects {
     }
 }
 
-task clean(type: Delete) {
+tasks.register('clean', Delete) {
     delete rootProject.buildDir
 }
