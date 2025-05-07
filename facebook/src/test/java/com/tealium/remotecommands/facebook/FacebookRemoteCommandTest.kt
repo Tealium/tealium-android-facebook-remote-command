@@ -1,13 +1,6 @@
 package com.tealium.remotecommands.facebook
 
-import Advertiser
-import AutoInit
-import AutoLog
-import Commands
-import Event.VALUE_TO_SUM
-import Flush
-import Purchase
-import User
+import com.tealium.remotecommands.facebook.Event.VALUE_TO_SUM
 import android.os.Bundle
 import io.mockk.*
 import io.mockk.impl.annotations.InjectMockKs
@@ -324,10 +317,10 @@ class FacebookRemoteCommandTest {
         json.put("booleanArray", booleanArray)
         FacebookRemoteCommand.mapJsonToBundle(json, bundle)
 
-        assertEquals(bundle.getString("string"), "123")
-        assertEquals(bundle.getInt("int"), 123)
-        assertEquals(bundle.getDouble("double"), 0.123, 0.1)
-        assertEquals(bundle.getBoolean("boolean"), true)
+        assertEquals("123", bundle.getString("string"))
+        assertEquals(123, bundle.getInt("int"))
+        assertEquals(0.123, bundle.getDouble("double"), 0.001)
+        assertEquals(true, bundle.getBoolean("boolean"))
 
         bundle.getStringArray("stringArray")?.forEachIndexed { index, value ->
             assertEquals(stringArray[index], value)
@@ -336,7 +329,7 @@ class FacebookRemoteCommandTest {
             assertEquals(intArray[index], value)
         }
         bundle.getDoubleArray("doubleArray")?.forEachIndexed { index, value ->
-            assertEquals(doubleArray[index], value)
+            assertEquals(doubleArray[index], value, 0.001)
         }
         bundle.getBooleanArray("booleanArray")?.forEachIndexed { index, value ->
             assertEquals(booleanArray[index], value)

@@ -1,5 +1,7 @@
 @file:JvmName("FacebookConstants")
 
+package com.tealium.remotecommands.facebook
+
 import com.facebook.appevents.AppEventsConstants
 
 object Commands {

@@ -1,10 +1,5 @@
 package com.tealium.remotecommands.facebook
 
-import Commands
-import Product
-import ProductAvailability
-import ProductCondition
-import ProductItemParameters
 import com.facebook.appevents.AppEventsLogger
 import io.mockk.*
 import io.mockk.impl.annotations.InjectMockKs

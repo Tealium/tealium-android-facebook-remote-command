@@ -1,6 +1,5 @@
 package com.tealium.remotecommands.facebook
 
-import Event
 import android.os.Bundle
 import io.mockk.*
 import io.mockk.impl.annotations.InjectMockKs

@@ -6,7 +6,7 @@ import java.math.BigDecimal
 import java.util.*
 
 interface FacebookCommand {
-    // Initialize
+    // com.tealium.remotecommands.facebook.Initialize
     fun initialize(applicationId: String?, debugEnabled: Boolean?)
     fun enableAutoLogAppEvents(enable: Boolean)
     fun enableAutoInitialize(enable: Boolean)
@@ -34,7 +34,7 @@ interface FacebookCommand {
     fun setUserID(userId: String)
     fun clearUserData()
     fun clearUserID()
-    // Product
+    // com.tealium.remotecommands.facebook.Product
     fun logProductItem(
         itemID: String,
         availability: AppEventsLogger.ProductAvailability?,
@@ -50,9 +50,9 @@ interface FacebookCommand {
         brand: String,
         parameters: Bundle
     )
-    // Flush Events
+    // com.tealium.remotecommands.facebook.Flush Events
     fun setFlushBehavior(flushValue: String)
     fun flush()
-    // Push
+    // com.tealium.remotecommands.facebook.Push
     fun setPushNotificationsRegistrationId(registrationId: String)
 }

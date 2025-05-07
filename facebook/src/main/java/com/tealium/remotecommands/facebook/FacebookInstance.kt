@@ -1,6 +1,5 @@
 package com.tealium.remotecommands.facebook
 
-import Flush
 import android.app.Application
 import android.os.Bundle
 import com.facebook.FacebookSdk
@@ -10,12 +9,12 @@ import java.math.BigDecimal
 import java.util.*
 
 class FacebookInstance(
-    val application: Application,
+    private val application: Application,
     applicationId: String?,
     debugEnabled: Boolean?
 ) : FacebookCommand {
 
-    lateinit var logger: AppEventsLogger
+    private lateinit var logger: AppEventsLogger
 
     init {
         initialize(applicationId, debugEnabled)

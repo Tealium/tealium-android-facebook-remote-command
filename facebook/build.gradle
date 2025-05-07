@@ -1,22 +1,20 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
 apply plugin: 'maven-publish'
 
 android {
-    compileSdkVersion 31
-    buildToolsVersion "30.0.3"
+    namespace = "com.tealium.remotecommands.facebook"
+    compileSdkVersion 36
 
     defaultConfig {
         minSdkVersion 21
-        targetSdkVersion 31
-        versionCode 1
-        versionName "$tealium_facebook_version"
-        buildConfigField 'String', "TEALIUM_FACEBOOK_VERSION", "\"$tealium_facebook_version\""
+        targetSdkVersion 36
+        versionCode = 1
+        versionName = "$tealium_facebook_version"
+        buildConfigField "String", "TEALIUM_FACEBOOK_VERSION", "\"$tealium_facebook_version\""
 
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        consumerProguardFiles 'consumer-rules.pro'
-
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles = ['consumer-rules.pro']
     }
 
     buildTypes {
@@ -31,52 +29,63 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_11
-        targetCompatibility JavaVersion.VERSION_11
+        sourceCompatibility JavaVersion.VERSION_21
+        targetCompatibility JavaVersion.VERSION_21
     }
 
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_11
+        jvmTarget = JavaVersion.VERSION_21.toString()
+    }
+
+    buildFeatures {
+        buildConfig = true
+    }
+
+    publishing {
+        singleVariant("release") {
+            withSourcesJar()
+            withJavadocJar()
+        }
     }
 }
 
-afterEvaluate {
-    publishing {
-        publications {
-            mavenJava(MavenPublication) {
+publishing {
+    publications {
+        release(MavenPublication) {
+            groupId = 'com.tealium.remotecommands'
+            artifactId = 'facebook'
+            version = "$tealium_facebook_version"
+            afterEvaluate {
                 from components.release
-                groupId 'com.tealium.remotecommands'
-                artifactId 'facebook'
-                version "$tealium_facebook_version"
             }
         }
-
-        repositories {
-    //        maven {
-    //            url "s3://maven.tealiumiq.com/android/releases/"
-    //            credentials(AwsCredentials) {
-    //                accessKey AWS_ACCESS_KEY
-    //                secretKey AWS_SECRET_KEY
-    //                sessionToken AWS_SESSION_TOKEN
-    //            }
-    //        }
-        }
     }
+    // repositories {
+    //     maven {
+    //         url "s3://maven.tealiumiq.com/android/releases/"
+    //         credentials(AwsCredentials) {
+    //             accessKey AWS_ACCESS_KEY
+    //             secretKey AWS_SECRET_KEY
+    //             sessionToken AWS_SESSION_TOKEN
+    //         }
+    //     }
+    // }
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     api "com.facebook.android:facebook-android-sdk:$facebook_version"
-    implementation 'com.tealium:remotecommands:1.0.1'
-    implementation 'androidx.appcompat:appcompat:1.4.1'
+    implementation 'com.tealium:remotecommands:1.0.2'
+    implementation 'androidx.appcompat:appcompat:1.7.0'
     testImplementation 'junit:junit:4.13.2'
-    testImplementation "org.robolectric:robolectric:4.8"
+    testImplementation "org.robolectric:robolectric:4.14.1"
     testImplementation "io.mockk:mockk:$mockk_version"
-    androidTestImplementation 'androidx.test:runner:1.4.0'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
-    implementation "androidx.core:core-ktx:1.7.0"
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    androidTestImplementation 'androidx.test:runner:1.6.2'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.6.1'
+    implementation "androidx.core:core-ktx:1.16.0"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 }
+
 repositories {
     mavenCentral()
 }

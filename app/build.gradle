@@ -2,16 +2,19 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 
 android {
-    compileSdkVersion 31
-    buildToolsVersion "30.0.3"
+    namespace = "com.tealium.example"
+    compileSdkVersion 36
+
     defaultConfig {
-        applicationId "com.tealium.example"
+        applicationId = "com.tealium.example"
         minSdkVersion 21
-        targetSdkVersion 31
-        versionCode 1
-        versionName "1.0.0"
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        targetSdkVersion 36
+        versionCode = 1
+        versionName = "1.0.0"
+        
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
+    
     buildTypes {
         debug {
             buildConfigField "String", "TEALIUM_VERSION", "\"$tealium_version\""
@@ -26,16 +29,17 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_21
+        targetCompatibility JavaVersion.VERSION_21
     }
 
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_1_8
+        jvmTarget = JavaVersion.VERSION_21.toString()
     }
 
     buildFeatures {
         viewBinding = true
+        buildConfig = true
     }
 }
 
@@ -43,14 +47,14 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     debugImplementation project(path: ':facebook')
     releaseImplementation "com.tealium.remotecommands:facebook:$tealium_facebook_version"
-    implementation "com.tealium:kotlin-remotecommand-dispatcher:1.2.0"
-    implementation "com.tealium:kotlin-tagmanagement-dispatcher:1.2.0"
-    implementation "com.tealium:kotlin-lifecycle:1.1.1"
-    implementation"org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'androidx.appcompat:appcompat:1.4.1'
-    implementation 'androidx.core:core-ktx:1.7.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.3'
+    implementation "com.tealium:kotlin-remotecommand-dispatcher:1.5.2"
+    implementation "com.tealium:kotlin-tagmanagement-dispatcher:1.2.5"
+    implementation "com.tealium:kotlin-lifecycle:1.2.2"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    implementation 'androidx.appcompat:appcompat:1.7.0'
+    implementation 'androidx.core:core-ktx:1.16.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.2.1'
     testImplementation 'junit:junit:4.13.2'
-    androidTestImplementation 'androidx.test:runner:1.4.0'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+    androidTestImplementation 'androidx.test:runner:1.6.2'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.6.1'
 }
