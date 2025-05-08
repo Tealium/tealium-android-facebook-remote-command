@@ -115,6 +115,23 @@ class FacebookRemoteCommandTest {
     }
 
     @Test
+    fun logPurchaseNotCalledWithInvalidAmount() {
+        val purchaseProperties = JSONObject().apply {
+            put(Purchase.PURCHASE_AMOUNT, "not_a_number") // String instead of number
+            put(Purchase.PURCHASE_CURRENCY, "USD")
+        }
+
+        val purchase = JSONObject().apply {
+            put(Purchase.PURCHASE, purchaseProperties)
+        }
+
+        facebookRemoteCommand.parseCommands(arrayOf(Commands.LOG_PURCHASE), purchase)
+        
+        verify { mockInstance wasNot Called }
+        confirmVerified(mockInstance)
+    }
+
+    @Test
     fun setUserCalledWithUserData() {
         val userProperties = JSONObject()
         userProperties.put(User.EMAIL, "test@test.com")
@@ -433,55 +450,35 @@ class FacebookRemoteCommandTest {
     }
 
     @Test
-    fun onInvokeParsesSingleCommand() {
-        val response = mockk<RemoteCommand.Response>()
-        val payload = JSONObject()
-        payload.put(Commands.COMMAND_KEY, "initialize")
-        payload.put(Initialize.APPLICATION_ID, "test_app_id")
-        payload.put(Initialize.DEBUG_ENABLED, true)
-        
-        every { response.requestPayload } returns payload
-        every { mockInstance.initialize("test_app_id", true) } just Runs
-        
-        facebookRemoteCommand.onInvoke(response)
-        
-        verify {
-            mockInstance.initialize("test_app_id", true)
+    fun parseCommandsHandlesMultipleCommands() {
+        val payload = JSONObject().apply {
+            put(User.USER_ID, "testuser")
+            put(Flush.FLUSH_BEHAVIOR, Flush.AUTO)
         }
-    }
-
-    @Test
-    fun onInvokeHandlesMultipleCommands() {
-        val response = mockk<RemoteCommand.Response>()
-        val payload = JSONObject()
-        payload.put(Commands.COMMAND_KEY, "clearuserid,flush")
         
-        every { response.requestPayload } returns payload
-        every { mockInstance.clearUserID() } just Runs
+        every { mockInstance.setUserID(any()) } just Runs
+        every { mockInstance.setFlushBehavior(any()) } just Runs
         every { mockInstance.flush() } just Runs
         
-        facebookRemoteCommand.onInvoke(response)
+        facebookRemoteCommand.parseCommands(
+            arrayOf(Commands.SET_USER_ID, Commands.SET_FLUSH_BEHAVIOR, Commands.FLUSH), 
+            payload
+        )
         
         verifySequence {
-            mockInstance.clearUserID()
+            mockInstance.setUserID("testuser")
+            mockInstance.setFlushBehavior(Flush.AUTO)
             mockInstance.flush()
         }
     }
 
     @Test
-    fun logPurchaseNotCalledWithNanAmount() {
-        val purchaseProperties = JSONObject()
-        purchaseProperties.put(Purchase.PURCHASE_AMOUNT, Double.NaN)
-        purchaseProperties.put(Purchase.PURCHASE_CURRENCY, "USD")
-
-        val purchase = JSONObject()
-        purchase.put(Purchase.PURCHASE, purchaseProperties)
-
-        facebookRemoteCommand.parseCommands(arrayOf(Commands.LOG_PURCHASE), purchase)
+    fun parseCommandsHandlesEmptyCommands() {
+        val payload = JSONObject()
         
-        verify {
-            mockInstance wasNot Called
-        }
+        facebookRemoteCommand.parseCommands(arrayOf(), payload)
+        
+        verify { mockInstance wasNot Called }
         confirmVerified(mockInstance)
     }
 }

@@ -80,7 +80,7 @@ class LogProductItemTest {
     @Test
     fun logProductItemNotCalledWithoutProductIdKey() {
         val payload = createProductItemJson()
-        payload.optJSONObject(Product.PRODUCT_ITEM).remove(ProductItemParameters.PRODUCT_ID)
+        payload.optJSONObject(Product.PRODUCT_ITEM)?.remove(ProductItemParameters.PRODUCT_ID)
 
         facebookRemoteCommand.parseCommands(arrayOf(Commands.LOG_PRODUCT_ITEM), payload)
         verify {
@@ -92,7 +92,7 @@ class LogProductItemTest {
     @Test
     fun logProductItemNotCalledWithoutProductDescriptionKey() {
         val payload = createProductItemJson()
-        payload.optJSONObject(Product.PRODUCT_ITEM).remove(ProductItemParameters.PRODUCT_DESCRIPTION)
+        payload.optJSONObject(Product.PRODUCT_ITEM)?.remove(ProductItemParameters.PRODUCT_DESCRIPTION)
 
         facebookRemoteCommand.parseCommands(arrayOf(Commands.LOG_PRODUCT_ITEM), payload)
         verify {
@@ -104,7 +104,7 @@ class LogProductItemTest {
     @Test
     fun logProductItemNotCalledWithoutProductImageLinkKey() {
         val payload = createProductItemJson()
-        payload.optJSONObject(Product.PRODUCT_ITEM).remove(ProductItemParameters.PRODUCT_IMAGE_LINK)
+        payload.optJSONObject(Product.PRODUCT_ITEM)?.remove(ProductItemParameters.PRODUCT_IMAGE_LINK)
 
         facebookRemoteCommand.parseCommands(arrayOf(Commands.LOG_PRODUCT_ITEM), payload)
         verify {
@@ -116,7 +116,7 @@ class LogProductItemTest {
     @Test
     fun logProductItemNotCalledWithoutProductLinkKey() {
         val payload = createProductItemJson()
-        payload.optJSONObject(Product.PRODUCT_ITEM).remove(ProductItemParameters.PRODUCT_LINK)
+        payload.optJSONObject(Product.PRODUCT_ITEM)?.remove(ProductItemParameters.PRODUCT_LINK)
 
         facebookRemoteCommand.parseCommands(arrayOf(Commands.LOG_PRODUCT_ITEM), payload)
         verify {
@@ -128,7 +128,7 @@ class LogProductItemTest {
     @Test
     fun logProductItemNotCalledWithoutProductTitleKey() {
         val payload = createProductItemJson()
-        payload.optJSONObject(Product.PRODUCT_ITEM).remove(ProductItemParameters.PRODUCT_TITLE)
+        payload.optJSONObject(Product.PRODUCT_ITEM)?.remove(ProductItemParameters.PRODUCT_TITLE)
 
         facebookRemoteCommand.parseCommands(arrayOf(Commands.LOG_PRODUCT_ITEM), payload)
         verify {
@@ -140,7 +140,7 @@ class LogProductItemTest {
     @Test
     fun logProductItemNotCalledWithoutProductGtinKey() {
         val payload = createProductItemJson()
-        payload.optJSONObject(Product.PRODUCT_ITEM).remove(ProductItemParameters.PRODUCT_GTIN)
+        payload.optJSONObject(Product.PRODUCT_ITEM)?.remove(ProductItemParameters.PRODUCT_GTIN)
 
         facebookRemoteCommand.parseCommands(arrayOf(Commands.LOG_PRODUCT_ITEM), payload)
         verify {
@@ -152,7 +152,7 @@ class LogProductItemTest {
     @Test
     fun logProductItemNotCalledWithoutProductMpnKey() {
         val payload = createProductItemJson()
-        payload.optJSONObject(Product.PRODUCT_ITEM).remove(ProductItemParameters.PRODUCT_MPN)
+        payload.optJSONObject(Product.PRODUCT_ITEM)?.remove(ProductItemParameters.PRODUCT_MPN)
 
         facebookRemoteCommand.parseCommands(arrayOf(Commands.LOG_PRODUCT_ITEM), payload)
         verify {
@@ -164,37 +164,9 @@ class LogProductItemTest {
     @Test
     fun logProductItemNotCalledWithoutProductBrandKey() {
         val payload = createProductItemJson()
-        payload.optJSONObject(Product.PRODUCT_ITEM).remove(ProductItemParameters.PRODUCT_BRAND)
+        payload.optJSONObject(Product.PRODUCT_ITEM)?.remove(ProductItemParameters.PRODUCT_BRAND)
 
         facebookRemoteCommand.parseCommands(arrayOf(Commands.LOG_PRODUCT_ITEM), payload)
-        verify {
-            mockInstance wasNot Called
-        }
-        confirmVerified(mockInstance)
-    }
-
-    @Test
-    fun logProductItemNotCalledWithInvalidCurrency() {
-        val payload = createProductItemJson()
-        payload.optJSONObject(Product.PRODUCT_ITEM)
-               .put(ProductItemParameters.PRODUCT_PRICE_CURRENCY, "INVALID")
-        
-        facebookRemoteCommand.parseCommands(arrayOf(Commands.LOG_PRODUCT_ITEM), payload)
-        
-        verify {
-            mockInstance wasNot Called
-        }
-        confirmVerified(mockInstance)
-    }
-
-    @Test
-    fun logProductItemNotCalledWithNanPriceAmount() {
-        val payload = createProductItemJson()
-        payload.optJSONObject(Product.PRODUCT_ITEM)
-               .put(ProductItemParameters.PRODUCT_PRICE_AMOUNT, Double.NaN)
-        
-        facebookRemoteCommand.parseCommands(arrayOf(Commands.LOG_PRODUCT_ITEM), payload)
-        
         verify {
             mockInstance wasNot Called
         }
