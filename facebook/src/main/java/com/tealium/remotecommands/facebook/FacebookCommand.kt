@@ -7,7 +7,7 @@ import java.util.*
 
 interface FacebookCommand {
     // com.tealium.remotecommands.facebook.Initialize
-    fun initialize(applicationId: String?, debugEnabled: Boolean?)
+    fun initialize(applicationId: String?, clientToken: String?, debugEnabled: Boolean?)
     fun enableAutoLogAppEvents(enable: Boolean)
     fun enableAutoInitialize(enable: Boolean)
     fun enableAdvertiserIDCollection(enable: Boolean)

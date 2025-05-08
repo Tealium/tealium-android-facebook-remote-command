@@ -11,18 +11,22 @@ import java.util.*
 class FacebookInstance(
     private val application: Application,
     applicationId: String?,
+    clientToken: String? = null,
     debugEnabled: Boolean?
 ) : FacebookCommand {
 
     private lateinit var logger: AppEventsLogger
 
     init {
-        initialize(applicationId, debugEnabled)
+        initialize(applicationId, clientToken, debugEnabled)
     }
 
-    override fun initialize(applicationId: String?, debugEnabled: Boolean?) {
+    override fun initialize(applicationId: String?, clientToken: String?, debugEnabled: Boolean?) {
         applicationId?.let { appId ->
             FacebookSdk.setApplicationId(applicationId)
+            clientToken?.let { token ->
+                FacebookSdk.setClientToken(token)
+            }
             FacebookSdk.fullyInitialize()
             debugEnabled?.let {
                 FacebookSdk.setIsDebugEnabled(it)

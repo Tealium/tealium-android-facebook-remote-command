@@ -244,5 +244,6 @@ object Advertiser {
 
 object Initialize {
     const val APPLICATION_ID = "applicationid"
+    const val CLIENT_TOKEN = "clienttoken"
     const val DEBUG_ENABLED = "debug"
 }

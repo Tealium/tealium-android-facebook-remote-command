@@ -11,39 +11,28 @@ import java.math.BigDecimal
 import java.util.*
 import kotlin.jvm.Throws
 
-class FacebookRemoteCommand : RemoteCommand {
+class FacebookRemoteCommand
+/**
+ * Constructs a RemoteCommand that integrates with the Facebook App Events SDK to allow Facebook API calls to be implemented through Tealium.
+ */
+constructor(
+    application: Application? = null,
+    commandId: String = DEFAULT_COMMAND_ID,
+    description: String = DEFAULT_COMMAND_DESCRIPTION,
+    facebookApplicationId: String? = null,
+    facebookClientToken: String? = null,
+    debugEnabled: Boolean? = null
+) : RemoteCommand(commandId, description, BuildConfig.TEALIUM_FACEBOOK_VERSION) {
 
     private lateinit var facebookInstance: FacebookCommand
     private var application: Application? = null
 
-    /**
-     * Constructs a RemoteCommand that integrates with the Facebook App Events SDK to allow Facebook API calls to be implemented through Tealium.
-     */
-    @JvmOverloads
-    constructor(
-        application: Application? = null,
-        commandId: String = DEFAULT_COMMAND_ID,
-        description: String = DEFAULT_COMMAND_DESCRIPTION,
-        facebookApplicationId: String? = null,
-        debugEnabled: Boolean? = null
-    ) : super(commandId, description, BuildConfig.TEALIUM_FACEBOOK_VERSION) {
+    init {
         application?.let { app ->
             this.application = app
             facebookApplicationId?.let {
-                facebookInstance = FacebookInstance(app, it, debugEnabled)
+                facebookInstance = FacebookInstance(app, it, facebookClientToken, debugEnabled)
             }
-        }
-    }
-
-    @JvmOverloads
-    constructor(
-        autoInit: Boolean,
-        application: Application? = null,
-        commandId: String = DEFAULT_COMMAND_ID,
-        description: String = DEFAULT_COMMAND_DESCRIPTION
-    ) : super(commandId, description, BuildConfig.TEALIUM_FACEBOOK_VERSION) {
-        application?.let {
-            this.application = it
         }
     }
 
@@ -138,6 +127,10 @@ class FacebookRemoteCommand : RemoteCommand {
                         if (payload.optString(Initialize.APPLICATION_ID).isNotBlank()) payload.optString(
                             Initialize.APPLICATION_ID
                         ) else null
+                    val clientToken =
+                        if (payload.optString(Initialize.CLIENT_TOKEN).isNotBlank()) payload.optString(
+                            Initialize.CLIENT_TOKEN
+                        ) else null
                     val debugEnabled = if (payload.optString(Initialize.DEBUG_ENABLED).isNotBlank()) payload.optBoolean(
                         Initialize.DEBUG_ENABLED
                     ) else null
@@ -147,6 +140,7 @@ class FacebookRemoteCommand : RemoteCommand {
                                 FacebookInstance(
                                     appContext,
                                     appId,
+                                    clientToken,
                                     debugEnabled
                                 )
                         } ?: run {

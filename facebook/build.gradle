@@ -4,11 +4,11 @@ apply plugin: 'maven-publish'
 
 android {
     namespace = "com.tealium.remotecommands.facebook"
-    compileSdkVersion 36
+    compileSdkVersion 35
 
     defaultConfig {
         minSdkVersion 21
-        targetSdkVersion 36
+        targetSdkVersion 35
         versionCode = 1
         versionName = "$tealium_facebook_version"
         buildConfigField "String", "TEALIUM_FACEBOOK_VERSION", "\"$tealium_facebook_version\""
@@ -45,6 +45,12 @@ android {
         singleVariant("release") {
             withSourcesJar()
             withJavadocJar()
+        }
+    }
+
+    testOptions {
+        unitTests {
+            includeAndroidResources = true
         }
     }
 }
