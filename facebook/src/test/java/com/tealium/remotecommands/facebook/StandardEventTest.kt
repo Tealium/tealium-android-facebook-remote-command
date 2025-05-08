@@ -112,4 +112,21 @@ class StandardEventTest {
         }
         confirmVerified(mockInstance)
     }
+
+    @Test
+    fun unknownEventNameUsedAsEventName() {
+        val customEventName = "myCustomEvent"
+        val result = facebookRemoteCommand.standardEvent(customEventName)
+        
+        Assert.assertEquals(customEventName, result)
+        
+        every { mockInstance.logEvent(customEventName) } just Runs
+        
+        facebookRemoteCommand.parseCommands(arrayOf(customEventName), JSONObject())
+        
+        verify {
+            mockInstance.logEvent(customEventName)
+        }
+        confirmVerified(mockInstance)
+    }
 }

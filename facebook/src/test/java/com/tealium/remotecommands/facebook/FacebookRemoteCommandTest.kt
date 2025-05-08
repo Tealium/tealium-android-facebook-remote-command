@@ -431,4 +431,57 @@ class FacebookRemoteCommandTest {
         }
         confirmVerified(mockInstance)
     }
+
+    @Test
+    fun onInvokeParsesSingleCommand() {
+        val response = mockk<RemoteCommand.Response>()
+        val payload = JSONObject()
+        payload.put(Commands.COMMAND_KEY, "initialize")
+        payload.put(Initialize.APPLICATION_ID, "test_app_id")
+        payload.put(Initialize.DEBUG_ENABLED, true)
+        
+        every { response.requestPayload } returns payload
+        every { mockInstance.initialize("test_app_id", true) } just Runs
+        
+        facebookRemoteCommand.onInvoke(response)
+        
+        verify {
+            mockInstance.initialize("test_app_id", true)
+        }
+    }
+
+    @Test
+    fun onInvokeHandlesMultipleCommands() {
+        val response = mockk<RemoteCommand.Response>()
+        val payload = JSONObject()
+        payload.put(Commands.COMMAND_KEY, "clearuserid,flush")
+        
+        every { response.requestPayload } returns payload
+        every { mockInstance.clearUserID() } just Runs
+        every { mockInstance.flush() } just Runs
+        
+        facebookRemoteCommand.onInvoke(response)
+        
+        verifySequence {
+            mockInstance.clearUserID()
+            mockInstance.flush()
+        }
+    }
+
+    @Test
+    fun logPurchaseNotCalledWithNanAmount() {
+        val purchaseProperties = JSONObject()
+        purchaseProperties.put(Purchase.PURCHASE_AMOUNT, Double.NaN)
+        purchaseProperties.put(Purchase.PURCHASE_CURRENCY, "USD")
+
+        val purchase = JSONObject()
+        purchase.put(Purchase.PURCHASE, purchaseProperties)
+
+        facebookRemoteCommand.parseCommands(arrayOf(Commands.LOG_PURCHASE), purchase)
+        
+        verify {
+            mockInstance wasNot Called
+        }
+        confirmVerified(mockInstance)
+    }
 }

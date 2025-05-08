@@ -173,6 +173,34 @@ class LogProductItemTest {
         confirmVerified(mockInstance)
     }
 
+    @Test
+    fun logProductItemNotCalledWithInvalidCurrency() {
+        val payload = createProductItemJson()
+        payload.optJSONObject(Product.PRODUCT_ITEM)
+               .put(ProductItemParameters.PRODUCT_PRICE_CURRENCY, "INVALID")
+        
+        facebookRemoteCommand.parseCommands(arrayOf(Commands.LOG_PRODUCT_ITEM), payload)
+        
+        verify {
+            mockInstance wasNot Called
+        }
+        confirmVerified(mockInstance)
+    }
+
+    @Test
+    fun logProductItemNotCalledWithNanPriceAmount() {
+        val payload = createProductItemJson()
+        payload.optJSONObject(Product.PRODUCT_ITEM)
+               .put(ProductItemParameters.PRODUCT_PRICE_AMOUNT, Double.NaN)
+        
+        facebookRemoteCommand.parseCommands(arrayOf(Commands.LOG_PRODUCT_ITEM), payload)
+        
+        verify {
+            mockInstance wasNot Called
+        }
+        confirmVerified(mockInstance)
+    }
+
     private fun createProductItemJson(): JSONObject {
         val productItemParameters = JSONObject()
         productItemParameters.put(ProductItemParameters.PRODUCT_ID, "product_id")

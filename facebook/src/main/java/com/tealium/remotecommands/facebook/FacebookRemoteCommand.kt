@@ -11,27 +11,39 @@ import java.math.BigDecimal
 import java.util.*
 import kotlin.jvm.Throws
 
-class FacebookRemoteCommand
-/**
- * Constructs a RemoteCommand that integrates with the Facebook App Events SDK to allow Facebook API calls to be implemented through Tealium.
- */
-@JvmOverloads constructor(
-    application: Application? = null,
-    commandId: String = DEFAULT_COMMAND_ID,
-    description: String = DEFAULT_COMMAND_DESCRIPTION,
-    facebookApplicationId: String? = null,
-    debugEnabled: Boolean? = null
-) : RemoteCommand(commandId, description, BuildConfig.TEALIUM_FACEBOOK_VERSION) {
+class FacebookRemoteCommand : RemoteCommand {
 
     private lateinit var facebookInstance: FacebookCommand
     private var application: Application? = null
 
-    init {
+    /**
+     * Constructs a RemoteCommand that integrates with the Facebook App Events SDK to allow Facebook API calls to be implemented through Tealium.
+     */
+    @JvmOverloads
+    constructor(
+        application: Application? = null,
+        commandId: String = DEFAULT_COMMAND_ID,
+        description: String = DEFAULT_COMMAND_DESCRIPTION,
+        facebookApplicationId: String? = null,
+        debugEnabled: Boolean? = null
+    ) : super(commandId, description, BuildConfig.TEALIUM_FACEBOOK_VERSION) {
         application?.let { app ->
             this.application = app
             facebookApplicationId?.let {
                 facebookInstance = FacebookInstance(app, it, debugEnabled)
             }
+        }
+    }
+
+    @JvmOverloads
+    constructor(
+        autoInit: Boolean,
+        application: Application? = null,
+        commandId: String = DEFAULT_COMMAND_ID,
+        description: String = DEFAULT_COMMAND_DESCRIPTION
+    ) : super(commandId, description, BuildConfig.TEALIUM_FACEBOOK_VERSION) {
+        application?.let {
+            this.application = it
         }
     }
 
