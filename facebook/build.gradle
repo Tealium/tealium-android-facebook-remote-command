@@ -4,11 +4,11 @@ apply plugin: 'maven-publish'
 
 android {
     namespace = "com.tealium.remotecommands.facebook"
-    compileSdkVersion 35
+    compileSdkVersion 33
 
     defaultConfig {
         minSdkVersion 21
-        targetSdkVersion 35
+        targetSdkVersion 33
         versionCode = 1
         versionName = "$tealium_facebook_version"
         buildConfigField "String", "TEALIUM_FACEBOOK_VERSION", "\"$tealium_facebook_version\""
@@ -29,12 +29,12 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_21
-        targetCompatibility JavaVersion.VERSION_21
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
     }
 
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_21.toString()
+        jvmTarget = JavaVersion.VERSION_11
     }
 
     buildFeatures {
@@ -81,15 +81,12 @@ publishing {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     api "com.facebook.android:facebook-android-sdk:$facebook_version"
-    implementation 'com.tealium:remotecommands:1.0.2'
-    implementation 'androidx.appcompat:appcompat:1.7.0'
+    implementation 'com.tealium:remotecommands:1.0.3'
     testImplementation 'junit:junit:4.13.2'
     testImplementation "org.robolectric:robolectric:4.14.1"
     testImplementation "io.mockk:mockk:$mockk_version"
     androidTestImplementation 'androidx.test:runner:1.6.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.6.1'
-    implementation "androidx.core:core-ktx:1.16.0"
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 }
 
 repositories {

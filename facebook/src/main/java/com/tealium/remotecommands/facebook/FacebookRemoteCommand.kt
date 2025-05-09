@@ -16,7 +16,7 @@ class FacebookRemoteCommand
  * Constructs a RemoteCommand that integrates with the Facebook App Events SDK to allow Facebook API calls to be implemented through Tealium.
  */
 constructor(
-    application: Application? = null,
+    application: Application,
     commandId: String = DEFAULT_COMMAND_ID,
     description: String = DEFAULT_COMMAND_DESCRIPTION,
     facebookApplicationId: String? = null,
@@ -25,14 +25,12 @@ constructor(
 ) : RemoteCommand(commandId, description, BuildConfig.TEALIUM_FACEBOOK_VERSION) {
 
     private lateinit var facebookInstance: FacebookCommand
-    private var application: Application? = null
+    private val application: Application
 
     init {
-        application?.let { app ->
-            this.application = app
-            facebookApplicationId?.let {
-                facebookInstance = FacebookInstance(app, it, facebookClientToken, debugEnabled)
-            }
+        this.application = application
+        facebookApplicationId?.let {
+            facebookInstance = FacebookInstance(application, it, facebookClientToken, debugEnabled)
         }
     }
 
@@ -123,29 +121,14 @@ constructor(
         commands.forEach { command ->
             when (command) {
                 Commands.INITIALIZE -> {
-                    val applicationId =
-                        if (payload.optString(Initialize.APPLICATION_ID).isNotBlank()) payload.optString(
-                            Initialize.APPLICATION_ID
-                        ) else null
-                    val clientToken =
-                        if (payload.optString(Initialize.CLIENT_TOKEN).isNotBlank()) payload.optString(
-                            Initialize.CLIENT_TOKEN
-                        ) else null
-                    val debugEnabled = if (payload.optString(Initialize.DEBUG_ENABLED).isNotBlank()) payload.optBoolean(
-                        Initialize.DEBUG_ENABLED
-                    ) else null
-                    application?.let { appContext ->
-                        applicationId?.let { appId ->
-                            facebookInstance =
-                                FacebookInstance(
-                                    appContext,
-                                    appId,
-                                    clientToken,
-                                    debugEnabled
-                                )
-                        } ?: run {
-                            Log.e(TAG, "${Initialize.APPLICATION_ID} $REQUIRED_KEY")
-                        }
+                    val applicationId = payload.optString(Initialize.APPLICATION_ID).ifBlank { null }
+                    val clientToken = payload.optString(Initialize.CLIENT_TOKEN).ifBlank { null }
+                    val debugEnabled = payload.optString(Initialize.DEBUG_ENABLED).ifBlank { null }?.let { payload.optBoolean(Initialize.DEBUG_ENABLED) }
+                    
+                    applicationId?.let { appId ->
+                        facebookInstance = FacebookInstance(application, appId, clientToken, debugEnabled)
+                    } ?: run {
+                        Log.e(TAG, "${Initialize.APPLICATION_ID} $REQUIRED_KEY")
                     }
                 }
                 Commands.LOG_PURCHASE -> {
@@ -168,12 +151,10 @@ constructor(
                 }
                 Commands.SET_USER_ID -> {
                     val userId = payload.optString(User.USER_ID)
-                    userId.let {
-                        if (it.isNotEmpty()) {
-                            facebookInstance.setUserID(it)
-                        } else {
-                            Log.e(TAG, "${User.USER_ID} $REQUIRED_KEY")
-                        }
+                    if (userId.isNotEmpty()) {
+                        facebookInstance.setUserID(userId)
+                    } else {
+                        Log.e(TAG, "${User.USER_ID} $REQUIRED_KEY")
                     }
                 }
                 Commands.CLEAR_USER_DATA -> {
@@ -314,14 +295,10 @@ constructor(
     private fun logEvent(command: String, valueToSum: Double, eventParameters: JSONObject? = null) {
         val bundle = Bundle()
         if (valueToSum > 0 && eventParameters != null) {
-            valueToSum.let { sumValue ->
-                mapJsonToBundle(eventParameters, bundle)
-                facebookInstance.logEvent(command, sumValue, bundle)
-            }
+            mapJsonToBundle(eventParameters, bundle)
+            facebookInstance.logEvent(command, valueToSum, bundle)
         } else if (valueToSum > 0) {
-            valueToSum.let { sumValue ->
-                facebookInstance.logEvent(command, sumValue)
-            }
+            facebookInstance.logEvent(command, valueToSum)
         } else if (valueToSum == 0.0 && eventParameters != null) {
             mapJsonToBundle(eventParameters, bundle)
             facebookInstance.logEvent(command, bundle)
@@ -339,7 +316,7 @@ constructor(
         }
         val purchaseAmount = amount?.toBigDecimal() as BigDecimal
         val currencyString = purchase.optString(Purchase.PURCHASE_CURRENCY, "USD")
-        val (currency) = guardLet(getCurrency(currencyString)) { return }
+        val currency = getCurrency(currencyString) ?: return
         val parameters: JSONObject? = purchase.optJSONObject(Purchase.PURCHASE_PARAMETERS)
 
         parameters?.let { purchaseParameters ->
@@ -401,39 +378,35 @@ constructor(
         val bundle = Bundle()
         mapJsonToBundle(productParameters, bundle)
 
-        productAvailability.let { availabilityValue ->
-            val (availability) = guardLet(productAvailabilityFrom(availabilityValue)) { return }
-            productCondition.let { conditionValue ->
-                val (condition) = guardLet(productConditionFrom(conditionValue)) { return }
+        val availability = productAvailabilityFrom(productAvailability) ?: return
+        val condition = productConditionFrom(productCondition) ?: return
 
-                if (productId.isEmpty()
-                    || productDescription.isEmpty()
-                    || productImageLink.isEmpty()
-                    || productLink.isEmpty()
-                    || productTitle.isEmpty()
-                    || productGtin.isEmpty()
-                    || productMpn.isEmpty()
-                    || productBrand.isEmpty()
-                ) {
-                    return
-                }
-                facebookInstance.logProductItem(
-                    productId,
-                    availability,
-                    condition,
-                    productDescription,
-                    productImageLink,
-                    productLink,
-                    productTitle,
-                    productPriceAmount,
-                    productPriceCurrency,
-                    productGtin,
-                    productMpn,
-                    productBrand,
-                    bundle
-                )
-            }
+        if (productId.isEmpty()
+            || productDescription.isEmpty()
+            || productImageLink.isEmpty()
+            || productLink.isEmpty()
+            || productTitle.isEmpty()
+            || productGtin.isEmpty()
+            || productMpn.isEmpty()
+            || productBrand.isEmpty()
+        ) {
+            return
         }
+        facebookInstance.logProductItem(
+            productId,
+            availability,
+            condition,
+            productDescription,
+            productImageLink,
+            productLink,
+            productTitle,
+            productPriceAmount,
+            productPriceCurrency,
+            productGtin,
+            productMpn,
+            productBrand,
+            bundle
+        )
     }
 
     fun splitCommands(payload: JSONObject): Array<String> {
@@ -477,12 +450,4 @@ constructor(
         }
     }
 
-}
-
-inline fun <T : Any> guardLet(vararg elements: T?, closure: () -> Nothing): List<T> {
-    return if (elements.all { it != null }) {
-        elements.filterNotNull()
-    } else {
-        closure()
-    }
 }

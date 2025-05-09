@@ -1,5 +1,6 @@
 package com.tealium.remotecommands.facebook
 
+import android.app.Application
 import com.facebook.appevents.AppEventsLogger
 import io.mockk.*
 import io.mockk.impl.annotations.InjectMockKs
@@ -17,8 +18,10 @@ class LogProductItemTest {
     @MockK
     lateinit var mockInstance: FacebookCommand
 
+    private val mockApplication = mockk<Application>(relaxed = true)
+    
     @InjectMockKs
-    var facebookRemoteCommand: FacebookRemoteCommand = FacebookRemoteCommand(null)
+    var facebookRemoteCommand: FacebookRemoteCommand = FacebookRemoteCommand(mockApplication)
 
     @Before
     fun setUp() {
