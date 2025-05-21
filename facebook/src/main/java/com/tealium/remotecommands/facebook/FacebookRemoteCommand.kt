@@ -321,7 +321,7 @@ constructor(
         if (amount.isNaN()) {
             return
         }
-        val purchaseAmount = BigDecimal(amount)
+        val purchaseAmount = BigDecimal(amount.toString())
         val currencyString = purchase.optString(Purchase.PURCHASE_CURRENCY, "USD")
         val currency = getCurrency(currencyString) ?: return
         val parameters: JSONObject? = purchase.optJSONObject(Purchase.PURCHASE_PARAMETERS)
@@ -373,7 +373,7 @@ constructor(
         if (amount.isNaN()) {
             return
         }
-        val productPriceAmount = BigDecimal(amount)
+        val productPriceAmount = BigDecimal(amount.toString())
         val productGtin = productItem.optString(ProductItemParameters.PRODUCT_GTIN)
         val productMpn = productItem.optString(ProductItemParameters.PRODUCT_MPN)
         val productBrand = productItem.optString(ProductItemParameters.PRODUCT_BRAND)
