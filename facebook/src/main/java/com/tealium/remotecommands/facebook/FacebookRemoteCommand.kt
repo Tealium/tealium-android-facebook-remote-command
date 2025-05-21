@@ -13,14 +13,34 @@ import kotlin.jvm.Throws
 
 class FacebookRemoteCommand
 /**
- * Constructs a RemoteCommand that integrates with the Facebook App Events SDK to allow Facebook API calls to be implemented through Tealium.
+ * Constructs a RemoteCommand that integrates with the Facebook App Events SDK and optionally initializes it.
+ * @param application The application context
+ * @param commandId The command ID used for the RemoteCommand
+ * @param description A description of the RemoteCommand
+ * @param facebookApplicationId The Facebook Application ID to initialize with, if provided
+ * @param facebookClientToken The Facebook Client Token to initialize with, if provided
+ * @param debugEnabled Whether to enable debug mode for Facebook SDK
  */
+@JvmOverloads
 constructor(
-    private val application: Application,
+    application: Application? = null,
     commandId: String = DEFAULT_COMMAND_ID,
     description: String = DEFAULT_COMMAND_DESCRIPTION,
+    facebookApplicationId: String? = null,
+    facebookClientToken: String? = null,
+    debugEnabled: Boolean? = null
 ) : RemoteCommand(commandId, description, BuildConfig.TEALIUM_FACEBOOK_VERSION) {
+    
+    init {
+        application?.let { app ->
+            this.application = app
+            if (facebookApplicationId != null && facebookClientToken != null) {
+                facebookInstance = FacebookInstance(app, facebookApplicationId, facebookClientToken, debugEnabled)
+            }
+        }
+    }
 
+    private lateinit var application: Application
     private lateinit var facebookInstance: FacebookCommand
 
     companion object {
@@ -297,13 +317,11 @@ constructor(
     }
 
     private fun logPurchase(purchase: JSONObject) {
-        val amount = purchase.optDouble(Purchase.PURCHASE_AMOUNT) as? Double
-        amount?.let {
-            if (it.isNaN()) {
-                return
-            }
+        val amount = purchase.optDouble(Purchase.PURCHASE_AMOUNT)
+        if (amount.isNaN()) {
+            return
         }
-        val purchaseAmount = amount?.toBigDecimal() as BigDecimal
+        val purchaseAmount = BigDecimal(amount)
         val currencyString = purchase.optString(Purchase.PURCHASE_CURRENCY, "USD")
         val currency = getCurrency(currencyString) ?: return
         val parameters: JSONObject? = purchase.optJSONObject(Purchase.PURCHASE_PARAMETERS)
@@ -351,13 +369,11 @@ constructor(
         val productImageLink = productItem.optString(ProductItemParameters.PRODUCT_IMAGE_LINK)
         val productLink = productItem.optString(ProductItemParameters.PRODUCT_LINK)
         val productTitle = productItem.optString(ProductItemParameters.PRODUCT_TITLE)
-        val amount = productItem.optDouble(ProductItemParameters.PRODUCT_PRICE_AMOUNT) as? Double
-        amount?.let {
-            if (it.isNaN()) {
-                return
-            }
+        val amount = productItem.optDouble(ProductItemParameters.PRODUCT_PRICE_AMOUNT)
+        if (amount.isNaN()) {
+            return
         }
-        val productPriceAmount = amount?.toBigDecimal() as BigDecimal
+        val productPriceAmount = BigDecimal(amount)
         val productGtin = productItem.optString(ProductItemParameters.PRODUCT_GTIN)
         val productMpn = productItem.optString(ProductItemParameters.PRODUCT_MPN)
         val productBrand = productItem.optString(ProductItemParameters.PRODUCT_BRAND)

@@ -10,9 +10,9 @@ import java.util.*
 
 class FacebookInstance(
     private val application: Application,
-    applicationId: String?,
+    applicationId: String? = null,
     clientToken: String? = null,
-    debugEnabled: Boolean?
+    debugEnabled: Boolean? = null
 ) : FacebookCommand {
 
     private lateinit var logger: AppEventsLogger
