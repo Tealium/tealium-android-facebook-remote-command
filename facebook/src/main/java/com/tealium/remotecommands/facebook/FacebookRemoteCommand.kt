@@ -23,25 +23,22 @@ class FacebookRemoteCommand
  */
 @JvmOverloads
 constructor(
-    application: Application? = null,
+    application: Application,
     commandId: String = DEFAULT_COMMAND_ID,
     description: String = DEFAULT_COMMAND_DESCRIPTION,
     facebookApplicationId: String? = null,
     facebookClientToken: String? = null,
     debugEnabled: Boolean? = null
 ) : RemoteCommand(commandId, description, BuildConfig.TEALIUM_FACEBOOK_VERSION) {
-    
-    init {
-        application?.let { app ->
-            this.application = app
-            if (facebookApplicationId != null && facebookClientToken != null) {
-                facebookInstance = FacebookInstance(app, facebookApplicationId, facebookClientToken, debugEnabled)
-            }
-        }
-    }
 
     private lateinit var application: Application
     private lateinit var facebookInstance: FacebookCommand
+
+    init {
+        if (facebookApplicationId != null && facebookClientToken != null) {
+            facebookInstance = FacebookInstance(application, facebookApplicationId, facebookClientToken, debugEnabled)
+        }
+    }
 
     companion object {
         const val DEFAULT_COMMAND_ID = "facebook"
