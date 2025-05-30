@@ -24,11 +24,11 @@ class FacebookRemoteCommand
 @JvmOverloads
 constructor(
     application: Application,
-    commandId: String = DEFAULT_COMMAND_ID,
-    description: String = DEFAULT_COMMAND_DESCRIPTION,
     facebookApplicationId: String? = null,
     facebookClientToken: String? = null,
-    debugEnabled: Boolean? = null
+    debugEnabled: Boolean? = null,
+    commandId: String = DEFAULT_COMMAND_ID,
+    description: String = DEFAULT_COMMAND_DESCRIPTION,
 ) : RemoteCommand(commandId, description, BuildConfig.TEALIUM_FACEBOOK_VERSION) {
 
     private lateinit var application: Application
