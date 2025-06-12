@@ -1,13 +1,6 @@
 package com.tealium.remotecommands.facebook
 
-import Advertiser
-import AutoInit
-import AutoLog
-import Commands
-import Event.VALUE_TO_SUM
-import Flush
-import Purchase
-import User
+import com.tealium.remotecommands.facebook.Event.VALUE_TO_SUM
 import android.os.Bundle
 import io.mockk.*
 import io.mockk.impl.annotations.InjectMockKs
@@ -20,6 +13,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import java.util.*
+import android.app.Application
 
 @RunWith(RobolectricTestRunner::class)
 class FacebookRemoteCommandTest {
@@ -27,8 +21,10 @@ class FacebookRemoteCommandTest {
     @MockK
     lateinit var mockInstance: FacebookCommand
 
+    private val mockApplication = mockk<Application>(relaxed = true)
+    
     @InjectMockKs
-    var facebookRemoteCommand: FacebookRemoteCommand = FacebookRemoteCommand(null)
+    var facebookRemoteCommand: FacebookRemoteCommand = FacebookRemoteCommand(mockApplication)
 
     @Before
     fun setUp() {
@@ -118,6 +114,23 @@ class FacebookRemoteCommandTest {
         verify {
             mockInstance wasNot Called
         }
+        confirmVerified(mockInstance)
+    }
+
+    @Test
+    fun logPurchaseNotCalledWithInvalidAmount() {
+        val purchaseProperties = JSONObject().apply {
+            put(Purchase.PURCHASE_AMOUNT, "not_a_number") // String instead of number
+            put(Purchase.PURCHASE_CURRENCY, "USD")
+        }
+
+        val purchase = JSONObject().apply {
+            put(Purchase.PURCHASE, purchaseProperties)
+        }
+
+        facebookRemoteCommand.parseCommands(arrayOf(Commands.LOG_PURCHASE), purchase)
+        
+        verify { mockInstance wasNot Called }
         confirmVerified(mockInstance)
     }
 
@@ -324,10 +337,10 @@ class FacebookRemoteCommandTest {
         json.put("booleanArray", booleanArray)
         FacebookRemoteCommand.mapJsonToBundle(json, bundle)
 
-        assertEquals(bundle.getString("string"), "123")
-        assertEquals(bundle.getInt("int"), 123)
-        assertEquals(bundle.getDouble("double"), 0.123, 0.1)
-        assertEquals(bundle.getBoolean("boolean"), true)
+        assertEquals("123", bundle.getString("string"))
+        assertEquals(123, bundle.getInt("int"))
+        assertEquals(0.123, bundle.getDouble("double"), 0.001)
+        assertEquals(true, bundle.getBoolean("boolean"))
 
         bundle.getStringArray("stringArray")?.forEachIndexed { index, value ->
             assertEquals(stringArray[index], value)
@@ -336,7 +349,7 @@ class FacebookRemoteCommandTest {
             assertEquals(intArray[index], value)
         }
         bundle.getDoubleArray("doubleArray")?.forEachIndexed { index, value ->
-            assertEquals(doubleArray[index], value)
+            assertEquals(doubleArray[index], value, 0.001)
         }
         bundle.getBooleanArray("booleanArray")?.forEachIndexed { index, value ->
             assertEquals(booleanArray[index], value)
@@ -436,6 +449,39 @@ class FacebookRemoteCommandTest {
         verify {
             mockInstance.enableAdvertiserIDCollection(false)
         }
+        confirmVerified(mockInstance)
+    }
+
+    @Test
+    fun parseCommandsHandlesMultipleCommands() {
+        val payload = JSONObject().apply {
+            put(User.USER_ID, "testuser")
+            put(Flush.FLUSH_BEHAVIOR, Flush.AUTO)
+        }
+        
+        every { mockInstance.setUserID(any()) } just Runs
+        every { mockInstance.setFlushBehavior(any()) } just Runs
+        every { mockInstance.flush() } just Runs
+        
+        facebookRemoteCommand.parseCommands(
+            arrayOf(Commands.SET_USER_ID, Commands.SET_FLUSH_BEHAVIOR, Commands.FLUSH), 
+            payload
+        )
+        
+        verifySequence {
+            mockInstance.setUserID("testuser")
+            mockInstance.setFlushBehavior(Flush.AUTO)
+            mockInstance.flush()
+        }
+    }
+
+    @Test
+    fun parseCommandsHandlesEmptyCommands() {
+        val payload = JSONObject()
+        
+        facebookRemoteCommand.parseCommands(arrayOf(), payload)
+        
+        verify { mockInstance wasNot Called }
         confirmVerified(mockInstance)
     }
 }

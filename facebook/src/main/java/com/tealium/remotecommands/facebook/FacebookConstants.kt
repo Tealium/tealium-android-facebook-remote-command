@@ -1,5 +1,7 @@
 @file:JvmName("FacebookConstants")
 
+package com.tealium.remotecommands.facebook
+
 import com.facebook.appevents.AppEventsConstants
 
 object Commands {
@@ -242,5 +244,6 @@ object Advertiser {
 
 object Initialize {
     const val APPLICATION_ID = "applicationid"
+    const val CLIENT_TOKEN = "clienttoken"
     const val DEBUG_ENABLED = "debug"
 }

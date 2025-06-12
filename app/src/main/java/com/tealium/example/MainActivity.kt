@@ -9,7 +9,7 @@ import com.tealium.example.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
-    lateinit var binding: ActivityMainBinding
+    private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,7 +61,7 @@ class MainActivity : AppCompatActivity() {
     private fun setUserId() {
         TealiumHelper.trackEvent(
             "setuserid", mutableMapOf<String, Any>(
-                "customer_id" to User.customerId
+                "customer_id" to User.CUSTOMER_ID
             )
         )
     }
@@ -94,8 +94,8 @@ class MainActivity : AppCompatActivity() {
     private fun addToCart() {
         TealiumHelper.trackEvent(
             "addtocart", mutableMapOf<String, Any>(
-                "product_id" to Product.productId,
-                "product_unit_price" to Product.productPrice
+                "product_id" to Product.PRODUCT_ID,
+                "product_unit_price" to Product.PRODUCT_PRICE
             )
         )
     }
@@ -124,10 +124,10 @@ object Purchase {
 }
 
 object User {
-    val customerId = "cust123"
+    const val CUSTOMER_ID = "customerid123"
     val profile = mutableMapOf<String, String>(
         "customer_email" to "test@test.com",
-        "customer_id" to customerId,
+        "customer_id" to CUSTOMER_ID,
         "customer_first_name" to "John",
         "customer_last_name" to "Doe",
         "customer_phone" to "858-555-6666",
@@ -140,10 +140,10 @@ object User {
 }
 
 object Product {
-    val productId = "abc123"
-    val productPrice = 19.99
+    const val PRODUCT_ID = "abc123"
+    const val PRODUCT_PRICE = 19.99
     val info = mutableMapOf<String, Any>(
-        "product_id" to productId,
+        "product_id" to PRODUCT_ID,
         "product_availability" to 1,
         "product_condition" to 2,
         "product_description" to "really cool",
@@ -152,7 +152,7 @@ object Product {
         "product_name" to "some cool product",
         "product_gtin" to "ASDF235562SDFSDF",
         "product_brand" to "awesome brand",
-        "product_unit_price" to productPrice,
+        "product_unit_price" to PRODUCT_PRICE,
         "currency" to "USD",
         "online_store_id" to "ABC234SDF",
         "bulk_discount" to "15"

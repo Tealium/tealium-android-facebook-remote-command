@@ -1,6 +1,7 @@
 {
   "config": {
       "applicationid": "407125680222876",
+      "clienttoken": "myclienttoken",
       "accesstoken": "mytoken",
       "userid": "myuser",
       "auto_log_events_enabled": true,

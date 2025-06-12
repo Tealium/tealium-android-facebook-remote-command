@@ -1,7 +1,8 @@
 <resources>
     <string name="app_name">TealiumFacebook</string>
     <string name="facebook_app_id">YOUR_FACEBOOK_APP_ID</string>
-    <string name="fb_login_protocol_scheme">YOUR_FACEBOOK_LOGIN</string>
+    <string name="facebook_client_token">YOUR_FACEBOOK_CLIENT_TOKEN</string>
+    <string name="fb_login_protocol_scheme">fbYOUR_FACEBOOK_APP_ID</string>
     <string name="purchase">Purchase</string>
     <string name="set_user">Set User</string>
     <string name="set_user_id">Set User Id</string>

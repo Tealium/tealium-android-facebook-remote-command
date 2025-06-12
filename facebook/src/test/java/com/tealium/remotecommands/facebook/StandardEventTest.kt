@@ -1,6 +1,6 @@
 package com.tealium.remotecommands.facebook
 
-import Event
+import android.app.Application
 import android.os.Bundle
 import io.mockk.*
 import io.mockk.impl.annotations.InjectMockKs
@@ -17,8 +17,10 @@ class StandardEventTest {
     @MockK
     lateinit var mockInstance: FacebookCommand
 
+    private val mockApplication = mockk<Application>(relaxed = true)
+    
     @InjectMockKs
-    var facebookRemoteCommand: FacebookRemoteCommand = FacebookRemoteCommand(null)
+    var facebookRemoteCommand: FacebookRemoteCommand = FacebookRemoteCommand(mockApplication)
     
     @Before
     fun setUp() {
@@ -110,6 +112,23 @@ class StandardEventTest {
         facebookRemoteCommand.parseCommands(arrayOf("adimpression"), payload)
         verify {
             mockInstance.logEvent("AdImpression", 1.0, any<Bundle>())
+        }
+        confirmVerified(mockInstance)
+    }
+
+    @Test
+    fun unknownEventNameUsedAsEventName() {
+        val customEventName = "myCustomEvent"
+        val result = facebookRemoteCommand.standardEvent(customEventName)
+        
+        Assert.assertEquals(customEventName, result)
+        
+        every { mockInstance.logEvent(customEventName) } just Runs
+        
+        facebookRemoteCommand.parseCommands(arrayOf(customEventName), JSONObject())
+        
+        verify {
+            mockInstance.logEvent(customEventName)
         }
         confirmVerified(mockInstance)
     }

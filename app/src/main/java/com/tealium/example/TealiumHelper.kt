@@ -11,9 +11,7 @@ import com.tealium.remotecommanddispatcher.remoteCommands
 import com.tealium.remotecommands.facebook.FacebookRemoteCommand
 
 object TealiumHelper {
-    private const val TAG = "TealiumHelper"
-
-    const val TEALIUM_MAIN = "main"
+    private const val TEALIUM_MAIN = "main"
 
     @JvmStatic
     fun initialize(application: Application) {

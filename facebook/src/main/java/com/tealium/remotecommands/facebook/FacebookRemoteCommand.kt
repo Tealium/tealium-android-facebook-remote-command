@@ -1,17 +1,6 @@
 package com.tealium.remotecommands.facebook
 
-import Advertiser
-import AutoInit
-import AutoLog
-import Commands
-import Event
-import Event.VALUE_TO_SUM
-import Flush
-import Product
-import ProductItemParameters
-import Purchase
-import Push
-import User
+import com.tealium.remotecommands.facebook.Event.VALUE_TO_SUM
 import android.app.Application
 import android.os.Bundle
 import android.util.Log
@@ -22,41 +11,32 @@ import java.math.BigDecimal
 import java.util.*
 import kotlin.jvm.Throws
 
-class FacebookRemoteCommand : RemoteCommand {
+class FacebookRemoteCommand
+/**
+ * Constructs a RemoteCommand that integrates with the Facebook App Events SDK and optionally initializes it.
+ * @param application The application context
+ * @param commandId The command ID used for the RemoteCommand
+ * @param description A description of the RemoteCommand
+ * @param facebookApplicationId The Facebook Application ID to initialize with, if provided
+ * @param facebookClientToken The Facebook Client Token to initialize with, if provided
+ * @param debugEnabled Whether to enable debug mode for Facebook SDK
+ */
+@JvmOverloads
+constructor(
+    application: Application,
+    facebookApplicationId: String? = null,
+    facebookClientToken: String? = null,
+    debugEnabled: Boolean? = null,
+    commandId: String = DEFAULT_COMMAND_ID,
+    description: String = DEFAULT_COMMAND_DESCRIPTION,
+) : RemoteCommand(commandId, description, BuildConfig.TEALIUM_FACEBOOK_VERSION) {
 
-    private val TAG = this::class.java.simpleName
+    private lateinit var application: Application
+    private lateinit var facebookInstance: FacebookCommand
 
-    lateinit var facebookInstance: FacebookCommand
-    var application: Application? = null
-
-    /**
-     * Constructs a RemoteCommand that integrates with the Facebook App Events SDK to allow Facebook API calls to be implemented through Tealium.
-     */
-    @JvmOverloads
-    constructor(
-        application: Application? = null,
-        commandId: String = DEFAULT_COMMAND_ID,
-        description: String = DEFAULT_COMMAND_DESCRIPTION,
-        facebookApplicationId: String? = null,
-        debugEnabled: Boolean? = null
-    ) : super(commandId, description, BuildConfig.TEALIUM_FACEBOOK_VERSION) {
-        application?.let { app ->
-            this.application = app
-            facebookApplicationId?.let {
-                facebookInstance = FacebookInstance(app, it, debugEnabled)
-            }
-        }
-    }
-
-    @JvmOverloads
-    constructor(
-        autoInit: Boolean,
-        application: Application? = null,
-        commandId: String = DEFAULT_COMMAND_ID,
-        description: String = DEFAULT_COMMAND_DESCRIPTION
-    ) : super(commandId, description, BuildConfig.TEALIUM_FACEBOOK_VERSION) {
-        application?.let {
-            this.application = it
+    init {
+        if (facebookApplicationId != null && facebookClientToken != null) {
+            facebookInstance = FacebookInstance(application, facebookApplicationId, facebookClientToken, debugEnabled)
         }
     }
 
@@ -64,6 +44,7 @@ class FacebookRemoteCommand : RemoteCommand {
         const val DEFAULT_COMMAND_ID = "facebook"
         const val DEFAULT_COMMAND_DESCRIPTION = "Tealium-Facebook Remote Command"
         const val REQUIRED_KEY = "key does not exist in the payload."
+        const val TAG = "FacebookRemoteCommand"
 
         /**
          * Maps a JSON object to a Bundle. Does not support nested objects.
@@ -74,8 +55,7 @@ class FacebookRemoteCommand : RemoteCommand {
         fun mapJsonToBundle(json: JSONObject?, bundle: Bundle) {
             json?.let {
                 it.keys().forEach { key ->
-                    val value = json[key]
-                    when (value) {
+                    when (val value = json[key]) {
                         is Int -> {
                             if (key != VALUE_TO_SUM) {
                                 bundle.putInt(key, value)
@@ -101,25 +81,24 @@ class FacebookRemoteCommand : RemoteCommand {
          * @param value - the value to set on the Bundle
          * @param bundle - bundle to set key/value pairs that is used in tracking events
          */
-        fun <T> mapArrayToBundle(key: String, value: Array<T>, bundle: Bundle) {
-            if (value.count() > 0) {
+        private fun <T> mapArrayToBundle(key: String, value: Array<T>, bundle: Bundle) {
+            if (value.isNotEmpty()) {
                 when (value.first()) {
                     is Double -> {
-                        val doubleArray = (value as? ArrayList<Double>)?.toDoubleArray()
+                        val doubleArray = value.filterIsInstance<Double>().toDoubleArray()
                         bundle.putDoubleArray(key, doubleArray)
                     }
                     is Boolean -> {
-                        val booleanArray = (value.toList() as? ArrayList<Boolean>)?.toTypedArray()
-                            ?.toBooleanArray()
+                        val booleanArray = value.filterIsInstance<Boolean>().toBooleanArray()
                         bundle.putBooleanArray(key, booleanArray)
                     }
                     is Int -> {
-                        val intArray = (value as? ArrayList<Int>)?.toIntArray()
+                        val intArray = value.filterIsInstance<Int>().toIntArray()
                         bundle.putIntArray(key, intArray)
                     }
                     else -> {
-                        val stringArray = (value as? ArrayList<String>)
-                        bundle.putStringArrayList(key, stringArray)
+                        val stringArray = value.map { it.toString() }
+                        bundle.putStringArrayList(key, ArrayList(stringArray))
                     }
                 }
             }
@@ -148,24 +127,14 @@ class FacebookRemoteCommand : RemoteCommand {
         commands.forEach { command ->
             when (command) {
                 Commands.INITIALIZE -> {
-                    val applicationId =
-                        if (payload.optString(Initialize.APPLICATION_ID).isNotBlank()) payload.optString(
-                            Initialize.APPLICATION_ID
-                        ) else null
-                    val debugEnabled = if (payload.optString(Initialize.DEBUG_ENABLED).isNotBlank()) payload.optBoolean(
-                        Initialize.DEBUG_ENABLED
-                    ) else null
-                    application?.let { appContext ->
-                        applicationId?.let { appId ->
-                            facebookInstance =
-                                FacebookInstance(
-                                    appContext,
-                                    appId,
-                                    debugEnabled
-                                )
-                        } ?: run {
-                            Log.e(TAG, "${Initialize.APPLICATION_ID} $REQUIRED_KEY")
-                        }
+                    val applicationId = payload.optString(Initialize.APPLICATION_ID).ifBlank { null }
+                    val clientToken = payload.optString(Initialize.CLIENT_TOKEN).ifBlank { null }
+                    val debugEnabled = payload.optString(Initialize.DEBUG_ENABLED).ifBlank { null }?.let { payload.optBoolean(Initialize.DEBUG_ENABLED) }
+                    
+                    applicationId?.let { appId ->
+                        facebookInstance = FacebookInstance(application, appId, clientToken, debugEnabled)
+                    } ?: run {
+                        Log.e(TAG, "${Initialize.APPLICATION_ID} $REQUIRED_KEY")
                     }
                 }
                 Commands.LOG_PURCHASE -> {
@@ -188,12 +157,10 @@ class FacebookRemoteCommand : RemoteCommand {
                 }
                 Commands.SET_USER_ID -> {
                     val userId = payload.optString(User.USER_ID)
-                    userId?.let {
-                        if (it.isNotEmpty()) {
-                            facebookInstance.setUserID(it)
-                        } else {
-                            Log.e(TAG, "${User.USER_ID} $REQUIRED_KEY")
-                        }
+                    if (userId.isNotEmpty()) {
+                        facebookInstance.setUserID(userId)
+                    } else {
+                        Log.e(TAG, "${User.USER_ID} $REQUIRED_KEY")
                     }
                 }
                 Commands.CLEAR_USER_DATA -> {
@@ -284,7 +251,8 @@ class FacebookRemoteCommand : RemoteCommand {
                         if (contentId.isNotBlank()) {
                             logEvent(Commands.COMPLETED_TUTORIAL, 0.0, it)
                         } else {
-                            Log.e(TAG, "${Event.CONTENT_ID} $REQUIRED_KEY"
+                            Log.e(
+                                TAG, "${Event.CONTENT_ID} $REQUIRED_KEY"
                             )
                         }
                     }
@@ -296,7 +264,7 @@ class FacebookRemoteCommand : RemoteCommand {
                         if (valueToSum > 0.0) {
                             logEvent(Commands.INITIATED_CHECKOUT, valueToSum, it)
                         } else {
-                            Log.e(TAG, "${Event.VALUE_TO_SUM} $REQUIRED_KEY")
+                            Log.e(TAG, "$VALUE_TO_SUM $REQUIRED_KEY")
                         }
                     }
                 }
@@ -330,39 +298,29 @@ class FacebookRemoteCommand : RemoteCommand {
         return StandardEvents.standardEventNames[commandName] ?: commandName
     }
 
-    fun logEvent(command: String, valueToSum: Double, eventParameters: JSONObject? = null) {
+    private fun logEvent(command: String, valueToSum: Double, eventParameters: JSONObject? = null) {
         val bundle = Bundle()
         if (valueToSum > 0 && eventParameters != null) {
-            valueToSum?.let { sumValue ->
-                eventParameters?.let { parameters ->
-                    mapJsonToBundle(parameters, bundle)
-                }
-                facebookInstance.logEvent(command, sumValue, bundle)
-            }
-        } else if (valueToSum > 0 && eventParameters == null) {
-            valueToSum?.let { sumValue ->
-                facebookInstance.logEvent(command, sumValue)
-            }
+            mapJsonToBundle(eventParameters, bundle)
+            facebookInstance.logEvent(command, valueToSum, bundle)
+        } else if (valueToSum > 0) {
+            facebookInstance.logEvent(command, valueToSum)
         } else if (valueToSum == 0.0 && eventParameters != null) {
-            eventParameters?.let { eventParameters ->
-                mapJsonToBundle(eventParameters, bundle)
-            }
+            mapJsonToBundle(eventParameters, bundle)
             facebookInstance.logEvent(command, bundle)
         } else {
             facebookInstance.logEvent(command)
         }
     }
 
-    fun logPurchase(purchase: JSONObject) {
-        val amount = purchase.optDouble(Purchase.PURCHASE_AMOUNT) as? Double
-        amount?.let {
-            if (it.isNaN()) {
-                return
-            }
+    private fun logPurchase(purchase: JSONObject) {
+        val amount = purchase.optDouble(Purchase.PURCHASE_AMOUNT)
+        if (amount.isNaN()) {
+            return
         }
-        val purchaseAmount = amount?.toBigDecimal() as BigDecimal
+        val purchaseAmount = BigDecimal(amount.toString())
         val currencyString = purchase.optString(Purchase.PURCHASE_CURRENCY, "USD")
-        val (currency) = guardLet(getCurrency(currencyString)) { return }
+        val currency = getCurrency(currencyString) ?: return
         val parameters: JSONObject? = purchase.optJSONObject(Purchase.PURCHASE_PARAMETERS)
 
         parameters?.let { purchaseParameters ->
@@ -374,7 +332,7 @@ class FacebookRemoteCommand : RemoteCommand {
         }
     }
 
-    fun setUser(user: JSONObject) {
+    private fun setUser(user: JSONObject) {
         val email = user.optString(User.EMAIL)
         val firstName = user.optString(User.FIRST_NAME)
         val lastName = user.optString(User.LAST_NAME)
@@ -400,7 +358,7 @@ class FacebookRemoteCommand : RemoteCommand {
         )
     }
 
-    fun logProductItem(productItem: JSONObject) {
+    private fun logProductItem(productItem: JSONObject) {
         val productId = productItem.optString(ProductItemParameters.PRODUCT_ID)
         val productAvailability = productItem.optInt(ProductItemParameters.PRODUCT_AVAILABILITY)
         val productCondition = productItem.optInt(ProductItemParameters.PRODUCT_CONDITION)
@@ -408,13 +366,11 @@ class FacebookRemoteCommand : RemoteCommand {
         val productImageLink = productItem.optString(ProductItemParameters.PRODUCT_IMAGE_LINK)
         val productLink = productItem.optString(ProductItemParameters.PRODUCT_LINK)
         val productTitle = productItem.optString(ProductItemParameters.PRODUCT_TITLE)
-        val amount = productItem.optDouble(ProductItemParameters.PRODUCT_PRICE_AMOUNT) as? Double
-        amount?.let {
-            if (it.isNaN()) {
-                return
-            }
+        val amount = productItem.optDouble(ProductItemParameters.PRODUCT_PRICE_AMOUNT)
+        if (amount.isNaN()) {
+            return
         }
-        val productPriceAmount = amount?.toBigDecimal() as BigDecimal
+        val productPriceAmount = BigDecimal(amount.toString())
         val productGtin = productItem.optString(ProductItemParameters.PRODUCT_GTIN)
         val productMpn = productItem.optString(ProductItemParameters.PRODUCT_MPN)
         val productBrand = productItem.optString(ProductItemParameters.PRODUCT_BRAND)
@@ -424,43 +380,35 @@ class FacebookRemoteCommand : RemoteCommand {
         val bundle = Bundle()
         mapJsonToBundle(productParameters, bundle)
 
-        productAvailability?.let { productAvailability ->
-            val (availability) = guardLet(productAvailabilityFrom(productAvailability)) { return }
-            productCondition?.let { productCondition ->
-                val (condition) = guardLet(productConditionFrom(productCondition)) { return }
+        val availability = productAvailabilityFrom(productAvailability) ?: return
+        val condition = productConditionFrom(productCondition) ?: return
 
-                if (productId.isEmpty()
-                    || productDescription.isEmpty()
-                    || productImageLink.isEmpty()
-                    || productLink.isEmpty()
-                    || productTitle.isEmpty()
-                    || productGtin.isEmpty()
-                    || productMpn.isEmpty()
-                    || productBrand.isEmpty()
-                ) {
-                    return
-                }
-                facebookInstance.logProductItem(
-                    productId,
-                    availability,
-                    condition,
-                    productDescription,
-                    productImageLink,
-                    productLink,
-                    productTitle,
-                    productPriceAmount,
-                    productPriceCurrency,
-                    productGtin,
-                    productMpn,
-                    productBrand,
-                    bundle
-                )
-            }
+        if (productId.isEmpty()
+            || productDescription.isEmpty()
+            || productImageLink.isEmpty()
+            || productLink.isEmpty()
+            || productTitle.isEmpty()
+            || productGtin.isEmpty()
+            || productMpn.isEmpty()
+            || productBrand.isEmpty()
+        ) {
+            return
         }
-    }
-
-    fun enableAutoLogAppEvents(enable: Boolean) {
-        facebookInstance.enableAutoLogAppEvents(enable)
+        facebookInstance.logProductItem(
+            productId,
+            availability,
+            condition,
+            productDescription,
+            productImageLink,
+            productLink,
+            productTitle,
+            productPriceAmount,
+            productPriceCurrency,
+            productGtin,
+            productMpn,
+            productBrand,
+            bundle
+        )
     }
 
     fun splitCommands(payload: JSONObject): Array<String> {
@@ -470,7 +418,7 @@ class FacebookRemoteCommand : RemoteCommand {
                 it.isEmpty()
             }
             .map {
-                it.trim().toLowerCase()
+                it.trim().lowercase()
             }
             .toTypedArray()
     }
@@ -504,18 +452,4 @@ class FacebookRemoteCommand : RemoteCommand {
         }
     }
 
-}
-
-inline fun <T : Any> guardLet(vararg elements: T?, closure: () -> Nothing): List<T> {
-    return if (elements.all { it != null }) {
-        elements.filterNotNull()
-    } else {
-        closure()
-    }
-}
-
-inline fun <T : Any> ifLet(vararg elements: T?, closure: (List<T>) -> Unit) {
-    if (elements.all { it != null }) {
-        closure(elements.filterNotNull())
-    }
 }
